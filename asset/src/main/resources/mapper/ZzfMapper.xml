@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyb2c.dao.ZzfMapper" >
+  <resultMap id="BaseResultMap" type="com.xyb2c.pojo.Zzf" >
+    <result column="data_1" property="data1" jdbcType="VARCHAR" />
+    <result column="data_2" property="data2" jdbcType="VARCHAR" />
+    <result column="data_3" property="data3" jdbcType="VARCHAR" />
+    <result column="data_4" property="data4" jdbcType="VARCHAR" />
+    <result column="data_5" property="data5" jdbcType="VARCHAR" />
+    <result column="data_6" property="data6" jdbcType="VARCHAR" />
+    <result column="data_7" property="data7" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    data_1, data_2, data_3, data_4, data_5, data_6, data_7
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.ZzfExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from zzf
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.xyb2c.pojo.ZzfExample" >
+    delete from zzf
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xyb2c.pojo.Zzf" >
+    insert into zzf (data_1, data_2, data_3, 
+      data_4, data_5, data_6, 
+      data_7)
+    values (#{data1,jdbcType=VARCHAR}, #{data2,jdbcType=VARCHAR}, #{data3,jdbcType=VARCHAR}, 
+      #{data4,jdbcType=VARCHAR}, #{data5,jdbcType=VARCHAR}, #{data6,jdbcType=VARCHAR}, 
+      #{data7,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xyb2c.pojo.Zzf" >
+    insert into zzf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="data1 != null" >
+        data_1,
+      </if>
+      <if test="data2 != null" >
+        data_2,
+      </if>
+      <if test="data3 != null" >
+        data_3,
+      </if>
+      <if test="data4 != null" >
+        data_4,
+      </if>
+      <if test="data5 != null" >
+        data_5,
+      </if>
+      <if test="data6 != null" >
+        data_6,
+      </if>
+      <if test="data7 != null" >
+        data_7,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="data1 != null" >
+        #{data1,jdbcType=VARCHAR},
+      </if>
+      <if test="data2 != null" >
+        #{data2,jdbcType=VARCHAR},
+      </if>
+      <if test="data3 != null" >
+        #{data3,jdbcType=VARCHAR},
+      </if>
+      <if test="data4 != null" >
+        #{data4,jdbcType=VARCHAR},
+      </if>
+      <if test="data5 != null" >
+        #{data5,jdbcType=VARCHAR},
+      </if>
+      <if test="data6 != null" >
+        #{data6,jdbcType=VARCHAR},
+      </if>
+      <if test="data7 != null" >
+        #{data7,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xyb2c.pojo.ZzfExample" resultType="java.lang.Integer" >
+    select count(*) from zzf
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update zzf
+    <set >
+      <if test="record.data1 != null" >
+        data_1 = #{record.data1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data2 != null" >
+        data_2 = #{record.data2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data3 != null" >
+        data_3 = #{record.data3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data4 != null" >
+        data_4 = #{record.data4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data5 != null" >
+        data_5 = #{record.data5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data6 != null" >
+        data_6 = #{record.data6,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data7 != null" >
+        data_7 = #{record.data7,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update zzf
+    set data_1 = #{record.data1,jdbcType=VARCHAR},
+      data_2 = #{record.data2,jdbcType=VARCHAR},
+      data_3 = #{record.data3,jdbcType=VARCHAR},
+      data_4 = #{record.data4,jdbcType=VARCHAR},
+      data_5 = #{record.data5,jdbcType=VARCHAR},
+      data_6 = #{record.data6,jdbcType=VARCHAR},
+      data_7 = #{record.data7,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <insert id="insertMany" parameterType="ArrayList" >
+  
+    insert into zzf (data_1, data_2, data_3, 
+      data_4, data_5, data_6, 
+      data_7)
+    values 
+    <foreach collection="list" item="item" index="index" separator="," > 
+ 		(#{item.data1,jdbcType=VARCHAR}, #{item.data2,jdbcType=VARCHAR}, #{item.data3,jdbcType=VARCHAR}, 
+      #{item.data4,jdbcType=VARCHAR}, #{item.data5,jdbcType=VARCHAR}, #{item.data6,jdbcType=VARCHAR}, 
+      #{item.data7,jdbcType=VARCHAR})
+      </foreach>
+  </insert>
+</mapper>

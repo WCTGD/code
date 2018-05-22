@@ -1,0 +1,42 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+
+/*top*/
+.top{background:url(../img/u2.png); width:100%; height:118px; position:fixed; top:0; left:0;}
+.top_img{ display:block; width:auto; height:96px; position:absolute; top:11px; left:20px;}
+.top_logo{ font-size:28px; color:#fff; font-weight:bold; position:absolute; left:130px;line-height:118px;}
+.top_gw{ font-size:16px; color:#fff; position:absolute; right:25%; top:20px; font-weight: bold; top:40px;}
+.time{ font-size:12px; font-weight:bold; color:#fff; position:absolute; right:15%; text-align:center; top:40px;}
+.week,.day{ height:22px;}
+.tuic{ position:absolute;right:10%; top:27px;}
+
+/*title*/
+.title{ overflow:hidden; height:36px; line-height:36px; background:#dadada; margin-top:118px; padding-left:100px;}
+.title li{ float:left; font-size:14px; color:#555; margin-left:5px;}
+
+/*标签栏*/
+.right_tb{ height:26px; position:absolute; left:100px; bottom:0; overflow:hidden; white-space:nowrap;}
+.right_tb .right_zm2:hover{ background-color:#12b1fd;}
+
+.right_zm{ display:block; height:26px; width:110px;line-height:26px; color:#333; font-size:12px; background-color:#edf1f2; float:left; margin-right:10px; border-radius:4px 4px 0 0; overflow:hidden;position:relative;}
+.right_zm a{ display:block; float:left; color:#333; width:92px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;margin-left:4px;}
+
+.right_zm2{ display:block;height:26px; line-height:26px; color:#fff; font-size:12px; background-color:#20b7ff; float:left; margin-right:10px; border-radius:4px 4px 0 0; overflow:hidden;width:110px; position:relative;}
+.right_zm2 a{ display:block; float:left; margin-left:4px; text-align:center; width:93px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor:default;}
+.tb_gb{ display:block; position:absolute; top:8px; right:6px;}
+
+/*left*/
+.left{ width:100px; background-color:#dadada; height:100%; position:fixed; left:0; top:154px;}
+.left a{ display:block; width:100px; height:70px; margin:auto; border-radius:5px; margin-bottom:5px;}
+.left a img{ display:block; margin-left:30px; float:left; margin-top:15px;}
+.left a:hover{ background:#edf1f2;}
+
+/*right*/
+.right{ height:100%; position:fixed; top:154px; left:100px; bottom:120px;}

@@ -1,0 +1,568 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="css/XZ_qxgl.css" rel="stylesheet">
+<link href="css/XZ_delect.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="css/jquery.gritter.css" />
+<link rel="stylesheet" href="css/datepicker.css" />
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<script src="js/date-time/bootstrap-datepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+</head>
+
+<body>
+	<!--table-->
+	<input type="hidden" id="workerId">
+	<div class="div_tb">
+		<div class="gl_1">
+			<div class="title_tb"></div>
+			<ul class="gl_1_ul">
+				<li><label>员工姓名</label> <input type="text" id="workerName"
+					readonly></li>
+				<li><label>员工编号</label> <input type="text" id="workerNo"
+					readonly></li>
+				<li><label>部门</label> <input type="text" id="department"
+					readonly></li>
+				<li><label>职位</label> <input type="text" id="position" readonly>
+				</li>
+				<li><label>类别</label> <input type="text" id="workerClass"
+					readonly></li>
+			</ul>
+			<div class="gl_1_div1">
+				<a class="a_bg">角色</a> <a id="yyqx">员工拥有权限</a>
+				<div class="gl_js_div">
+					<span class="gl_sc" id="gl_sc1">删除</span><span class="gl_tj"
+						id="gl_tj1">添加</span>
+				</div>
+			</div>
+			<div class="gl_1_div2" id="gl_li1">
+				<ul>
+					<li>权限组</li>
+					<!--
+				<li><input type="text" readonly/></li>
+				<li><input type="text" readonly/></li>
+-->
+				</ul>
+			</div>
+			<div class="gl_1_div2" id="gl_li2">
+				<ul>
+					<!-- <li>用户组信息</li> -->
+					<!--
+				<li><input type="text" readonly/></li>
+				<li><input type="text" readonly/></li>
+-->
+				</ul>
+			</div>
+		</div>
+
+		<div class="gl_2">
+			<div class="title_tb"></div>
+			<div class="gl_ul_k">
+				<ul class="gl_2_ul1" id="gl_js">
+					<li>权限组</li>
+					<li>总经理</li>
+					<li>总监</li>
+					<li>人事</li>
+					<li>行政</li>
+				</ul>
+				<!--
+			<ul class="gl_2_ul1" id="gl_js2">
+				<li>角色</li>
+				<li>总经理</li>
+				<li>总监</li>
+				<li>人事</li>
+				<li>行政</li>
+			</ul>
+-->
+				<ul class="gl_2_ul1" id="gl_yh">
+					<li>用户组信息</li>
+					<li>总经理</li>
+					<li>总监</li>
+					<li>人事</li>
+					<li>行政</li>
+				</ul>
+				<div id="gl_qx">
+					<div class="ul_tb2">
+						<span>权限菜单</span> <a>资产</a> <a>位置</a> <a>维修</a> <a>预防性维护</a> <a>员工</a>
+						<a>基础数据</a> <a>报表</a> <a>权限</a> <a></a> <a></a> <a></a>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="8%"><div>菜单</div></td>
+									<td width="7%"><div>读取</div></td>
+									<td width="7%"><div>查看</div></td>
+									<td width="7%"><div>修改</div></td>
+									<td width="7%"><div>删除</div></td>
+									<td width="7%"><div>新增</div></td>
+									<td width="7%"><div>搜索</div></td>
+								</tr>
+								<tr>
+									<td><div>资产首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>资产</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="8%"><div>菜单</div></td>
+									<td width="7%"><div>读取</div></td>
+									<td width="7%"><div>查看</div></td>
+									<td width="7%"><div>修改</div></td>
+									<td width="7%"><div>删除</div></td>
+									<td width="7%"><div>新增</div></td>
+									<td width="7%"><div>搜索</div></td>
+								</tr>
+								<tr>
+									<td><div>位置首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>位置</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="8%"><div>菜单</div></td>
+									<td width="7%"><div>读取</div></td>
+									<td width="7%"><div>查看</div></td>
+									<td width="7%"><div>修改</div></td>
+									<td width="7%"><div>删除</div></td>
+									<td width="7%"><div>新增</div></td>
+									<td width="7%"><div>搜索</div></td>
+								</tr>
+								<tr>
+									<td><div>维修首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>维修工单</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="10%"><div>菜单</div></td>
+									<td width="8%"><div>读取</div></td>
+									<td width="8%"><div>查看</div></td>
+									<td width="8%"><div>修改</div></td>
+									<td width="8%"><div>删除</div></td>
+									<td width="8%"><div>新增</div></td>
+								</tr>
+								<tr>
+									<td><div>预防性维护首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>预防性维护工单</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="10%"><div>菜单</div></td>
+									<td width="8%"><div>读取</div></td>
+									<td width="8%"><div>查看</div></td>
+									<td width="8%"><div>修改</div></td>
+									<td width="8%"><div>删除</div></td>
+									<td width="8%"><div>新增</div></td>
+								</tr>
+								<tr>
+									<td><div>员工首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>员工</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="10%"><div>菜单</div></td>
+									<td width="8%"><div>读取</div></td>
+									<td width="8%"><div>查看</div></td>
+									<td width="8%"><div>修改</div></td>
+									<td width="8%"><div>删除</div></td>
+									<td width="8%"><div>新增</div></td>
+								</tr>
+								<tr>
+									<td><div>基础数据首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>基础数据</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>供应商</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>承包商</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="14%"><div>菜单</div></td>
+									<td width="12%"><div>读取</div></td>
+									<td width="12%"><div>查看</div></td>
+									<td width="12%"><div>导出</div></td>
+								</tr>
+								<tr>
+									<td><div>报表首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>报表</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="sz_div">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td width="10%"><div>菜单</div></td>
+									<td width="8%"><div>读取</div></td>
+									<td width="8%"><div>查看</div></td>
+									<td width="8%"><div>修改</div></td>
+									<td width="8%"><div>删除</div></td>
+									<td width="8%"><div>新增</div></td>
+								</tr>
+								<tr>
+									<td><div>权限管理首页</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+								<tr>
+									<td><div>权限</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+									<td><div>
+											<input type="checkbox" disabled>
+										</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--删除页面-->
+	<div class="sc_yy">
+		<div class="sc_div">
+			<div class="xz_title">
+				<img id="sc_close_img" src="img/u122_6.png" />
+			</div>
+			<ul class="sc_ul">
+				<li class="sc_li1">确认删除</li>
+				<li class="sc_li3">
+					<button class="qr">确认</button>
+					<button class="qx">取消</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="qx_button">
+		<a class="qx_bc" onclick="save()">保存</a>
+	</div>
+	<script type="text/javascript" src="js/XZ_qxgl.js"></script>
+	<script type="text/javascript" src="js/XZ_delect.js"></script>
+
+
+</body>
+</html>

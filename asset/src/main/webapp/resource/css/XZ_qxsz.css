@@ -1,0 +1,40 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0; padding-bottom:200px;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input,select,textarea{ margin: 0; padding: 0; outline:none;}
+table,tr,td{ margin:0; padding:0;}
+
+/*table*/
+.tr_bg{ background:#ffff99;}
+.div_tb{width:80%; padding:10px 0;overflow:auto; font-size:12px; color:#333; text-align:center; white-space:nowrap; margin-left: 10%; float: left;}
+.title_tb{height: 28px; line-height: 28px;background: #003333; color: #ccc; text-align: left; border:1px solid #003333;}
+.ul_tb1{float: left; width: 30%; border-left:1px solid #666; border-right:1px solid #666;}
+.ul_tb1 li{height: 28px;line-height: 28px; text-align: center; border-bottom: solid 1px #666;}
+.ul_tb2{float: left; width: 20%;border-left:1px solid #666; border-right:1px solid #666;}
+.ul_tb2 span{ display: block; height: 28px;line-height: 28px; text-align: center; border-bottom: solid 1px #666;}
+.ul_tb2 a{ display: block; height: 28px;line-height: 28px; text-align: center; border-bottom: solid 1px #666; color: #000; cursor: default;}
+.sz_div table{border-left:1px solid #666;width:50%; float: left;}
+.sz_div div{border-bottom:1px solid #666; border-right:1px solid #666; height: 28px; line-height: 28px;}
+
+/*翻页*/
+.td_zg{ overflow:hidden; height:28px; line-height:28px; position:relative; background: #fff;}
+.td_zg ul{ overflow:hidden;}
+.t_div1{ float:left; margin-top:-2px;}
+.t_div1 select{ height:22px; margin-top:5px;}
+.t_div2{ overflow:hidden; float:left; margin-left:5px;}
+.t_div2 img{ float:left; margin-top:7px;}
+.t_div2 span{ float:left; font-size:14px; font-weight:bold; margin-left:5px; margin-right:5px;}
+
+.t_div3{ float:left; font-size:12px; margin-left:5px;}
+.t_div3 input{ width:30px; outline:none; height:20px; line-height: 20px;}
+.t_div4{ width:180px; font-size:12px; position:absolute; right: -16px;}
+
+/*button*/
+.qx_button{float: left; padding: 10px 0;}
+.qx_button a{display: block; color: #000; font-size: 12px; width: 70px; height: 30px; line-height: 30px; text-align: center; border-radius: 8px; margin-bottom: 20px; cursor: pointer;}
+.qx_bc{background: #cc6600;}

@@ -1,0 +1,1148 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_weixiu.css" rel="stylesheet" />
+<link type="text/css" href="css/XZ_delect.css" rel="stylesheet" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="css/jquery.gritter.css" />
+<link rel="stylesheet" href="css/datepicker.css" />
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<!-- <script type="text/javascript" src="js/jquery-2.0.3.min.js"></script> -->
+<script src="js/date-time/bootstrap-datepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+	$(function() {
+		var assetsclass=getallbaseassetclass();
+		var orderclass = getallworkerorderclass();
+		var level = getallworkelevel();
+		var state = getallworkeorderstate();
+		var department = getalldepartment();
+		var position = getallposition();
+		var worker = getallworker();
+		var assetsstate=getallsundryassetsstate();
+		for (var i = 0; i < assetsstate.length; i++) {
+			var a = $("<option>", {
+				text : assetsstate[i].information,
+				value : assetsstate[i].id
+			});
+			$("#iu_assets_state").append(a);
+		}
+		for (var i = 0; i < assetsclass.length; i++) {
+			var a = $("<option>", {
+				text : assetsclass[i].assetCategory,
+				value : assetsclass[i].id
+			});
+			$("#assetsclass").append(a);
+		}
+		for (var i = 0; i < orderclass.length; i++) {
+			var a = $("<option>", {
+				text : orderclass[i].information,
+				value : orderclass[i].id
+			});
+			var b = $("<option>", {
+				text : orderclass[i].information,
+				value : orderclass[i].id
+			});
+			$("#workorderclass").append(a);
+			$("#iu_workorderclass").append(b);
+		}
+		for (var i = 0; i < level.length; i++) {
+			var a = $("<option>", {
+				text : level[i].information,
+				value : level[i].id
+			});
+			var b = $("<option>", {
+				text : level[i].information,
+				value : level[i].id
+			});
+			$("#level").append(a);
+			$("#iu_level").append(b);
+		}
+		for (var i = 0; i < state.length; i++) {
+			var a = $("<option>", {
+				text : state[i].information,
+				value : state[i].id
+			});
+			var b = $("<option>", {
+				text : state[i].information,
+				value : state[i].id
+			});
+			$("#iu_state").append(a);
+			$("#state").append(b);
+		}
+		var a = "";
+		for (var i = 0; i < department.small.length; i++) {
+			a += "<li><span class='xz_sp1'>></span> <span class='xz_sp1'>";
+			a += department.small[i].department;
+			a += "</span><ul class='xl_ul'>";
+			for (var j = 0; j < worker.length; j++) {
+				if (worker[j].dId == department.small[i].id) {
+					a += "<li><span class='xz_sp2'>></span><div class='xz_sp1' onclick='getworker(this)'>";
+					a += worker[j].name;
+					a += "</div></li>";
+				}
+			}
+			a += "</ul></li>";
+		}
+		$("#iudata_worker").html(a);
+		var b = "";
+		for (var i = 0; i < department.small.length; i++) {
+			b += "<li><span class='xz_sp1'>></span> <span class='xz_sp1'>";
+			b += department.small[i].department;
+			b += "</span><ul class='xl_ul'>";
+			for (var j = 0; j < position.length; j++) {
+				if (position[j].dId == department.small[i].id) {
+					b += "<li><span class='xz_sp2'>></span><div class='xz_sp1' onclick='getposition(this)'>";
+					b += position[j].position;
+					b += "</div></li>";
+				}
+			}
+			b += "</ul></li>";
+		}
+		$("#iudata_position").html(b);
+		$("#page").html(1);
+		select();
+
+	})
+	//关闭那个五秒弹窗
+	function closeztyy(){
+		$('.zt_yy').hide()
+	}
+	//赋值员工
+	function getworker(t){
+		$('.xz_xl').slideUp();
+		var ht=$(t).html();
+		$('#qqz').val(ht);
+		changeworker();
+	}
+	//赋值位置
+	function getposition(t){
+		$('.xz_xl1').slideUp();
+		var ht=$(t).html();
+		$('.xl_inp').val(ht);
+		changeposition();
+	}
+	//获取资产状态
+	function getallsundryassetsstate() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallsundryassetsstate",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有工单类型
+	function getallworkerorderclass() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallsundrywokerorderclass",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有员工
+	function getallworker() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallworker",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有工作优先级
+	function getallworkelevel() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallsundryurgencyLevel",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有工单状态
+	function getallworkeorderstate() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallsundrywokerorderstate",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有资产类别
+	function getallbaseassetclass() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbaseassetclass",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有部门
+	function getalldepartment() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbasedepartment",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有位置
+	function getallposition() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallposition",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取项目
+	var pathName = getContextPath();
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	$(document).ready(function() {
+		$(".input-daterange").datepicker({
+			format : "yyyy-mm-dd",
+			language : "zh-CN",
+			keyboardNavigation : false,
+			forceParse : false,
+			autoclose : true,
+		});
+		$(".input-date-time").datetimepicker({
+			format : "yyyy-mm-dd",
+			language : "zh-CN",
+			weekStart : 1,
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			showMeridian : 1,
+			minuteStep : 10
+		});
+		$(".input-date-time-h").datetimepicker({
+			format : "yyyy-mm-dd",
+			language : "zh-CN",
+			weekStart : 1,
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			showMeridian : 1,
+			minuteStep : 1
+		});
+	});
+	//查询
+	function select() {
+		$.ajax({
+			url : pathName + "/repairlist/select",
+			type : "get",
+			dataType : "json",
+			data : {
+				no : $("#wzbh").val(),
+				workerorderClassId :$("#workorderclass").val(),
+				levelId:$("#level").val(),
+				workerorderStateId:$("#state").val(),
+				date1:$("#bxrq1").val(),
+				date2:$("#bxrq2").val(),
+				assetsClassId:$("#assetsclass").val(),
+				size:$("#size").val(),
+				page:$("#page").html() 
+			},
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				$("#count").html(data1.count);
+				$("#pagesize").html(data1.pagesize);
+				$("#start").html(data1.start);
+				$("#end").html(data1.end);
+				
+				
+				var repairList =data1.repairList;
+				var a="";
+				for (var i = 0; i < repairList.length; i++) {
+					a+="<tr class='data' onclick=click1(this)><td><div><input class='check_qx' type='checkbox' /></div></td><td><div>";
+					a+=repairList[i].no;
+					a+="</div></td><td><div>"
+					a+=repairList[i].wokerorderClass.information;
+					a+="</div></td><td><div>"
+					a+=repairList[i].wokerorderState.information;
+					a+="</div></td><td><div>"
+					a+=repairList[i].assets.no;
+					a+="</div></td><td><div>"
+					a+=repairList[i].worker.name;
+					a+="</div></td><td><div>"
+					a+=repairList[i].level.information;
+					a+="</div></td><td><div class='tb_cz'><a class='xg' onclick='update("+repairList[i].id+")'>修改</a> <a class='ck' onclick='see("+repairList[i].id+")'>查看</a> <a class='sc' onclick='deleteb("+repairList[i].id+")'>删除</a></div></td></tr>";
+				}
+				for (var i = 0; i < $("#size").val()-repairList.length; i++) {
+					a+="<tr><td><div></div></td><td><div>";
+					a+="</div></td><td><div>"
+					a+="</div></td><td><div>"
+					a+="</div></td><td><div>"
+					a+="</div></td><td><div>"
+					a+="</div></td><td><div>"
+					a+="</div></td><td><div class='tb_cz'></div></td></tr>";
+				}
+				$("#tablebd").html(a);
+				
+			}
+		})
+	}
+	//删除
+	//根据主键删除
+	function deletebypk(id) {
+		$.ajax({
+			url : pathName + "/repairlist/delete",
+			data : {
+				id : id
+			},
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8"
+		})
+	}
+	function deleteb(id){
+		$("#delete_id").val("");
+		$('.sc_yy').show();
+		$("#delete_id").val(id);
+	}
+	function realdelete() {
+		 deletebypk($("#delete_id").val());
+		 alert("删除成功");
+		 $('.sc_yy').hide();
+		 select(); 
+	}
+	function hidedelete() {
+		 $('.sc_yy').hide();
+	}
+	//重置
+	function reset() {
+		$("#wzbh").val("");
+		$("#workorderclass").val("");
+		$("#level").val("");
+		$("#state").val("");
+		$("#bxrq1").val("");
+		$("#bxrq2").val("");
+		$("#assetsclass").val("");
+	}
+	//查看
+	function see(id) {
+		$(".ck_span2").each(function(){
+		　　　　$(this).html("");
+		　　})
+		  $.ajax({
+			url : pathName + "/repairlist/selectone",
+			type : "get",
+			data : {
+				id : id
+			},
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				if(data1.note!=null){
+ 				$("#s_note").html(data1.note);}
+ 				$("#s_no").html(data1.no);
+ 				$("#s_state").html(data1.wokerorderState.information);
+ 				$("#s_class").html(data1.wokerorderClass.information);
+ 				$("#s_launch_time").html(data1.launchTime);
+ 				$("#s_worker").html(data1.worker.name);
+ 				$("#s_launchworker").html(data1.launchworker.name);
+ 				$("#s_launchworker_telephone").html(data1.launchworker.mobilePhone);
+ 				$("#s_finish_time").html(data1.finishTime);
+ 				$("#s_level").html(data1.level.information);
+ 				$("#s_a_no").html(data1.assets.no);
+ 				$("#s_a_class").html(data1.assets.baseAssetClass.assetCategory);
+ 				$("#s_a_state").html(data1.assets.sundryAssetsState.information);
+ 				if(data1.assets.publicProperty==1){
+ 					$("#s_a_public").html("公共资产");
+ 				}else{
+ 					$("#s_a_public").html("私有资产");
+ 				}
+ 				if(data1.assets.worker!=null){
+ 				$("#s_a_worker").html(data1.assets.worker.name);
+ 				}
+ 				if(data1.assets.position!=null){
+ 					if(data1.assets.position.note!=null){
+ 		 				$("#s_a_p_note").html(data1.assets.position.note);
+ 		 				}
+ 					$("#s_a_p_no").html(data1.assets.position.no);
+ 				}
+ 				if(data1.assets.baseDepartment!=null){
+ 					$("#s_a_p").html(data1.assets.baseDepartment.department);
+ 				}
+ 				$("#s_a_waynote").html(data1.assets.wayNote);
+ 				$("#s_a_way").html(data1.assets.sundryAssetsWay.information);
+ 				$("#s_a_deadline").html(data1.assets.warrantyDeadline);
+ 				if(data1.assets.note!=null){
+ 					$("#s_a_note").html(data1.assets.note);
+ 				}
+			}
+		})
+		  
+		  $('.ck_yy').show();	
+	}
+	//点击tr
+	function click1(t) {
+		$(".data").removeAttr("style");
+		$(".check_qx").removeAttr("checked");
+		$(t).attr("style", "background-color: #ffff99");
+		$("input[type=checkbox]", t).prop("checked", "checked");
+	}
+	//翻页
+	function pageleft() {
+		if($("#page").html()==1){
+			alert("已经是第一页了");
+		}else{
+			$("#page").html($("#page").html()-1)
+		}
+		select();
+	}
+	function pageright() {
+		if($("#page").html()==$("#pagesize").html()){
+			alert("已经是尾页了");
+		}else{
+			$("#page").html(parseInt($("#page").html())+1);
+		}
+		select();
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+	//清空修改添加div
+	function clear() {
+		$("[id^='iu_']").each(function(){
+		　　　　$(this).val("");
+		　　})
+		  $("#qqz").val("");
+		$("#iu_assets").html("");
+	}
+	//日期转化
+	Date.prototype.Format = function(fmt) { //author: meizz 
+		var o = {
+			"M+" : this.getMonth() + 1, //月份 
+			"d+" : this.getDate(), //日 
+			"h+" : this.getHours(), //小时 
+			"m+" : this.getMinutes(), //分 
+			"s+" : this.getSeconds(), //秒 
+			"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+			"S" : this.getMilliseconds()
+		//毫秒 
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+						: (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+	//更新
+	function update(id) {
+		$("#iu_state").removeAttr("disabled");
+		$("i_id").val(id);
+		$("#add").hide();
+		$("#save").show();
+ 		clear();
+ 		 $.ajax({
+ 			url : pathName + "/repairlist/selectone",
+ 			type : "get",
+ 			data : {
+ 				id : id
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				$("#i_id").val(data1.id);
+ 				$("#iu_no").val(data1.no);
+ 				$("#iu_state").val(data1.workerorderStateId);
+ 				$("#iu_assets_public").val(data1.assets.publicProperty);
+ 				changepublic(data1.assets.publicProperty);
+ 				$("#iu_time").val(new Date(data1.launchTime).Format("yyyy-MM-dd hh:mm:ss"));
+ 				$("#iu_workorderclass").val(data1.workerorderClassId);
+ 				$("#iu_problem").val(data1.note);
+ 				$("#iu_hopefinishtime").val(new Date(data1.finishTime).Format("yyyy-MM-dd"));
+ 				$("#iu_level").val(data1.levelId);
+ 				$("#iu_worker_id").val(data1.workerId);
+ 				$("#qqz").val(data1.worker.name);
+ 				changeworker();
+ 				$("#iu_launchworker_id").val(data1.launchworkerId);
+ 				$("#iu_launchworker").val(data1.launchworker.name);
+ 				if(data1.assets.position!=null){
+	 				$("#iu_position").val(data1.assets.position.position);
+	 				changeposition();
+ 				}
+ 				$("#iu_assets").val(data1.assetId);
+ 				changeassets();
+ 				if(data1.worker!=null){
+ 					$("#iu_assets_worker").val(data1.worker.name)
+ 				}
+ 			}
+ 		})
+ 		$('.zx_yy').show();		
+	}
+	function realupdate() {
+		if(check()){
+			$.ajax({
+	 			url : pathName + "/repairlist/update",
+	 			type : "get",
+	 			data : {
+	 				id:$("#i_id").val(),
+	 				no:$("#iu_no").val(),
+	 				workerorderStateId:$("#iu_state").val(),
+	 				launchTime: new Date($("#iu_time").val()),
+	 				workerorderClassId:$("#iu_workorderclass").val(),
+	 				note:$("#iu_problem").val(),
+	 				finishTime:new Date($("#iu_hopefinishtime").val()),
+	 				levelId:$("#iu_level").val(),
+	 				workerId:$("#iu_worker_id").val(),
+	 				launchworkerId:$("#iu_launchworker_id").val(),
+	 				assetId:$("#iu_assets").val()
+	 			},
+	 			dataType : "json",
+	 			async : false,
+	 			contentType : "application/json;charset=UTF-8",
+	 			success : function(d) {
+	 				alert("更新成功");
+	 			}
+	 		})
+		}else{
+			alert("带*的东西还没填完");
+		}
+	}
+	//添加按钮
+	function add() {
+		
+		$("#iu_assets_state").attr("disabled","disabled");
+		$("#save").hide();
+		$("#add").show();
+ 		clear();
+ 		var date = new Date();
+ 		$("#iu_time").val(date.Format("yyyy-MM-dd hh:mm:ss"));
+ 		$("#iu_state").val(1);
+ 		$("#iu_state").attr("disabled", "disabled");
+ 		
+ 		$.ajax({
+ 			url : pathName + "/getuser",
+ 			type : "get",
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				$("#iu_launchworker_id").val(data1.id);
+ 				$("#iu_launchworker").val(data1.name);
+ 			}
+ 		})
+ 		 $.ajax({
+ 			url : pathName + "/repairlist/selectmax",
+ 			type : "get",
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				$("#iu_no").val(data1);
+ 			}
+ 		})
+ 		
+		$('.zx_yy').show();		
+	}
+	function check() {
+		if($("#iu_workorderclass").val()==null||$("#iu_workorderclass").val()==""||
+		$("#iu_problem").val()==null||$("#iu_problem").val()==""||
+		$("#iu_hopefinishtime").val()==null||$("#iu_hopefinishtime").val()==""||
+		$("#iu_level").val()==null||$("#iu_level").val()==""||
+		$("#qqz").val()==null||$("#qqz").val()==""||
+		$("#iu_assets").val()==null||$("#iu_assets").val()==""){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	function realadd() {
+		var no="";
+		$.ajax({
+ 			url : pathName + "/repairlist/selectmax",
+ 			type : "get",
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				no=data1;
+ 			}
+ 		})
+		if(check()){
+			if($("#iu_no").val()<no){
+				alert("你下手晚了，这个号码被人用了,我给你生成了个新的号码");
+				$("#iu_no").val(no);
+			}else{
+				$.ajax({
+		 			url : pathName + "/repairlist/add",
+		 			type : "get",
+		 			data : {
+		 				no:$("#iu_no").val(),
+		 				workerorderStateId:$("#iu_state").val(),
+		 				launchTime: new Date($("#iu_time").val()),
+		 				workerorderClassId:$("#iu_workorderclass").val(),
+		 				note:$("#iu_problem").val(),
+		 				finishTime:new Date($("#iu_hopefinishtime").val()),
+		 				levelId:$("#iu_level").val(),
+		 				workerId:$("#iu_worker_id").val(),
+		 				launchworkerId:$("#iu_launchworker_id").val(),
+		 				assetId:$("#iu_assets").val()
+		 			},
+		 			dataType : "json",
+		 			async : false,
+		 			contentType : "application/json;charset=UTF-8",
+		 			success : function(data1) {
+		 				if(data1==-1){
+		 					alert("添加失败");
+		 				}else{
+		 					select();
+		 					$('.zx_yy').hide();	
+		 					alert("添加成功");
+		 				}
+		 			}
+		 		})
+			}
+		}else{
+			alert("带*的东西还没填完");
+		}
+	}
+	//改变员工
+	function changeworker(){
+		$.ajax({
+ 			url : pathName + "/repairlist/changeworker",
+ 			type : "get",
+ 			data : {
+ 				name:$("#qqz").val()
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				if(data1.worker== null){
+ 					alert("没有这号人");
+ 					/* $("#iu_depatment").val(""); */
+ 	 				$("#iu_telephone").val("");
+ 	 				$("#iu_worker_id").val("");
+ 				}else{
+ 				/* if(data1.position!=null){
+ 					 $("#iu_depatment").val(data1.position.position);
+ 					} */
+ 					$("#iu_telephone").val(data1.worker.mobilePhone);
+ 					$("#iu_worker_id").val(data1.worker.id);
+ 					$("#iu_depatment").val(data1.worker.department);
+ 				}
+ 			}
+ 		})
+	}
+	//改变位置
+	function changeposition(){
+		$("#iu_assets").html("");
+		$.ajax({
+ 			url : pathName + "/repairlist/changeposition",
+ 			type : "get",
+ 			data : {
+ 				position:$("#iu_position").val()
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				if(data1.position== null){
+ 					alert("没有这号位置");
+ 					$("#iu_position_no").val("");
+ 	 				$("#iu_assets").html("");
+ 				}else{
+ 					$("#iu_position_no").val(data1.position.no);
+ 					$("#iu_position_note").val(data1.position.note);
+ 					var assets=data1.assets;
+ 					for (var i = 0; i < assets.length; i++) {
+ 						var a = $("<option>", {
+ 							text : assets[i].assetDesc,
+ 							value : assets[i].id
+ 						});
+ 						$("#iu_assets").append(a);
+					}
+ 					$("#iu_assets").val("");
+ 					changeassets();
+ 				}
+ 			}
+ 		})
+	}
+	function changeassets(){
+		if($("#iu_assets").val()==null||$("#iu_assets").val()==""){
+			$("#iu_assets_no").val("");
+			$("#iu_assets_state").val("");
+			$("#iu_assets_way").val("");
+			$("#iu_assets_deadline").val("");
+			$("#iu_assets_class").val("");
+			$("#iu_assets_note").val("");
+			$("#iu_assets_worker").val("");
+			return;
+		}
+		$.ajax({
+ 			url : pathName + "/assets/selectbypk",
+ 			type : "get",
+ 			data : {
+ 				id:$("#iu_assets").val()
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				$("#iu_assets_no").val(data1.no);
+ 				$("#iu_assets_state").val(data1.sundryAssetsState.id);
+ 				$("#iu_assets_way").val(data1.sundryAssetsWay.information);
+ 				if(data1.warrantyDeadline!=null){
+ 					var a=new Date(data1.warrantyDeadline);
+ 					$("#iu_assets_deadline").val(a.Format("yyyy-MM-dd"));
+ 				}
+ 				$("#iu_assets_class").val(data1.baseAssetClass.assetCategory);
+ 				$("#iu_assets_note").val(data1.note);
+ 				
+ 			}
+ 			
+ 		})
+	}
+	function set(){
+		$('.zt_yy').show();
+		setTimeout(function(){
+			$('.zt_yy').hide();
+		},2000);
+	}
+	//公共资产换
+	function changepublic(t){
+		$("#iu_assets").html("");
+		$("#iu_assets").val("");
+		$("#iu_assets_no").val("");
+		if(t==1){
+			$("#iu_pub_star").html("");
+			$("#iu_position").attr("onclick","");
+			$("#iu_position").val("");
+			$("#iu_position_no").val("");
+			$.ajax({
+	 			url : pathName + "/repairlist/selectpublicassets",
+	 			type : "get",
+	 			dataType : "json",
+	 			async : false,
+	 			contentType : "application/json;charset=UTF-8",
+	 			success : function(data) {
+	 				for (var i = 0; i < data.length; i++) {
+	 					var a = $("<option>", {
+	 						text : data[i].assetDesc,
+	 						value : data[i].id
+	 					});
+	 					$("#iu_assets").append(a);
+					}
+	 			}
+	 			
+	 		})
+		}else{
+			$("#iu_pub_star").html("*");
+			$("#iu_position").attr("onclick","dogood()");
+		}
+		$("#iu_assets").val("");
+		changeassets();
+	}
+	//往下翻
+	function dogood() {
+		$('.xz_xl1').slideToggle();
+		$('.xz_xl1 span').toggle(function(){
+			$('.xz_xl1 li').removeClass('click_bg');
+			$(this).parent('li').addClass('click_bg');
+			$(this).parent('li').children('ul').slideDown();	
+		},function(){
+			$(this).parent('li').removeClass('click_bg');
+			$(this).parent('li').children('ul').slideUp();		
+		})
+	}
+</script>
+</head>
+
+<body>
+	<!--main-->
+	<div class="main">
+		<ul>
+			<li class="li1"><label for="wzbh">工单编号</label> <input type="text" id="wzbh"></li>
+			<li class="li1"><label>工单类型</label> <select id="workorderclass">
+					<option value="">全部</option>
+			</select></li>
+
+			<li class="li3">
+				<button onclick="select()">搜&nbsp;索</button>
+				<button onclick="reset()">重&nbsp;置</button>
+			</li>
+			<li class="li1"><label>工作优先级</label> <select id="level">
+					<option value="">全部</option>
+			</select></li>
+			<li class="li1"><label>工单状态</label> <select id="state">
+					<option value="">全部</option>
+			</select></li>
+			<li class="li3">
+				<button id="xzwx" onclick="add()">新建工单</button>
+				<button>预防性维护列表</button>
+			</li>
+			<li class="li1"><label>发起时间</label> <!--<input class="inp1" type="date" id="yjrq1">--> <input type="text" data-date-format="yyyy-mm-dd" id="bxrq1" class="form-control input-date-time-h inp1" readonly> <span class="span1">--</span> <!--<input class="inp1" type="date" id="yjrq2">--> <input type="text" data-date-format="yyyy-mm-dd" id="bxrq2" class="form-control input-date-time-h inp1" readonly></li>
+			<li class="li1"><label>资产类别</label> <select id="assetsclass">
+					<option value="">全部</option>
+
+			</select></li>
+		</ul>
+	</div>
+
+	<!--展开-->
+	<div class="button_sh">
+		<img src="img/sousuo_s1.png" />
+	</div>
+
+	<!--table-->
+	<div class="div_tb">
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr class="tr_tb">
+				<td><div></div></td>
+				<td><div>工单编号</div></td>
+				<td><div>工单类型</div></td>
+				<td><div>工单状态</div></td>
+				<td><div>资产编号</div></td>
+				<td><div>请求者</div></td>
+				<td><div>优先级</div></td>
+				<td><div class="tb_cz">操作</div></td>
+			</tr>
+			<tbody id="tablebd">
+				<!-- <tr>
+					<td><div>
+							<input name="check_qx" type="checkbox" />
+						</div></td>
+					<td><div>10000001</div></td>
+					<td><div>故障</div></td>
+					<td><div>打开</div></td>
+					<td><div>10021</div></td>
+					<td><div>xxx</div></td>
+					<td><div>紧急</div></td>
+					<td>
+						<div class="tb_cz">
+							<a class="xg">修改</a> <a class="ck">查看</a> <a class="sc">删除</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><div>
+							<input name="check_qx" type="checkbox" />
+						</div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td>
+						<div class="tb_cz">
+							<a class="xg">修改</a> <a class="ck">查看</a> <a class="sc">删除</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><div>
+							<input name="check_qx" type="checkbox" />
+						</div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td>
+						<div class="tb_cz">
+							<a class="xg">修改</a> <a class="ck">查看</a> <a class="sc">删除</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><div>
+							<input name="check_qx" type="checkbox" />
+						</div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td><div></div></td>
+					<td>
+						<div class="tb_cz">
+							<a class="xg">修改</a> <a class="ck">查看</a> <a class="sc">删除</a>
+						</div>
+					</td>
+				</tr> -->
+			</tbody>
+			<tr>
+				<td colspan="21" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1"><select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+							</select></li>
+							<li class="t_div2"><img src="img/zuo1.png" onclick="pageleft()" /> <span id="page"></span><span>/</span><span id="pagesize"></span> <img src="img/you1.png" onclick="pageright()" /></li>
+							<li class="t_div3"><span>跳转至</span> <input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}" /> <span>页</span></li>
+							<li class="t_div4">共<span id="count"></span>条数据，当前显示<span id="start"></span><span>-</span><span id="end"></span></li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="fh">
+		<!--<button>返&nbsp;回</button>-->
+		<button>导&nbsp;出</button>
+	</div>
+
+	<!--新增页面-->
+	<div class="zx_yy">
+		<div class="xz_div_z">
+			<div class="xz_title">
+				<img id="xz_close_img" src="img/u122_6.png" />
+			</div>
+			<div class="xz_div0">
+				<div class="xz_div1">
+					<ul class="xz_ul">
+						<li class="xz_li1"><label class="lab1">工单编号</label><input type="hidden" id="i_id"> <input class="zd" type="text" readonly id="iu_no" /></li>
+						<li class="xz_li1"><label class="lab1">工单状态</label> <!-- <input class="zd" type="text" readonly /> --> <select id="iu_state" onchange="set()">
+
+						</select></li>
+						<li class="xz_li1"><label class="lab1">发起时间</label> <input class="zd" type="text" readonly id="iu_time" /></li>
+						<li class="xz_li1"><label class="lab1">工单类型</label> <select id="iu_workorderclass">
+
+						</select>*</li>
+						<li class="xz_li1"><label class="lab1">问题描述</label> <textarea type="text" id="iu_problem"></textarea>*</li>
+						<li class="xz_li1"><label class="lab1">希望完成时间</label> <input type="text" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" id="iu_hopefinishtime" readonly>*</li>
+						<li class="xz_li1"><label class="lab1">工作优先级</label> <select id="iu_level">
+
+						</select>*</li>
+					</ul>
+					<ul class="xz_ul1">
+						<li class="xz_qq">请求者信息</li>
+						<li><label class="lab4">请求者</label>
+							<div class="xz_qqz">
+								<input class="inp2" id="qqz" type="text" onchange="changeworker()" /> <input type="hidden" id="iu_worker_id"> <img src="img/zh.png" />
+							</div>*</li>
+						<li><label class="lab4">部门</label> <input type="text" readonly="readonly" class="zd" id="iu_depatment" required /></li>
+						<li><label class="lab4">电话</label> <input type="text" readonly="readonly" class="zd" id="iu_telephone" required /></li>
+						<li><label class="lab4">创建人</label> <input type="text" class="zd" id="iu_launchworker" readonly /><input type="hidden" id="iu_launchworker_id"></li>
+						<div class="xz_xl" id="iudata_worker">
+							<ul>
+								<li><span class="xz_sp1">></span> <span class="xz_sp1">技术部</span>
+									<ul class="xl_ul">
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置1</div></li>
+									</ul></li>
+							</ul>
+							<ul>
+								<li><span class="xz_sp1">></span> <span class="xz_sp1">市场部</span>
+									<ul class="xl_ul">
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置1</div></li>
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置2</div></li>
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置3</div></li>
+									</ul></li>
+							</ul>
+						</div>
+					</ul>
+				</div>
+				<div class="xz_div2">
+					<div class="xz_zc">资产/位置编号</div>
+					<ul class="xz_ul2">
+					<li class="xz_li2"><label class="lab1">资产属性</label><select class="xz_sel2" id="iu_assets_public" onchange="changepublic(this.value)"><option value="0">私有财产</option><option value="1">公共财产</option></select>*</li>
+						<li class="xz_li2"><label class="lab1">位置编号</label> <input type="text" id="iu_position_no" class="xz_inp2" readonly /> <input class="xl_inp" type="text" readonly id="iu_position" /><span id="iu_pub_star">*</span></li>
+						<div class="xz_xl1" id="iudata_position">
+							<ul>
+								<li><span class="xz_sp1">></span> <span class="xz_sp1">技术部</span>
+									<ul class="xl_ul">
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置1</div></li>
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置2</div></li>
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置3</div></li>
+									</ul></li>
+							</ul>
+							<ul>
+								<li><span class="xz_sp1">></span> <span class="xz_sp1">市场部</span>
+									<ul class="xl_ul">
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置1</div></li>
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置2</div></li>
+										<li><span class="xz_sp2">></span>
+											<div class="xz_sp1">位置3</div></li>
+									</ul></li>
+							</ul>
+						</div>
+
+						<li class="xz_li2"><label class="lab1">资产编号</label> <input type="text" class="xz_inp2" readonly id="iu_assets_no"  /> <select onchange="changeassets()" id="iu_assets">
+						</select>*</li>
+
+						<li class="xz_li2"><label class="lab1">资产状态</label> <select class="xz_sel2" readonly id="iu_assets_state" disabled="disabled"></select> </li>
+
+					</ul>
+					<ul class="xz_ul2">
+					<li class="xz_li2"><label class="lab1">授权员工</label> <input class="xz_sel2" id="iu_assets_worker" readonly /></li>
+						<li class="xz_li2"><label class="lab1">保修/外包</label> <input class="xz_sel2" id="iu_assets_way" readonly /></li>
+						<li class="xz_li2"><label class="lab1">保修截止日期</label> <input class="xz_sel2" id="iu_assets_deadline" readonly /></li>
+						<li class="xz_li2"><label class="lab1">资产类别</label> <input class="xz_sel2" id="iu_assets_class" readonly /></li>
+					</ul>
+					<ul class="xz_ul3">
+						<li class="ul3_li1">注释</li>
+						<li class="ul3_li2"><label>资产</label> <textarea id="iu_assets_note" readonly="readonly"></textarea></li>
+						<li class="ul3_li2"><label>位置</label> <textarea id="iu_position_note" readonly="readonly"></textarea></li>
+					</ul>
+				</div>
+				<div class="but">
+					<button id="add" onclick="realadd()">添&nbsp;加</button>
+					<button id="save" onclick="realupdate()">保&nbsp;存</button>
+					<button id="close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--查看页面-->
+	<div class="ck_yy" style="height: 747px;">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="img/u122_6.png">
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li"><span class="ck_span1">工单编号</span> <span class="ck_span2" id="s_no">1000023</span></li>
+				<li class="ck_li"><span class="ck_span1">工单状态</span> <span class="ck_span2" id="s_state">10225465</span></li>
+				<li class="ck_li"><span class="ck_span1">工单类型</span> <span class="ck_span2" id="s_class">打开</span></li>
+				<li class="ck_li"><span class="ck_span1">发起时间</span> <span class="ck_span2" id="s_launch_time">使用中</span></li>
+				<li class="ck_li"><span class="ck_span1">问题描述</span> <span class="ck_span2" id="s_note">维修</span></li>
+				<li class="ck_li"><span class="ck_span1">请求者</span> <span class="ck_span2" id="s_worker">电器</span></li>
+				<li class="ck_li"><span class="ck_span1">创建人</span> <span class="ck_span2" id="s_launchworker">2016/5/22</span></li>
+				<li class="ck_li"><span class="ck_span1">电话</span> <span class="ck_span2" id="s_launchworker_telephone">技术部</span></li>
+				<li class="ck_li"><span class="ck_span1">期望完成日期</span> <span class="ck_span2" id="s_finish_time">故障，使用不了</span></li>
+				<li class="ck_li"><span class="ck_span1">工作优先级</span> <span class="ck_span2" id="s_level">106-415</span></li>
+				<li class="ck_li"><span class="ck_span1">资产编号</span> <span class="ck_span2" id="s_a_no">2014/5/22</span></li>
+				<li class="ck_li"><span class="ck_span1">资产类型</span> <span class="ck_span2" id="s_a_class">保修</span></li>
+				<li class="ck_li"><span class="ck_span1">资产属性</span> <span class="ck_span2" id="s_a_public">保修</span></li>
+				<li class="ck_li"><span class="ck_span1">授权员工</span> <span class="ck_span2" id="s_a_worker">保修</span></li>
+				<li class="ck_li"><span class="ck_span1">资产状态</span> <span class="ck_span2" id="s_a_state">2014/5/22</span></li>
+				<li class="ck_li"><span class="ck_span1">位置编号</span> <span class="ck_span2" id="s_a_p_no">管理员</span></li>
+				<li class="ck_li"><span class="ck_span1">部门</span> <span class="ck_span2" id="s_a_p"></span></li>
+				<li class="ck_li"><span class="ck_span1">保修/外包备注</span> <span class="ck_span2" id="s_a_waynote">管理员</span></li>
+				<li class="ck_li"><span class="ck_span1">保修/外包</span> <span class="ck_span2" id="s_a_way"></span></li>
+				<li class="ck_li"><span class="ck_span1">保修截止日期</span> <span class="ck_span2" id="s_a_deadline"></span></li>
+				<li class="ck_li"><span class="ck_span1">注释(资产)</span> <span class="ck_span3" id="s_a_note"></span></li>
+				<li class="ck_li"><span class="ck_span1">注释(位置)</span> <span class="ck_span3" id="s_a_p_note"></span></li>
+			</ul>
+		</div>
+	</div>
+
+	<!--删除页面-->
+	<div class="sc_yy">
+	<input type="hidden" id="delete_id">
+		<div class="sc_div">
+			<div class="xz_title">
+				<img id="sc_close_img" src="img/u122_6.png" onclick="hidedelete()" />
+			</div>
+			<ul class="sc_ul">
+				<li class="sc_li1">确认删除</li>
+				<li class="sc_li3">
+					<button class="qr" onclick="realdelete()">确认</button>
+					<button class="qx" onclick="hidedelete()">取消</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+<!--资产状态发生改变-->
+<div class="zt_yy" style="display:none">
+	<div class="zt_div">
+    	<div class="xz_title">
+            <img id="sc_close_img" src="img/u122_6.png" onclick="closeztyy()"/>
+        </div>
+        <div class="qr_div">请确认目前资产状态是否以改变</div>
+    </div>
+</div>
+	<script type="text/javascript" src="js/XZ_weixiu.js"></script>
+	<script type="text/javascript" src="js/XZ_delect.js"></script>
+</body>
+</html>

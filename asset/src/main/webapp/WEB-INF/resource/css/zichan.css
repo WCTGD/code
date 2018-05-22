@@ -1,0 +1,99 @@
+﻿@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input,select,textarea{ margin: 0; padding: 0; outline:none;}
+table,tr,td{ margin:0; padding:0;}
+
+/*main*/
+.main{ width: 100%;}
+.main ul{ width: 1086px; padding: 30px 0; margin: auto; overflow: hidden;}
+.main ul .li1{ float: left; height: 28px; overflow: hidden; display: inline-block; margin-right: 20px; margin-bottom: 20px;}
+.main ul .li3{ float: right; height: 28px; overflow: hidden; display: inline-block; margin-right: 20px; margin-bottom: 20px;}
+.li1 label{ font-size: 18px; color: #000; font-weight: bold; text-align: right;  float: left; margin-right: 10px; line-height: 28px; width:110px;}
+.li1 input{ width: 220px; height: 26px; border: 0; border: solid 1px #ccc;}
+.li1 .inp1{ width: 97px; height: 26px; border: 0; border: solid 1px #ccc;}
+.span1{ font-weight:bold;}
+.li1 select{ width: 222px; height: 26px; border: 0; border: solid 1px #ccc; outline:none;}
+.li2 label{ font-size: 12px; color: #666; line-height: 28px; float: left; margin: 0 20px 0 5px;}
+.li2 input{ width: 14px; height: 14px; border: 0;border: solid 1px #ccc; float: left; margin-top: 7px;}
+.main button{ width: 90px; height: 28px; font-size: 12px;}
+#bxrq1,#bxrq2{ width:101px;}
+#stuse1,#stuse2{ width:101px;}
+
+/*展开*/
+.button_sh{ width:60px; height:40px; line-height:40px; margin:auto; text-align:center;}
+
+/*content*/
+.div_tb{width:96%; padding:10px 0;overflow:auto; margin:auto; font-size:12px; color:#333; text-align:center; white-space:nowrap; margin:auto;}
+table{border-top:solid 1px #009dd9;border-left:solid 1px #009dd9;border-right:solid 1px #009dd9; margin:auto;}
+.tr_tb{ background:#73c8e9;}
+.div_tb div{border-bottom:solid 1px #009dd9; height:38px; line-height:18px; padding:5px 50px;}
+.div_tb div a{ color:#009dd9; cursor:pointer;}
+.div_tb .tb_cz{ padding:5px 50px 5px 400px;}
+
+.td_zg{ overflow:hidden; height:28px; line-height:28px; position:relative;}
+.t_div1{ float:left; margin-top:-2px;}
+.t_div2{ overflow:hidden; float:left; margin-left:20px;}
+.t_div2 img{ float:left; margin-top:3px;}
+.t_div2 span{ float:left; font-size:14px; font-weight:bold; margin-left:10px; margin-right:10px;}
+
+.t_div3{ float:left; font-size:12px; margin-left:20px;}
+.t_div3 input{ width:40px; margin-top:-2px; outline:none;}
+.t_div4{ width:180px; font-size:12px; position:absolute; left:50%; margin-left:-90px; text-align:center;}
+
+.fh{ width:96%; margin:auto; overflow:hidden; margin-bottom:50px;}
+.fh button{ width: 90px; height: 28px; font-size: 12px; margin-top:30px; float:right;}
+
+/*新增页面*/
+.zx_yy{ width:100%; position:fixed; z-index:10; top:0; left:0; background:rgba(0,0,0,0.5); display:none;}
+.xz_div_z{ width:860px; overflow:hidden; position:absolute; left:50%; margin-left:-430px; top:50%;}
+.xz_title{ width:100%; height:30px; background:#009dd9; position:relative;}
+.xz_title img{ position:absolute; top:8px; right:10px;}
+.xz_div0{ width:100%; height:100%; overflow:auto;background:#fff;}
+.xz_div1{ overflow:hidden; border-bottom:solid 1px #ccc; width:780px; margin-left:30px;}
+.xz_ul{ overflow:hidden; margin-top:30px; margin-left:15px; float:left;}
+.xz_li1{ margin-bottom:20px; width:350px;color:#ff003a}
+.lab1{font-size: 16px; color: #0075CC; text-align: right;  float: left; margin-right: 10px; line-height: 28px; width:110px;}
+.lab2{font-size: 16px; color: #0075CC; float: right; margin-right: 10px; line-height: 28px; width:314px;}
+.xz_li1 input{ width: 220px; height: 26px; border: 0; border: solid 1px #ccc;}
+.xz_li1 .xz_inp1{ background:#ccc; }
+.xz_li1 .xz_inp2{ background:#ccc; width:60px;float:left; height:24px;}
+.xz_li1 select{ width: 222px; height: 26px; border: 0; border: solid 1px #ccc; outline:none;}
+.xz_li1 .xz_sel1{ width: 160px;}
+.xz_li1 textarea{ height:112px; width:314px; margin-left:26px;border: 0; border: solid 1px #ccc;}
+
+.xz_div2{ width:780px; margin-left:30px;}
+.xz_div2 ul{ overflow:hidden;}
+.xz_li2{ float:left; width:260px; margin-bottom:5px; margin-top:10px;color:#ff003a}
+.xz_li2 .lab1{ width:80px;}
+.xz_li2 input{ width:150px; height:24px;border: 0; border: solid 1px #ccc;}
+
+.lab3{font-size: 16px; color: #0075CC; float: left; line-height: 28px; width:700px; margin-left:50px;}
+.xz_li2 textarea{ width:712px; height:112px; margin-left:50px;border: 0; border: solid 1px #ccc; outline:none;}
+
+.but{ width:300px; margin:auto; margin-bottom:50px;margin-top:20px;}
+.but button{ width:90px; height:26px; font-size:12px; margin-left:40px;}
+
+/*删除页面*/
+.sc_yy{width:100%; position:fixed; z-index:10; top:0; left:0; background:rgba(0,0,0,0.5); display:none;}
+.sc_div{ width:320px; height:160px; position:absolute; left:50%; margin-left:-80px; top:50%; margin-top:-160px;}
+.sc_ul{ background:#fff;}
+.sc_li1{ width:100%; height:50px; line-height:50px; color:#0000FF; font-size:18px; font-weight:bold; text-align:center;}
+.sc_li2{ width:100%; height:40px; line-height:40px; font-size:12px;}
+.sc_li2 input{ margin-left:88px;}
+.sc_li3{ width:100%; height:40px; line-height:40px;}
+.sc_li3 button{ width:90px; height:26px; font-size:12px; margin-left:115px;}
+
+/*查看页面*/
+.ck_yy{width:100%; position:fixed; z-index:10; top:0; left:0; background:rgba(0,0,0,0.5); display:none;}
+.ck_div{ width:909px; height:421px; background:#fff; position:absolute; top:50%; margin-top:-212px; left:50%; margin-left:-454px;border-radius:6px 6px 0 0; overflow:hidden;}
+.ck_ul{ border-top:solid 1px #0098e1;border-left:solid 1px #0098e1; overflow:hidden;}
+.ck_li{ float:left; overflow:hidden;}
+.ck_span1{ display:block; float:left; width:123px; height:38px; color:#333; font-size:16px; text-align:center; line-height:38px; border-bottom:solid 1px #0098e1;border-right:solid 1px #0098e1; background:url(../img/u155.png);}
+.ck_span2{ display:block; float:left; width:329px; height:38px; color:#333; font-size:16px; text-align:center; line-height:38px;
+border-bottom:solid 1px #0098e1;border-right:solid 1px #0098e1;}

@@ -1,0 +1,46 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0; padding-bottom:200px;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input,select,textarea{ margin: 0; padding: 0; outline:none;}
+table,tr,td{ margin:0; padding:0;}
+
+/*table*/
+.tr_bg{ background:#ffff99;}
+.div_tb{width:80%; padding:10px 0;overflow:hidden; font-size:13px; color:#333; text-align:center; white-space:nowrap; margin-left: 10%; float: left;}
+.title_tb{ height: 28px;background: #003333; border:solid 1px #003333;}
+.gl_1{float:left; border: 1px solid #003333; height: 488px; width: 50%;}
+.gl_1_ul{width:100%; overflow: hidden; margin-top: 20px; border-bottom: solid 1px #003333;}
+.gl_1_ul li{float:left;width: 50%; margin-bottom: 20px;}
+.gl_1_ul label{float: left; width: 25%; text-align: right; font-weight: normal; margin-right: 1%; font-size: 13px;}
+.gl_1_ul input{float: left; width: 70%; height: 22px; border:1px solid #ccc; background: #ccc;}
+
+.gl_1_div1{overflow: hidden; width: 100%; height: 21px;border-bottom: solid 1px #ccc;}
+.gl_1_div1 a{display: block;  padding: 0 10px; height: 20px; border: solid 1px #999; border-radius: 5px; float: left;cursor: pointer; margin: 0 5px 0 2px;}
+.a_bg{background: #003333; color: #fff;}
+.gl_1_div1 span{ float: right;display: block;  padding: 0 10px; height: 20px; border: solid 1px #999; border-radius: 5px;color: #000; cursor: pointer; margin: 0 5px 0 2px;}
+.gl_1_div1 .gl_xg{ float: right;}
+.gl_1_div1 .gl_tj{ float: right;}
+.gl_yh_div,.gl_qx_div{display:none;}
+.gl_1_div2{overflow:auto; height: 278px;}
+.gl_1_div2 ul{height: auto;}
+.gl_1_div2 li{width:100%; height: 28px;border-bottom: solid 1px #ccc;  line-height: 28px; text-align: left;}
+.gl_1_div2 input{ border:none; background: none; width: 100%; height: 100%;}
+.gl_2{float:left; border: 1px solid #003333; height: 488px; width: 50%; display: none;}
+.gl_ul_k{height: 458px; overflow: auto;}
+.gl_2_ul1{width: 20%;border-right: 1px solid #003333; display: none;}
+.gl_2_ul1 li{height: 28px; line-height: 28px; border-bottom: 1px solid #003333;}
+.ul_tb2{float: left; width: 20%;border-left:1px solid #666; border-right:1px solid #666;}
+.ul_tb2 span{ display: block; height: 28px;line-height: 28px; text-align: center; border-bottom: solid 1px #666;}
+.ul_tb2 a{ display: block; height: 28px;line-height: 28px; text-align: center; border-bottom: solid 1px #666; color: #000; cursor: default;}
+.sz_div{ display: none;}
+.sz_div table{border-left:1px solid #666;width:80%; float: left;}
+.sz_div div{border-bottom:1px solid #666; border-right:1px solid #666; height: 28px; line-height: 28px;}
+#gl_js,#gl_yh,#gl_qx{display: none;}
+.qx_button{float: left; padding: 10px 0;}
+.qx_button a{display: block; color: #000; font-size: 12px; width: 70px; height: 30px; line-height: 30px; text-align: center; border-radius: 8px; margin-bottom: 20px; cursor: pointer;}
+.qx_bc{background: #cc6600;}

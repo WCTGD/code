@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyb2c.dao.SupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.xyb2c.pojo.Supplier" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="zip_code" property="zipCode" jdbcType="CHAR" />
+    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="contact_name" property="contactName" jdbcType="VARCHAR" />
+    <result column="contact_job" property="contactJob" jdbcType="VARCHAR" />
+    <result column="contact_address" property="contactAddress" jdbcType="VARCHAR" />
+    <result column="service" property="service" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, no, supplier_name, country, province, city, zip_code, telphone, fax, email, contact_name, 
+    contact_job, contact_address, service, flag, create_time, modify_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.SupplierExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from supplier
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xyb2c.pojo.SupplierExample" >
+    delete from supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xyb2c.pojo.Supplier" >
+    insert into supplier (id, no, supplier_name, 
+      country, province, city, 
+      zip_code, telphone, fax, 
+      email, contact_name, contact_job, 
+      contact_address, service, flag, 
+      create_time, modify_time)
+    values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, #{supplierName,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{zipCode,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, #{contactJob,jdbcType=VARCHAR}, 
+      #{contactAddress,jdbcType=VARCHAR}, #{service,jdbcType=VARCHAR}, #{flag,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xyb2c.pojo.Supplier" >
+    insert into supplier
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="supplierName != null" >
+        supplier_name,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="zipCode != null" >
+        zip_code,
+      </if>
+      <if test="telphone != null" >
+        telphone,
+      </if>
+      <if test="fax != null" >
+        fax,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="contactName != null" >
+        contact_name,
+      </if>
+      <if test="contactJob != null" >
+        contact_job,
+      </if>
+      <if test="contactAddress != null" >
+        contact_address,
+      </if>
+      <if test="service != null" >
+        service,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null" >
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=CHAR},
+      </if>
+      <if test="telphone != null" >
+        #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
+        #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactJob != null" >
+        #{contactJob,jdbcType=VARCHAR},
+      </if>
+      <if test="contactAddress != null" >
+        #{contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xyb2c.pojo.SupplierExample" resultType="java.lang.Integer" >
+    select count(*) from supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update supplier
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.no != null" >
+        no = #{record.no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supplierName != null" >
+        supplier_name = #{record.supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null" >
+        country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zipCode != null" >
+        zip_code = #{record.zipCode,jdbcType=CHAR},
+      </if>
+      <if test="record.telphone != null" >
+        telphone = #{record.telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fax != null" >
+        fax = #{record.fax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactName != null" >
+        contact_name = #{record.contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactJob != null" >
+        contact_job = #{record.contactJob,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactAddress != null" >
+        contact_address = #{record.contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.service != null" >
+        service = #{record.service,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update supplier
+    set id = #{record.id,jdbcType=INTEGER},
+      no = #{record.no,jdbcType=VARCHAR},
+      supplier_name = #{record.supplierName,jdbcType=VARCHAR},
+      country = #{record.country,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      zip_code = #{record.zipCode,jdbcType=CHAR},
+      telphone = #{record.telphone,jdbcType=VARCHAR},
+      fax = #{record.fax,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      contact_name = #{record.contactName,jdbcType=VARCHAR},
+      contact_job = #{record.contactJob,jdbcType=VARCHAR},
+      contact_address = #{record.contactAddress,jdbcType=VARCHAR},
+      service = #{record.service,jdbcType=VARCHAR},
+      flag = #{record.flag,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xyb2c.pojo.Supplier" >
+    update supplier
+    <set >
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null" >
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        zip_code = #{zipCode,jdbcType=CHAR},
+      </if>
+      <if test="telphone != null" >
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
+        contact_name = #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactJob != null" >
+        contact_job = #{contactJob,jdbcType=VARCHAR},
+      </if>
+      <if test="contactAddress != null" >
+        contact_address = #{contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="service != null" >
+        service = #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xyb2c.pojo.Supplier" >
+    update supplier
+    set no = #{no,jdbcType=VARCHAR},
+      supplier_name = #{supplierName,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      zip_code = #{zipCode,jdbcType=CHAR},
+      telphone = #{telphone,jdbcType=VARCHAR},
+      fax = #{fax,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      contact_name = #{contactName,jdbcType=VARCHAR},
+      contact_job = #{contactJob,jdbcType=VARCHAR},
+      contact_address = #{contactAddress,jdbcType=VARCHAR},
+      service = #{service,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="supplierSelect" resultMap="BaseResultMap">
+  	select * from supplier where flag='1'  limit #{start},#{pageSize}
+  </select>
+  <select id="countSupplier" resultType="java.lang.Integer">
+  	select count(*) from supplier where flag='1'
+  </select>
+  <select id="supplierSelectByNo" resultMap="BaseResultMap">
+  	select * from supplier where `no`=#{no}
+  </select>
+  <update id="supplierDeleteByNo" parameterType="com.xyb2c.pojo.Supplier">
+  	update supplier set flag='0' where `no` = #{no}
+  </update>
+  <select id="supplierAdd" resultMap="BaseResultMap">
+  	select MAX(no) as no from supplier
+  </select>
+  <insert id="supplierInsert" parameterType="com.xyb2c.pojo.Supplier">
+  	insert into supplier (`no`, supplier_name, 
+      country, province, city, 
+      zip_code, telphone, fax, 
+      email, contact_name, contact_job, 
+      contact_address, service)
+    values (#{no}, #{supplierName}, 
+      #{country}, #{province}, #{city}, 
+      #{zipCode}, #{telphone}, #{fax}, 
+      #{email}, #{contactName}, #{contactJob}, 
+      #{contactAddress}, #{service})
+  </insert>
+  <update id="updateSupplierByNo" parameterType="com.xyb2c.pojo.Supplier">
+  	update supplier
+  	 set  supplier_name = #{supplierName},country = #{country},province = #{province},city = #{city},zip_code = #{zipCode},
+	      telphone = #{telphone},fax = #{fax},email = #{email},contact_name = #{contactName},contact_job = #{contactJob},
+	      contact_address = #{contactAddress},service = #{service}
+    where `no` = #{no}
+  </update>
+  <select id="selectSupplierByShow" resultMap="BaseResultMap">
+  	select * from supplier where `id`=#{id}
+  </select>
+  
+</mapper>

@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+/*main*/
+.main{ width: 100%; height: 184px;}
+.main ul{ width: 1086px; height: 124px; padding: 30px 0; margin: auto; overflow: hidden;}
+.main ul .li1{ float: left; height: 28px; overflow: hidden; display: inline-block; margin-right: 20px; margin-bottom: 20px;}
+.main ul .li2{ float: left; height: 28px; overflow: hidden; display: inline-block; margin-right: 20px; margin-bottom: 20px; margin-left:40px;}
+.main .li1 label{ font-size: 18px; color: #000; font-weight: bold; text-align: right;  float: left; margin-right: 20px; line-height: 28px;}
+.main .li1 input{ width: 222px; height: 26px; border: 0; border: solid 1px #ccc;}
+.main .li2 label{ font-size: 12px; color: #666; line-height: 28px; float: left; margin: 0 20px 0 5px;}
+.main .li2 input{ width: 14px; height: 14px; border: 0;border: solid 1px #ccc; float: left; margin-top: 7px;}
+.main button{ width: 90px; height: 28px; font-size: 12px;}
+/*table*/
+.ma_ta{ width:96%; margin:auto; overflow:auto;}
+table{ border-top:solid 1px #009dd9; border-left:solid 1px #009dd9; margin:auto; min-width:1100px;}
+.ma_ta .first_tr div{ background:#73c8e9;}
+.ma_ta div{ font-family:"微软雅黑"; font-size:12px; color:#333; display:block; text-align:center; height:18px; line-height:18px; padding:5px 20px; border-bottom:solid 1px #009dd9; border-right:solid 1px #009dd9; }
+.ma_ta div p{ float:left; margin:0 5px; cursor:pointer;color:#009dd9;}
+.td_zg{ overflow:hidden; height:30px; line-height:30px; position:relative;}
+.t_div1{ float:left; margin-left:1%; margin-top:-2px;}
+.t_div2{ overflow:hidden; float:left; margin-left:30px;}
+.t_div2 img{ float:left; margin-top:3px;}
+.t_div2 span{ float:left; font-size:14px; font-weight:bold; margin-left:10px; margin-right:10px;}
+
+.t_div3{ float:left; font-size:12px; margin-left:30px; margin-top:-2px;}
+.t_div3 input{ width:20%;}
+.t_div4{ width:180px; font-size:12px; position:absolute; left:50%; margin-left:-90px; text-align:center;}
+
+.sc,.fh{ height: 28px; margin-top:30px; font-size: 12px; position:absolute;}
+.sc{ right:150px; width:90px;}
+.fh{ right:50px; width: 90px;}

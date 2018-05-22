@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<link href="css/XZ_yufangxingweihubiao.css" rel="stylesheet" type="text/css">
+<link type="text/css" href="css/XZ_delect.css" rel="stylesheet" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="css/jquery.gritter.css" />
+<link rel="stylesheet" href="css/datepicker.css" />
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<script src="js/date-time/bootstrap-datepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#iu_assets_public").val("");
+		$("#iu_position").attr("onclick","dogood()");
+		select();
+		var orderstate=getallworkeorderstate();
+		var department = getalldepartment();
+		var position = getallposition();
+		var jobclass = getalljobclass();
+		for (var i = 0; i < jobclass.length; i++) {
+			var a = $("<option>", {
+				text : jobclass[i].information,
+				value : jobclass[i].id
+			});
+			$("#iu_jobclass").append(a);
+		}
+		for (var i = 0; i < orderstate.length; i++) {
+			var a = $("<option>", {
+				text : orderstate[i].information,
+				value : orderstate[i].id
+			});
+			$("#iu_workerorder_state").append(a);
+		}
+		var b="";
+		for (var i = 0; i < department.small.length; i++) {
+// 			b += "<ul><li><span class='xz_sp1'>></span> <span class='xz_sp1'>";
+// 			b += department[i].department;
+// 			b += "</span><ul class='xl_ul'>";
+			b+="<ul><li><span class='xz_sp1'>></span> <span class='xz_sp1'>";
+			b+=department.small[i].department;
+			b+="</span><ul class='xl_ul'>";
+			for (var j = 0; j < position.length; j++) {
+				if (position[j].dId == department.small[i].id) {
+					b+="<li><span class='xz_sp2'>></span><div class='xz_sp1' onclick='getposition(this)'>";
+					b+=position[j].position
+					b+="</div></li>";
+// 					b += "<li><span class='xz_sp2'>></span><div class='xz_sp1' onclick='getposition(this)'>";
+					/* b+="<li><span class='xz_sp2'>></span><div class='xz_sp1'>";
+					b += position[j].position;
+					b += "</div></li>"; */
+				}
+			}
+			b += "</ul></li></ul>";
+		}
+		$("#iudata_position").html(b);
+
+	})
+	//赋值位置
+	function getposition(t){
+		$('.xz_xl').slideUp();
+		var ht=$(t).html();
+		$('#iu_position').val(ht);
+		changeposition();
+	}
+	//改变位置
+	function changeposition(){
+		$("#iu_assets").html("");
+		$("#iu_position_id").val("");
+		$.ajax({
+ 			url : pathName + "/repairlist/changeposition",
+ 			type : "get",
+ 			data : {
+ 				position:$("#iu_position").val()
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				if(data1.position== null){
+ 					$("#iu_position_no").val("");
+ 	 				$("#iu_assets").html("");
+ 				}else{
+ 					$("#iu_position_no").val(data1.position.no);
+ 					$("#iu_position_id").val(data1.position.id);
+ 					var assets=data1.assets;
+ 					for (var i = 0; i < assets.length; i++) {
+ 						var a = $("<option>", {
+ 							text : assets[i].assetDesc,
+ 							value : assets[i].id
+ 						});
+ 						$("#iu_assets").append(a);
+					}
+ 					$("#iu_assets").val("");
+ 					$("#iu_assets_no").val("");
+ 				}
+ 			}
+ 		})
+	}
+	function changepublic(t){
+		if(t==1){
+			$("#iu_assets").html("");
+			$("#iu_position").attr("onclick","");
+			$("#iu_position").val("");
+			$("#iu_position_id").val("");
+			$("#iu_position_no").val("");
+			$.ajax({
+	 			url : pathName + "/repairlist/selectpublicassets",
+	 			type : "get",
+	 			dataType : "json",
+	 			async : false,
+	 			contentType : "application/json;charset=UTF-8",
+	 			success : function(data) {
+	 				for (var i = 0; i < data.length; i++) {
+	 					var a = $("<option>", {
+	 						text : data[i].assetDesc,
+	 						value : data[i].id
+	 					});
+	 					$("#iu_assets").append(a);
+					}
+	 			}
+	 		})
+		}else{
+			$("#iu_assets_no").val("");
+			$("#iu_assets").val("");
+			$("#iu_position").attr("onclick","dogood()");
+		}
+		changeassets();
+	}
+	function changeassets(){
+		if($("#iu_assets").val()==null||$("#iu_assets").val()==""){
+			$("#iu_assets_no").val("");
+			$("#iu_assets").val("");
+			return;
+		}
+		$.ajax({
+ 			url : pathName + "/assets/selectbypk",
+ 			type : "get",
+ 			data : {
+ 				id:$("#iu_assets").val()
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data1) {
+ 				$("#iu_assets_no").val(data1.no);
+ 			}
+ 			
+ 		})
+	}
+	//往下翻
+	function dogood() {
+		$('.xz_xl').slideToggle();
+// 		$('.xz_xl').slideDown();
+		$('.xz_xl span').toggle(function(){
+			$('.xz_xl li').removeClass('click_bg');
+			$(this).parent('li').addClass('click_bg');
+			$(this).parent('li').children('ul').slideDown();	
+		},function(){
+			$(this).parent('li').removeClass('click_bg');
+			$(this).parent('li').children('ul').slideUp();		
+		})	
+	}
+	function doup(){
+		$('.xz_xl').slideUp();
+	}
+	//获取所有工单状态
+	function getallworkeorderstate() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallsundrywokerorderstate",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有部门
+	function getalldepartment() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbasedepartment",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有位置
+	function getallposition() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallposition",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有工作类型
+	function getalljobclass() {
+		var data
+		$.ajax({
+			url : pathName + "/maintain/selectalljobclass",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//查询
+	function select() {
+		$
+				.ajax({
+					url : pathName + "/maintain/select",
+					type : "get",
+					dataType : "json",
+					data : {
+						page : $("#page").html(),
+						size : $("#size").val(),
+						no : $("#wh").val(),
+						name : $("#mc").val(),
+						assetsno : $("#rw").val(),
+						start1 : $("#start1").val(),
+						start2 : $("#start2").val(),
+						plan : 0
+					},
+					async : false,
+					contentType : "application/json;charset=UTF-8",
+					success : function(data1) {
+						$("#count").html(data1.count);
+						$("#pagesize").html(data1.pagesize);
+						$("#begin").html(data1.begin);
+						$("#end").html(data1.end);
+
+						var data = data1.data;
+						var a = "";
+						for (var i = 0; i < data.length; i++) {
+							a += "<tr  class='data' onclick=click1(this)><td><div><input class='check_qx' type='checkbox' /></div></td><td><div>";
+							a += data[i].no;
+							a += "</div></td><td><div>";
+							a += data[i].name;
+							a += "</div></td><td><div>";
+							a += new Date(data[i].startdate)
+									.Format("yyyy-MM-dd");
+							a += "</div></td><td><div>";
+							if(data[i].assets!=null){
+							a += data[i].assets.no;}
+							a += "</div></td>";
+							a += "<td><div class='tb_cz'><a class='xg' onclick='update("
+									+ data[i].id
+									+ ")'>修改</a> <a class='ck' onclick='see("
+									+ data[i].id
+									+ ")'>查看</a> <a class='sc' onclick=showdelete("
+									+ data[i].id + ")>删除</a></div></td></tr>";
+						}
+						for (var i = 0; i < $("#size").val() - data.length; i++) {
+							a += "<tr><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td></tr>";
+						}
+						$("#tb").html(a);
+					}
+				})
+	}
+	function pageleft() {
+		var page = parseInt($("#page").html());
+		if (page == 1) {
+			alert("已经是第一页了！！！");
+		} else {
+			$("#page").html(page - 1);
+			select();
+		}
+	}
+	function pageright() {
+		var page = parseInt($("#page").html());
+		var pagesize = parseInt($("#pagesize").html());
+		if (page == pagesize) {
+			alert("已经是尾页了！！！");
+		} else {
+			$("#page").html(page + 1);
+			select();
+		}
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+	//位置小圈圈选中
+	function checkposition(){
+		$("#iu_assets_public").val("");
+		$("#iu_assets_public").attr("disabled","disabled");
+		$("#iu_position").attr("onclick","dogood()");
+		$("#iu_assets").attr("disabled","disabled");
+		$("#iu_star").html("");
+	}
+	//资产小圈圈选中
+	function checkassets(){
+		$("#iu_assets_public").removeAttr("disabled");
+		$("#iu_position").attr("onclick","dogood()");
+		$("#iu_assets").removeAttr("disabled");
+		$("#iu_star").html("*");
+	}
+	function clear() {
+		$("[id^='iu_']").each(function(){
+		　　　　$(this).val("");
+		　　})
+		$("[id^='s_']").each(function(){
+		　　　　$(this).html("");
+		　　})
+		$(".iu_star").html("");;
+		$("#yf_wz").removeAttr("checked");
+		$("#yf_zc").removeAttr("checked");
+		$("#yf_jh").removeAttr("checked");
+		$("#yf_gd").removeAttr("checked");
+	}
+	//查看
+	function see(id){
+		clear();
+		$.ajax({
+ 			url : pathName + "/maintain/selectone",
+ 			type : "get",
+ 			data : {
+ 				id:id
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data) {
+ 				$("#s_no").html(data.no);
+ 				$("#s_job_class").html(data.sundryJobClass.information);
+ 				$("#s_name").html(data.name);
+ 				if(data.unit!=null){
+ 					$("#s_unit").html(data.unit);
+ 				}
+ 				$("#s_workerorder_class").html("预防性维护");
+ 				if(data.frequency!=null){
+ 					$("#s_frequency").html(data.frequency);
+ 				}
+ 				$("#s_assets_class").html(data.assets.baseAssetClass.assetCategory);
+ 				if(data.daynum!=null){
+ 					$("#s_daynum").html(data.daynum);
+ 				}
+ 				if(data.assets!=null){
+ 					$("#s_thing").html("资产");
+ 					$("#s_assets").html(data.assets.assetDesc);
+ 				}else{
+ 					$("#s_thing").html("位置");
+ 				}
+ 				if(data.workday!=null){
+ 					$("#s_workday").html(data.workday);
+ 				}
+ 				if(data.startdate!=null){
+ 					$("#s_start").html(new Date(data.startdate).Format("yyyy-MM-dd"));
+ 				}
+ 				$("#s_position").html(data.position.position);
+ 				if(data.enddate!=null){
+ 					$("#s_end").html(new Date(data.enddate).Format("yyyy-MM-dd"));
+ 				}
+ 				if(data.plan!=null){
+ 					$("#s_plan").html(data.plan);
+ 				}
+ 				$(".ck_yy").show();
+ 			}
+ 		})
+	}
+	function showdelete(id) {
+		$(".sc_yy").show();
+		$("#delete_id").val(id);
+	}
+	function realdelete() {
+		$.ajax({
+ 			url : pathName + "/maintain/delete",
+ 			type : "get",
+ 			data : {
+ 				id:$("#delete_id").val()
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function() {
+ 			}
+		})
+		$(".sc_yy").hide();
+		alert("删除成功");
+		select();
+	}
+	function selectmaxno() {
+		var data1;
+		$.ajax({
+ 			url : pathName + "/maintain/selectmaxno",
+ 			type : "get",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data) {
+ 				data1 = data;
+ 			}
+		})
+		return data1;
+	}
+	function add() {
+		$("#iu_assets").html("");
+		clear();
+		$("#add").show();
+		$("#save").hide();
+		$(".zx_yy").show();
+		$("#iu_workerorder_class").val("预防性维护");
+		$("#iu_no").val(selectmaxno());
+	}
+	function reduceday(){
+		 var start=$("#iu_start").val();
+		 var end = $("#iu_end").val();
+		 if(start!=""&&end!=""){
+			 if(end<=start){
+				 alert("结束时间必须晚于开始时间");
+				 $("#iu_start").val("");
+				 $("#iu_end").val("");
+				 return;
+			 }
+			var mils1= new Date(end);
+			var mils2=new Date(start);
+			mils=mils1-mils2;
+			var day=mils/86400000;
+			$("#iu_workday").val(day);
+		 }
+	}
+	function singlecheckbox(id){
+		if(id=="yf_jh"){
+			$("#yf_gd").removeAttr("checked");
+		}else{
+			$("#yf_jh").removeAttr("checked");
+		}
+		if($("#yf_gd").is(":checked")||$("#yf_jh").is(":checked")){
+			$(".iu_star").html("*");
+		}else{
+			$(".iu_star").html("");
+		}
+	}
+	function multipleday(){
+		var a=$("#iu_frequency").val();
+		var b=$("#iu_unit").val();
+		if((!(/^\d+$/.test(a))) || a == 0){
+			$("#iu_frequency").val("")
+			$("#iu_day").val("");
+			return;
+		}
+		if(b==""||b==null||a==""||a==null){
+			$("#iu_day").val("");
+			return;
+		}
+		$("#iu_day").val(a*b);
+	}
+	function check(i) {
+		var a=-1;
+ 		if($("#yf_wz").is(":checked")){
+ 			a=0;
+ 		}
+ 		if($("#yf_zc").is(":checked")){
+ 			a=1;
+ 		}
+ 		if(a==-1){
+ 			alert("位置和资产没选");
+ 			return false;
+ 		}
+ 		if(a==0){
+ 			if($("#iu_position").val()==""||$("#iu_position").val()==null){
+ 				alert("东西没填完");
+ 				return false;
+ 			}
+ 		}
+ 		if(a==1){
+ 			if($("#iu_assets_public").val()==""||$("#iu_assets_public").val()==null){
+ 				alert("东西没填完");
+ 				return false;
+ 			}
+ 			if($("#iu_assets_public").val()==0){
+ 				if($("#iu_position").val()==""||$("#iu_position").val()==null||$("#iu_assets").val()==""||$("#iu_assets").val()==null){
+ 					alert("东西没填完");
+ 	 				return false;
+ 				}
+ 			}
+ 			if($("#iu_assets_public").val()==1){
+ 				if($("#iu_assets").val()==""||$("#iu_assets").val()==null){
+ 					alert("东西没填完");
+ 	 				return false;
+ 				}
+ 			}
+ 		}
+ 		var b=-1;
+ 		if($("#yf_jh").is(":checked")||$("#yf_gd").is(":checked")){
+ 			b=0;
+ 		}
+ 		if(b!=-1){
+ 			if($("#iu_unit").val()==""||$("#iu_unit").val()==null||$("#iu_frequency").val()==""||
+ 				$("#iu_frequency").val()==null||$("#iu_day").val()==""||$("#iu_day").val()==null||
+ 				$("#iu_workday").val()==""||$("#iu_workday").val()==null){
+ 				alert("东西没填完");
+	 				return false;
+ 			}
+ 		}
+ 		if(i==1){
+		var no=selectmaxno();
+		if($("#iu_no").val()<no){
+			alert("这个编号给人用了，给你重新弄一个");
+			$("#iu_no").val(no);
+			return false;
+		}
+		}
+		if($("#iu_name").val()==""||$("#iu_name").val()==null||
+			$("#iu_workerorder_state").val()==""||$("#iu_workerorder_state").val()==null||
+			$("#iu_start").val()==""||$("#iu_start").val()==null||
+			$("#iu_end").val()==""||$("#iu_end").val()==null||
+			$("#iu_jobclass").val()==""||$("#iu_jobclass").val()==null){
+			alert("东西没填完");
+			return false;
+		}
+		return true;
+	}
+ 	function realadd(){
+ 		if(check(1)){
+ 		var a=-1;
+ 		if($("#yf_jh").is(":checked")){
+ 			a=0;
+ 		}
+ 		if($("#yf_gd").is(":checked")){
+ 			a=1;
+ 		}
+ 		if(a==-1){
+ 			$.ajax({
+ 	 			url : pathName + "/maintain/insert",
+ 	 			type : "get",
+ 	 			data : {
+ 	 				no:$("#iu_no").val(),
+ 	 				name:$("#iu_name").val(),
+ 	 				jobId:$("#iu_jobclass").val(),
+ 	 				workerorderStateId:$("#iu_workerorder_state").val(),
+ 	 				startdate:new Date($("#iu_start").val()),
+ 	 				enddate:new Date($("#iu_end").val()),
+ 	 				workday:$("#iu_workday").val(),
+ 	 				pId:$("#iu_position_id").val(),
+ 	 				aId:$("#iu_assets").val(),
+ 	 				plan:0
+ 	 			},
+ 	 			async : false,
+ 	 			contentType : "application/json;charset=UTF-8",
+ 	 			success : function(data) {
+ 	 				if(data==1){
+ 	 					$(".zx_yy").hide();
+ 	 					select();
+ 	 					alert("添加成功");
+ 	 				}else{
+ 	 					alert("一定出了什么问题，请联系朱志峰");
+ 	 				}
+ 	 			}
+ 			}) 			
+ 		}
+ 		if(a!=-1){
+ 			$.ajax({
+ 	 			url : pathName + "/maintain/insert",
+ 	 			type : "get",
+ 	 			data : {
+ 	 				no:$("#iu_no").val(),
+ 	 				name:$("#iu_name").val(),
+ 	 				jobId:$("#iu_jobclass").val(),
+ 	 				workerorderStateId:$("#iu_workerorder_state").val(),
+ 	 				startdate:new Date($("#iu_start").val()),
+ 	 				enddate:new Date($("#iu_end").val()),
+ 	 				pId:$("#iu_position_id").val(),
+ 	 				aId:$("#iu_assets").val(),
+ 	 				unit:$("#iu_unit").val(),
+ 	 				frequency:$("#iu_frequency").val(),
+ 	 				daynum:$("#iu_day").val(),
+ 	 				workday:$("#iu_workday").val(),
+ 	 				plan:a
+ 	 			},
+ 	 			async : false,
+ 	 			contentType : "application/json;charset=UTF-8",
+ 	 			success : function(data) {
+ 	 				if(data==1){
+ 	 					$(".zx_yy").hide();
+ 	 					select();
+ 	 					alert("添加成功");
+ 	 				}else{
+ 	 					alert("一定出了什么问题，请联系朱志峰");
+ 	 				}
+ 	 			}
+ 			})
+ 			}
+		}
+ 	}
+ 	function realupdate(){
+ 		if(check(0)){
+ 		var a=-1;
+ 		if($("#yf_jh").is(":checked")){
+ 			a=0;
+ 		}
+ 		if($("#yf_gd").is(":checked")){
+ 			a=1;
+ 		}
+ 		if(a==-1){
+ 			$.ajax({
+ 	 			url : pathName + "/maintain/update",
+ 	 			type : "get",
+ 	 			data : {
+ 	 				id:$("#iu_id").val(),
+ 	 				no:$("#iu_no").val(),
+ 	 				name:$("#iu_name").val(),
+ 	 				jobId:$("#iu_jobclass").val(),
+ 	 				workerorderStateId:$("#iu_workerorder_state").val(),
+ 	 				startdate:new Date($("#iu_start").val()),
+ 	 				enddate:new Date($("#iu_end").val()),
+ 	 				workday:$("#iu_workday").val(),
+ 	 				pId:$("#iu_position_id").val(),
+ 	 				aId:$("#iu_assets").val()
+ 	 			},
+ 	 			async : false,
+ 	 			contentType : "application/json;charset=UTF-8",
+ 	 			success : function(data) {
+ 	 				if(data==1){
+ 	 					$(".zx_yy").hide();
+ 	 					select();
+ 	 					alert("更新成功");
+ 	 				}else{
+ 	 					alert("一定出了什么问题，请联系朱志峰");
+ 	 				}
+ 	 			}
+ 			}) 			
+ 		}
+ 		if(a!=-1){
+ 			$.ajax({
+ 	 			url : pathName + "/maintain/update",
+ 	 			type : "get",
+ 	 			data : {
+ 	 				id:$("#iu_id").val(),
+ 	 				no:$("#iu_no").val(),
+ 	 				name:$("#iu_name").val(),
+ 	 				jobId:$("#iu_jobclass").val(),
+ 	 				workerorderStateId:$("#iu_workerorder_state").val(),
+ 	 				startdate:new Date($("#iu_start").val()),
+ 	 				enddate:new Date($("#iu_end").val()),
+ 	 				pId:$("#iu_position_id").val(),
+ 	 				aId:$("#iu_assets").val(),
+ 	 				unit:$("#iu_unit").val(),
+ 	 				frequency:$("#iu_frequency").val(),
+ 	 				daynum:$("#iu_day").val(),
+ 	 				workday:$("#iu_workday").val(),
+ 	 				plan:a
+ 	 			},
+ 	 			async : false,
+ 	 			contentType : "application/json;charset=UTF-8",
+ 	 			success : function(data) {
+ 	 				if(data==1){
+ 	 					$(".zx_yy").hide();
+ 	 					select();
+ 	 					alert("更新成功");
+ 	 				}else{
+ 	 					alert("一定出了什么问题，请联系朱志峰");
+ 	 				}
+ 	 			}
+ 			})
+ 			}
+		}else{
+			$(".zx_yy").show();
+		}
+ 	}
+ 	function update(id){
+ 		clear();
+ 			$("#iu_assets_state").removeAttr("disabled");
+ 			$("#add").hide();
+ 			$("#save").show();
+ 	 		clear();
+ 	 		 $.ajax({
+ 	 			url : pathName + "/maintain/selectone",
+ 	 			type : "get",
+ 	 			data : {
+ 	 				id : id
+ 	 			},
+ 	 			dataType : "json",
+ 	 			async : false,
+ 	 			contentType : "application/json;charset=UTF-8",
+ 	 			success : function(data) {
+ 	 				$("#iu_workerorder_class").val("预防性维护");
+ 	 				$("#iu_id").val(id);
+ 	 				$("#iu_no").val(data.no);
+ 	 				$("#iu_name").val(data.name);
+ 	 				$("#iu_jobclass").val(data.jobId);
+ 	 				$("#iu_workerorder_state").val(data.workerorderStateId);
+ 	 				$("#iu_start").val(new Date(data.startdate).Format("yyyy-MM-dd"));
+ 	 				$("#iu_end").val(new Date(data.enddate).Format("yyyy-MM-dd"));
+ 	 				
+ 	 				if(data.aId!=null&&data.aId!=""){
+ 	 					$("#yf_zc").prop("checked","checked");
+ 	 					$("#iu_assets_public").val(data.assets.publicProperty);
+ 	 					changepublic(data.assets.publicProperty);
+ 	 					if(data.pId!=null&&data.pId!=""){
+ 	 						$("#iu_position_id").val(data.pId);
+ 	 						$("#iu_position_no").val(data.position.no);
+ 	 						$("#iu_position").val(data.position.position);
+ 	 						changeposition();
+ 	 					}
+ 	 					$("#iu_assets_no").val(data.assets.no);
+ 	 					$("#iu_assets").val(data.aId);
+ 	 				}else{
+ 	 					$("#iu_assets_public").attr("disabled","disabled");
+ 	 					$("#yf_wz").prop("checked","checked");
+ 	 					$("#iu_position_id").val(data.pId);
+	 					$("#iu_position_no").val(data.position.no);
+	 					$("#iu_position").val(data.position.position);
+	 					changeposition();
+	 					$("#iu_assets_no").val("");
+ 	 					$("#iu_assets").val("");
+ 	 				}
+ 	 				if(data.workday!=null&&data.workday!=""){
+	 	 					$("#iu_workday").val(data.workday);
+	 	 				}
+ 	 				if(data.plan==0||data.plan==1){
+ 	 					$("#iu_unit").val(data.unit);
+ 	 	 				$("#iu_frequency").val(data.frequency);
+ 	 	 				$("#iu_day").val(data.daynum);
+ 	 	 				if(data.plan==1){
+ 	 	 					$("#yf_gd").prop("checked","checked");
+ 	 	 				}else{
+ 	 	 					$("#yf_jh").prop("checked","checked");
+ 	 	 				}
+ 	 	 				$(".iu_star").html("*");
+ 	 				}
+ 	 			}
+ 	 		})
+ 	 		$(".zx_yy").show();	
+ 		}
+ 	
+</script>
+</head>
+<body>
+	<div class="main">
+		<ul>
+			<li class="li1">
+				<label for="wh">维护编号</label>
+				<input type="text" id="wh">
+			</li>
+			<li class="li1">
+				<label for="zc">开始时间</label>
+				<input type="text" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" id="start1" readonly>
+				<span>~</span>
+				<input type="text" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" id="start2" readonly>
+			</li>
+			<li class="li1">
+				<button onclick="select()">搜&nbsp;索</button>
+				<button class="xj" onclick="reset()">重&nbsp;置</button>
+			</li>
+
+			<li class="li1">
+				<label for="rw">资产编号</label>
+				<input type="text" id="rw"><li class="li1">
+				<label for="mc">维护名称</label>
+				<input type="text" id="mc">
+			</li>
+			</li>
+
+
+
+
+
+
+
+
+
+
+			<li class="li1">
+				<button id="xzwxjh" onclick="add()">新建维护计划</button>
+				<a href="maintainlist.html"><button class="scgd">生成维护工单</button></a>
+			</li>
+
+		</ul>
+	</div>
+	<div class="ma_ta">
+		<!--显示块-->
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr class="first_tr">
+				<td>
+					<div></div>
+				</td>
+				<td>
+					<div>预防性维护编号</div>
+				</td>
+				<td>
+					<div>预防性维护名称</div>
+				</td>
+				<td>
+					<div>预计开始时间</div>
+				</td>
+				<td>
+					<div>资产编号</div>
+				</td>
+				<td>
+					<div class="tb_cz">操作</div>
+				</td>
+			</tr>
+			<tbody id="tb">
+			</tbody>
+			<tr>
+				<td colspan="11" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1">
+								<select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+								</select>
+							</li>
+							<li class="t_div2">
+								<img src="img/zuo1.png" onclick="pageleft()" />
+								<span id="page">1</span>
+								<span>/</span>
+								<span id="pagesize"></span>
+								<img src="img/you1.png" onclick="pageright()" />
+							</li>
+							<li class="t_div3">
+								<span>跳转至</span>
+								<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}" s />
+								<span>页</span>
+							</li>
+							<li class="t_div4">
+								共
+								<span id="count"></span>
+								条数据，当前显示
+								<span id="begin"></span>
+								-
+								<span id="end"></span>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!--<div class="fh">
+    <button>返&nbsp;回</button>
+</div>-->
+
+	<!--新增页面-->
+	<div class="zx_yy">
+		<input type="hidden" id="iu_id">
+		<div class="xz_div_z">
+			<div class="xz_title">
+				<img id="xz_close_img" src="img/u122_6.png" />
+			</div>
+			<div class="xz_div0">
+				<div class="xz_div1">
+					<ul class="xz_ul0">
+						<li>
+							<label>维护编号</label>
+							<input class="zd" id="iu_no" type="text" readonly />
+						</li>
+						<li>
+							<label>维护名称</label>
+							<input type="text" required id="iu_name" />
+							*
+						</li>
+						<li>
+							<label>工单类别</label>
+							<input class="zd" id="iu_workerorder_class" type="text" readonly required />
+						</li>
+						<li>
+							<label>资产属性</label>
+							<select id="iu_assets_public" onchange="changepublic(this.value)">
+								<option value="0">私有资产</option>
+								<option value="1">公共资产</option>
+							</select>
+							<span id="iu_star">*</span>
+						</li>
+						<li>
+							<label>工作类型</label>
+							<select id="iu_jobclass">
+							</select>
+							*
+						</li>
+						<li>
+							<label>预定开始日期</label>
+							<input type="text" onchange="reduceday()" data-date-format="yyyy-mm-dd"
+								class="ul1_inp3 form-control input-date-time-h" id="iu_start" readonly>
+							*
+						</li>
+						<li>
+							<label>工单状态</label>
+							<select id="iu_workerorder_state">
+							</select>
+							*
+						</li>
+						<li>
+							<label>预定完成日期</label>
+							<input type="text" onchange="reduceday()" data-date-format="yyyy-mm-dd"
+								class="ul1_inp3 form-control input-date-time-h" id="iu_end" readonly>
+							*
+						</li>
+					</ul>
+					<div class="div1_title">基准维护</div>
+					<ul class="xz_ul1">
+						<li>
+							<input class="ul1_inp1" type="radio" name="jzwh" id="yf_wz" onclick="checkposition()" />
+							<label class="ul1_lab1" for="yf_wz">位置</label>
+							<label class="ul1_lab2">位置编号</label>
+							<input type="hidden" id="iu_position_id">
+							<input class="ul1_inp2 zd" id="iu_position_no" type="text" readonly />
+							<!-- <select class="ul1_sel1">
+								<option>总经办3号桌</option>
+								<option>总经办3号桌</option>
+						</select> -->
+							<input class="ul1_sel1" id="iu_position" readonly="readonly">
+							<div class="xz_xl" id="iudata_position" onblur="doup()">
+								<ul>
+									<li>
+										<span class="xz_sp1">></span>
+										<span class="xz_sp1">技术部</span>
+										<ul class="xl_ul">
+											<li>
+												<span class="xz_sp2">></span>
+												<div class="xz_sp1">位置1</div>
+											</li>
+										</ul>
+									</li>
+								</ul>
+								<ul>
+									<li>
+										<span class="xz_sp1">></span>
+										<span class="xz_sp1">市场部</span>
+										<ul class="xl_ul">
+											<li>
+												<span class="xz_sp2">></span>
+												<div class="xz_sp1">位置1</div>
+											</li>
+											<li>
+												<span class="xz_sp2">></span>
+												<div class="xz_sp1">位置2</div>
+											</li>
+											<li>
+												<span class="xz_sp2">></span>
+												<div class="xz_sp1">位置3</div>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<input class="ul1_inp1" type="radio" name="jzwh" id="yf_zc" onclick="checkassets()" />
+							<label class="ul1_lab1" for="yf_zc">资产</label>
+							<label class="ul1_lab2">资产编号</label>
+							<input class="ul1_inp2 zd" type="text" id="iu_assets_no" readonly />
+							<select class="ul1_sel1" id="iu_assets" onchange="changeassets()">
+							</select>
+						</li>
+						<div class="star">*</div>
+					</ul>
+
+					<div class="div1_title">下次维护生成类型</div>
+					<ul class="xz_ul2">
+						<li>
+							<input class="ul1_inp1" type="checkbox" name="jh" id="yf_jh" onclick="singlecheckbox(this.id)" />
+							<label class="ul1_lab1" for="yf_jh">计划</label>
+							<label class="ul1_lab2">频率单位</label>
+							<select class="ul1_sel2" id="iu_unit" onchange="multipleday()">
+								<option value="1">天</option>
+								<option value="7">周</option>
+								<option value="30">月</option>
+								<option value="365">年</option>
+							</select>
+							<span class="iu_star" style="color: #ff003a; float: left;"></span>
+							<label class="ul1_lab3">频率</label>
+							<input class="ul1_sel2" type="text" id="iu_frequency" placeholder="请输入正整数" onchange="multipleday()" />
+							<span class="iu_star" style="color: #ff003a;"></span>
+						</li>
+						<li>
+							<input class="ul1_inp1" type="checkbox" name="jh" id="yf_gd" onclick="singlecheckbox(this.id)" />
+							<label class="ul1_lab1" for="yf_gd">工单</label>
+							<label class="ul1_lab2">天</label>
+							<input class="ul1_sel2 zd" type="text" readonly id="iu_day" />
+							<span class="iu_star" style="color: #ff003a; float: left;"></span>
+							<label class="ul1_lab3">工作周期天</label>
+							<input class="ul1_sel2" id="iu_workday" type="text" />
+							<span class="iu_star" style="color: #ff003a;"></span>
+						</li>
+
+					</ul>
+				</div>
+				<div class="but">
+					<button id="add" onclick="realadd()">添&nbsp;加</button>
+					<button id="save" onclick="realupdate()">保&nbsp;存</button>
+					<button id="close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--查看页面-->
+	<div class="ck_yy">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="img/u122_6.png" />
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li">
+					<span class="ck_span1">维护编号</span>
+					<span class="ck_span2" id="s_no">1000023</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">工作类型</span>
+					<span class="ck_span2" id="s_job_class">10225465</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">维护名称</span>
+					<span class="ck_span2" id="s_name">打印机检修</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">频率单位</span>
+					<span class="ck_span2" id="s_unit">10235</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">工单类型</span>
+					<span class="ck_span2" id="s_workerorder_class">预防性维护</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">频率</span>
+					<span class="ck_span2" id="s_frequency">使用中</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产类型</span>
+					<span class="ck_span2" id="s_assets_class">机械</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">天</span>
+					<span class="ck_span2" id="s_daynum">电器</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">基准维护类型</span>
+					<span class="ck_span2" id="s_thing">资产</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">工作周期</span>
+					<span class="ck_span2" id="s_workday">2014/5/22</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产名称</span>
+					<span class="ck_span2" id="s_assets"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">预定开始日期</span>
+					<span class="ck_span2" id="s_start"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">位置</span>
+					<span class="ck_span2" id="s_position"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">预定完成日期</span>
+					<span class="ck_span2" id="s_end"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">下次维护生成类型</span>
+					<span class="ck_span2" id="s_plan"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1"></span>
+					<span class="ck_span2"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!--删除页面-->
+	<div class="sc_yy">
+		<input type="hidden" id="delete_id">
+		<div class="sc_div">
+			<div class="xz_title">
+				<img id="sc_close_img" src="img/u122_6.png" onclick="hidedelete()" />
+			</div>
+			<ul class="sc_ul">
+				<li class="sc_li1">确认删除</li>
+				<li class="sc_li3">
+					<button class="qr" onclick="realdelete()">确认</button>
+					<button class="qx" onclick="hidedelete()">取消</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<script src="js/XZ_yufangxingweihubiao.js"></script>
+	<script src="js/XZ_delect.js"></script>
+</body>
+</html>

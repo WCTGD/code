@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_zichanliebiao.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+	var pathName = getContextPath();
+	//获取项目
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	//获取url中的参数
+	function getUrlParam(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+		var r = window.location.search.substr(1).match(reg); //匹配目标参数
+		if (r != null)
+			return unescape(r[2]);
+		return null; //返回参数值
+	}
+	var plan;
+	$(function() {
+		plan = getUrlParam("plan");
+		$("#down").attr("href","excel/maintaindown?plan="+plan)
+		select();
+	})
+
+	//查询
+	function select() {
+		$
+				.ajax({
+					url : pathName + "/maintain/select",
+					type : "get",
+					dataType : "json",
+					data : {
+						page : $("#page").html(),
+						size : $("#size").val(),
+						start2 : "",
+						plan : plan
+					},
+					async : false,
+					contentType : "application/json;charset=UTF-8",
+					success : function(data1) {
+						$("#count").html(data1.count);
+						$("#pagesize").html(data1.pagesize);
+						$("#begin").html(data1.begin);
+						$("#end").html(data1.end);
+
+						var data = data1.data;
+						var a = "";
+						for (var i = 0; i < data.length; i++) {
+							a += "<tr><td><div>" + data[i].no + "</div></td>";
+							a += "<td><div>" + data[i].name + "</div></td>";
+							a += "<td><div>" + data[i].workday
+									+ "天</div></td></tr>";
+
+						}
+						for (var i = 0; i < $("#size").val() - data.length; i++) {
+							a += "<tr><td><div></div></td><td><div></div></td><td><div></div></td></tr>";
+						}
+						$("#tb").html(a);
+					}
+				})
+	}
+	function pageleft() {
+		var page = parseInt($("#page").html());
+		if (page == 1) {
+			alert("已经是第一页了！！！");
+		} else {
+			$("#page").html(page - 1);
+			select();
+		}
+	}
+	function pageright() {
+		var page = parseInt($("#page").html());
+		var pagesize = parseInt($("#pagesize").html());
+		if (page == pagesize) {
+			alert("已经是尾页了！！！");
+		} else {
+			$("#page").html(page + 1);
+			select();
+		}
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+</script>
+
+
+
+</head>
+
+<body>
+	<div class="ma_ta">
+		<!--显示块-->
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr class="zero_tr">
+				<td colspan="9" align="center" valign="middle">
+					<div class="tb_div0">
+						<span>预防性维护任务列表</span>
+					</div>
+				</td>
+			</tr>
+			<tr class="first_tr">
+				<td>
+					<div>任务编号</div>
+				</td>
+				<td>
+					<div>任务名称</div>
+				</td>
+				<td>
+					<div>预计工时</div>
+				</td>
+			</tr>
+			<tbody id="tb">
+			</tbody>
+
+			<tr>
+				<td colspan="9" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1">
+								<select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+								</select>
+							</li>
+							<li class="t_div2">
+								<img src="img/zuo1.png" onclick="pageleft()" />
+								<span id="page">1</span>
+								<span>/</span>
+								<span id="pagesize"></span>
+								<img src="img/you1.png" onclick="pageright()" />
+							</li>
+							<li class="t_div3">
+								<span>跳转至</span>
+								<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}" s />
+								<span>页</span>
+							</li>
+							<li class="t_div4">
+								共
+								<span id="count"></span>
+								条数据，当前显示
+								<span id="begin"></span>
+								-
+								<span id="end"></span>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="fh">
+		<a id="down">
+		<button>导&nbsp;出</button></a>
+	</div>
+	<script type="text/javascript" src="js/XZ_yufangxingweihurenwuliebiaobaobiao.js"></script>
+</body>
+</html>

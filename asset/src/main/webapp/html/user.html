@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<link href="/asset/css/XZ_yuangong.css" rel="stylesheet" type="text/css">
+<link href="/asset/css/XZ_delect.css" rel="stylesheet" type="text/css">
+<link href="/asset/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/asset/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/asset/css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="/asset/css/jquery.gritter.css" />
+<link rel="stylesheet" href="/asset/css/datepicker.css" />
+<link rel="stylesheet" href="/asset/css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="/asset/js/jquery-1.12.3.min.js"></script>
+<script src="/asset/js/date-time/bootstrap-datepicker.js"></script>
+<script src="/asset/js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="/asset/js/date-time/bootstrap-datetimepicker.js"></script>
+<script
+	src="/asset/js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+</head>
+<body onload="getData()">
+	<!--<div class="top">
+       <img class="top_img" src="img/u4.png"/> 
+       <span class="top_logo">神洲酷奇资产管理</span>
+       <span class="top_gw">行政主管 壹佰万</span>
+       <span class="time">
+            <div class="week"></div>
+            <div class="day"></div>
+       </span>
+       <span class="tuic">
+            <img src="img/u31.png"/>
+       </span>
+    </div>-->
+	<div class="main">
+		<ul>
+			<li class="li1"><label for="wh">员工编号</label> <input type="text"
+				id="id" name="id"></li>
+			<li class="li1"><label for="zc">职位</label> <input type="text"
+				id="job" id="job"></li>
+			<li class="li1">
+				<button id="search" name="search" onclick="search()">搜&nbsp;索</button>
+			</li>
+			<li class="li1"><label for="mc">员工姓名</label> <input type="text"
+				id="name" name="name"></li>
+			<li class="li1"><label for="rw">部门</label> <input type="text"
+				id="department" name="department"></li>
+			<!-- 			<li class="li1"> -->
+			<!-- 				<button>查看全部</button> 				<button class="scgd" id="xzyg">新员工</button> -->
+			<!-- 			</li> -->
+
+		</ul>
+	</div>
+	<div class="ma_ta">
+		<!--显示块-->
+		<table border="0" cellspacing="0" cellpadding="0" id="table">
+			<tr class="first_tr">
+				<td><div></div></td>
+				<td><div>员工编号</div></td>
+				<td><div>姓名</div></td>
+				<td><div>职位</div></td>
+				<td><div>部门</div></td>
+				<td><div class="tb_cz">操作</div></td>
+			</tr>
+			<tbody id="tb">
+			</tbody>
+			<tr>
+				<td colspan="17" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1"><select id="pageSize" onchange="strike()">
+									<option value="10" selected="selected">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+							</select></li>
+							<li class="t_div2"><img src="/asset/img/zuo1.png"
+								onclick="before()" /><span id="pageCode">1</span> <span>/</span><span
+								id="totalPage">1</span> <img src="/asset/img/you1.png"
+								onclick="after()" /></li>
+							<li class="t_div3"><span>跳转至</span> <input type="text"
+								id="skipId" class="skipId" onchange="skip()" /> <span>页</span></li>
+							<li class="t_div4">共<span id="totalRecord"></span>条数据，当前显示<span
+								id="start">0</span>-<span id="end">10</span></li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!--<div class="fh">
+		<button>返&nbsp;回</button>
+	</div>-->
+
+	<!--新增页面-->
+	<div class="zx_yy">
+		<div class="xz_div_z">
+			<div class="xz_title">
+				<img id="xz_close_img" src="img/u122_6.png" />
+			</div>
+			<div class="xz_div0">
+				<div class="xz_div1">
+					<ul class="xz_ul">
+						<li><label>员工编号</label> <input type="text" class="zd"
+							id='w_id' readonly /></li>
+
+						<li><label>员工姓名</label> <input type="text" class="zd"
+							id='w_name' readonly />*</li>
+						<li><label>邮箱</label> <input type="text" class="zd"
+							id='w_email' readonly /></li>
+						<li><label>部门</label> <input type="text" class="zd"
+							id='w_department' readonly /></li>
+						<li><label>家庭电话</label> <input type="text" id='w_jiating' /></li>
+						<li><label>职位</label> <input type="text" class="zd"
+							id='w_job' readonly />*</li>
+						<li><label>手机号码</label> <input type="text" class="zd"
+							id='w_phone' readonly /></li>
+						<li><label>位置</label> <select id='w_position'>
+						</select></li>
+						<li><label>类别</label> <select id='w_information'></select></li>
+						<li><label>地址</label> <textarea id='w_address'></textarea></li>
+					</ul>
+				</div>
+				<div class="but">
+					<button id="save" onclick='save()'>保&nbsp;存</button>
+					<button id="close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--查看页面-->
+	<div class="ck_yy">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="img/u122_6.png" />
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li"><span class="ck_span1">员工编号</span> <span
+					class="ck_span2" id='see_id'></span></li>
+				<li class="ck_li"><span class="ck_span1">手机号码</span> <span
+					class="ck_span2" id='see_phone'></span></li>
+				<li class="ck_li"><span class="ck_span1">员工姓名</span> <span
+					class="ck_span2" id='see_name'></span></li>
+				<li class="ck_li"><span class="ck_span1">邮箱</span> <span
+					class="ck_span2" id='see_email'></span></li>
+				<li class="ck_li"><span class="ck_span1">部门</span> <span
+					class="ck_span2" id='see_department'></span></li>
+				<li class="ck_li"><span class="ck_span1">家庭电话</span> <span
+					class="ck_span2" id='see_home_phone'></span></li>
+				<li class="ck_li"><span class="ck_span1">职位</span> <span
+					class="ck_span2" id='job'></span></li>
+				<li class="ck_li"><span class="ck_span1">地址</span> <span
+					class="ck_span2" id='see_address'></span></li>
+				<li class="ck_li"><span class="ck_span1">位置</span> <span
+					class="ck_span2" id='see_position'></span></li>
+				<li class="ck_li"><span class="ck_span1"></span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">类别</span> <span
+					class="ck_span2" id='see_information'></span></li>
+				<li class="ck_li"><span class="ck_span1"></span> <span
+					class="ck_span2"></span></li>
+
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript" src="/asset/js/XZ_yuangong.js"></script>
+	<script type="text/javascript" src="/asset/js/XZ_delect.js"></script>
+
+	<!--  --------------------------------JS --------------------------------------- -->
+	<script type="text/javascript">
+		var pathName = getContextPath();
+		function search() {
+			var pageCode = $("#pageCode").html();
+			var pagesize = $("#pageSize").val();
+			var id ;
+			if($('#id').val() != null && $('#id').val() != "" ){
+				if(!isNaN($('#id').val())){
+					id =$('#id').val();
+				}else{
+					alert("员工编号必须为数字！")
+				}
+			}
+			alert(id);
+			var name = $('#name').val();
+			var job = $('#job').val();
+			var department = $('#department').val();
+			if(id != "" && id != null || name != "" || name != null || 
+					job != "" || job != null || department != "" || department != null){
+			$('#tb').empty();//把当前元素设置为空
+			$.ajax({
+						url : pathName + "/user/search",
+						type : "post",
+						dataType : "json",
+						async : false,
+						contentType : "application/json;charset=UTF-8",
+						data : JSON.stringify({
+							"id" : id,
+							"name" : name,
+							"job" : job,
+							"department" : department,
+							"pageCode" : pageCode,
+							"pageSize" : pagesize
+						}),
+						success : function(data) {
+							var list = data.result;
+							for (var i = 0; i < list.length; i++) {
+								var str = "";
+								str += "<tr  class='trbg' onclick = 'click1(this)'>";
+								str += "<td><div><input class='check_qx' type='checkbox'/></div></td>";
+								str += "<td><div>" + list[i].id + "</div></td>"
+										+ "<td><div>" + list[i].name
+										+ "</div></td>" + "<td><div>"
+										+ list[i].job + "</div></td>"
+										+ "<td><div>" + list[i].department
+										+ "</div></td>"
+								str += "<td><div class='tb_cz'>";
+								str += "<a class='xg' onclick='update("
+										+ list[i].id
+										+ ")' >修改</a> <a class='ck' onclick='check("
+										+ list[i].id + ")'>查看</a> ";
+								str += "</div></td></tr>";
+								$('#tb').append(str);
+							}
+							var page = data.page;
+							$("#start").html(page.start + 1);
+							$("#end").html(page.end);
+							$("#totalRecord").html(page.totalRecord);
+							$("#totalPage").html(page.totalPage);
+							$("#totalCode").html(page.totalCode);
+						},
+						error : function(data) {
+							alert("错误")
+						}
+					})
+		}else {
+			alert("搜索条件不能全为空！");
+		}
+		
+		}
+		
+		function getData(){
+			var pageCode = $("#pageCode").html();
+			var pagesize = $("#pageSize").val();
+			var id = $('#id').val();
+			var name = $('#name').val();
+			var job = $('#job').val();
+			var department = $('#department').val();
+// 			if(id != "" && id != null && name != "" && name != null && 
+// 					job != "" && job != null && department != "" && department != null){
+			$('#tb').empty();//把当前元素设置为空
+			$.ajax({
+						url : pathName + "/user/search",
+						type : "post",
+						dataType : "json",
+						async : false,
+						contentType : "application/json;charset=UTF-8",
+						data : JSON.stringify({
+							"id" : id,
+							"name" : name,
+							"job" : job,
+							"department" : department,
+							"pageCode" : pageCode,
+							"pageSize" : pagesize
+						}),
+						success : function(data) {
+							var list = data.result;
+							for (var i = 0; i < list.length; i++) {
+								var str = "";
+								str += "<tr  class='trbg' onclick = 'click1(this)'>";
+								str += "<td><div><input class='check_qx' type='checkbox'/></div></td>";
+								str += "<td><div>" + list[i].id + "</div></td>"
+										+ "<td><div>" + list[i].name
+										+ "</div></td>" + "<td><div>"
+										+ list[i].job + "</div></td>"
+										+ "<td><div>" + list[i].department
+										+ "</div></td>"
+								str += "<td><div class='tb_cz'>";
+								str += "<a class='xg' onclick='update("
+										+ list[i].id
+										+ ")' >修改</a> <a class='ck' onclick='check("
+										+ list[i].id + ")'>查看</a> ";
+								str += "</div></td></tr>";
+								$('#tb').append(str);
+							}
+							var page = data.page;
+							$("#start").html(page.start + 1);
+							$("#end").html(page.end);
+							$("#totalRecord").html(page.totalRecord);
+							$("#totalPage").html(page.totalPage);
+							$("#totalCode").html(page.totalCode);
+						},
+						error : function(data) {
+							alert("错误")
+						}
+					})
+// 		}else {
+// 			alert("搜索条件不能全为空！");
+// 		}
+		}
+		
+		
+		
+		
+		//下拉框显示条数选择
+		function strike() {
+			var size = $("#pageSize").val();
+			$("#pageSize").val(size);
+			search();
+		}
+		
+		function position_onclick(){
+			var department = $('#w_department option:selected').val();
+			
+			alert(department);
+		}
+		
+		//前一页
+		function before() {
+			var a = $("#pageCode").html();
+			if (a > 1) {
+				$("#pageCode").html(a - 1);
+				search();
+			} else {
+				alert("已经是第一页了")
+			}
+
+		}
+		//后一页
+		function after() {
+			var b = $("#totalPage").html();
+			var a = $("#pageCode").html();
+
+			if (Number(a) < Number(b)) {
+				$("#pageCode").html(Number(a) + 1);
+				search();
+			} else {
+				alert("已经是最后一页了");
+			}
+		}
+		//跳转
+		function skip() {
+			var skipId = $(".skipId").val();
+			var b = $("#totalPage").html();
+			if (Number(skipId) <= Number(b) && Number(skipId) >= Number(1)) {
+				$("#pageCode").html(skipId);
+				search();
+			} else {
+				alert("不存在！");
+			}
+		}
+
+		//修改
+		function update(id) {
+			var id = id;
+			$('#w_department').empty();//把当前元素设置为空
+			$('#w_information').empty();
+			$('#w_position').empty();
+			$.ajax({
+				url : pathName + "/user/selectById",
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8",
+				data : JSON.stringify({
+					"id" : id,
+				}),
+				success : function(data) {
+					var worker = data.result;
+					$('#w_phone').val(worker.mobilePhone);
+					$('#w_id').val(worker.id);
+					$('#w_name').val(worker.name);
+					$('#w_jiating').val(worker.homePhone);
+					$('#w_address').val(worker.address);
+					$('#w_job').val(worker.job);
+					$('#w_email').val(worker.email);
+					$('#w_department').val(worker.department);
+					$('#w_information').append(
+							"<option >" + worker.information + "</option>");
+					if(worker.position != "无" && worker.position !="" && worker.position != null ){
+					$('#w_position').append(
+							"<option  selected:selected>" + worker.position + "</option>");
+					}
+					selectInformation();
+					selectChildrenDepartment();
+					$('.zx_yy').show();
+				},
+				error : function(data) {
+					alert("错误")
+				}
+			})
+		}
+		//查看
+		function check(id) {
+			$.ajax({
+				url : pathName + "/user/selectById",
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8",
+				data : JSON.stringify({
+					"id" : id,
+				}),
+				success : function(data) {
+					var  worker =data.result;
+					$('#see_id').html(worker.id);
+					$('#see_name').html(worker.name);
+					$('#see_department').html(worker.department);
+					$('#see_job').html(worker.job);
+					$('#see_position').html(worker.position);
+					$('#see_information').html(worker.information);
+					$('#see_phone').html(worker.mobilePhone);
+					$('#see_email').html(worker.email);
+					$('#see_home_phone').html(worker.homePhone);
+					$('#see_address').html(worker.address);
+					$('.ck_yy').show();
+				}
+			})
+		}
+		
+		function selectChildrenDepartment(){
+// 			$('#w_position').empty();
+			var department = $('#w_department ').val();
+// 			alert(department);
+			$.ajax({
+				url : pathName + "/user/selectChildrenDepartment",
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8",
+				data : JSON.stringify({
+					"department" : department,
+				}),
+				success : function(data) {
+					var list =  data.result;
+					
+					if(list.length >　0){
+						$('#w_position').append("<option>" + "无"
+								+ "</option>")
+					for(var i = 0 ;i<list.length ; i++){
+						$('#w_position').append("<option>" + list[i].position
+								+ "</option>")
+					}
+				}else{
+					$('#w_position').append("<option>" + "无"
+							+ "</option>")
+				}
+				},error : function(data) {
+					alert("错误")
+				}
+				})
+			
+		}
+		
+		function selectInformation(){
+			$.ajax({
+				url : pathName + "/user/selectInformation",
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8",
+				success : function(data) {
+// 					$('#w_information').empty();
+					var list  = data.result;
+					if(list.length>0){
+					for (var i = 0; i < list.length; i++) {
+						$('#w_information').append("<option>" + list[i].information
+								+ "</option>");
+					}
+				}else{
+					$('#w_information').append("<option>" + "无"
+							+ "</option>");
+				}
+				}
+		})
+		}
+		
+		function save(){
+			var id  = $('#w_id').val();
+			var name = $('#w_name').val();
+			var department = $('#w_department').val();
+			var address = $('#w_address').val();
+			var homePhone = $('#w_jiating').val();
+			var mobilePhone = $('#w_phone').val();
+			var email = $('#w_email').val;
+			var position = $('#w_position option:selected').val();
+			var job = $('#w_job').val();
+			var information = $('#w_information option:selected').val();
+			$.ajax({
+				url : pathName + "/user/save",
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8",
+				data : JSON.stringify({
+					"department" : department,
+					"id": id ,
+					"email" :email,
+					"homePhone" : homePhone,
+					"name" :name,
+					"job" : job,
+					"position" : position,
+					"mobilePhone" : mobilePhone,
+					"address" : address,
+					"information" :information,
+				}),
+				success : function(data) {
+					alert(data.result);
+				},
+				error : function(data) {
+					alert("错误")
+				}
+				
+			})
+		
+		}
+		
+		function click1(t) {
+			$(".trbg").removeAttr("style");
+			$(".check_qx").removeAttr("checked");
+			$(t).attr("style", "background-color: #ffff99");
+			$("input[type=checkbox]", t).prop("checked", "checked");
+		}
+		
+	</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1390 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_zichan.css" rel="stylesheet" />
+<link type="text/css" href="css/XZ_bumentanchuang.css" rel="stylesheet" />
+<!-- <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script> -->
+<!-- <script type="text/javascript" src="js/jquery.form.js"></script> -->
+
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+<link type="text/css" href="css/XZ_delect.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="css/jquery.gritter.css" />
+<link rel="stylesheet" href="css/datepicker.css" />
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" />
+
+<link href="css/style.css" rel="stylesheet">
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+<script src="js/XZ_delect.js"></script>
+<!-- <script src="js/jquery-2.1.0.min.js" type="text/javascript"></script> -->
+<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="js/Authority.js"></script>
+
+<script src="js/ajaxfileupload.js" type="text/javascript"></script>
+<script src="js/date-time/bootstrap-datepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+</head>
+<script type="text/javascript">	
+	var pathName = getContextPath();
+	//获取项目
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	$(function() {
+		var assetsclass = getallassetsclass();
+		var assetsstate = getallsundryassetsstate();
+		var assetsway = selectallsundryassetsway();
+		var department = selectallbasedepartment();
+		var contractor = selectallbasecontractor();
+		var supplier = selectallsupplier();
+// 		$("#assetsclass").empty();
+// 		$("#iu_assets_class").empty();
+		for (var i = 0; i < assetsclass.length; i++) {
+			var a = $("<option>", {
+				text : assetsclass[i].assetCategory,
+				value : assetsclass[i].assetCategory
+			});
+			var b = $("<option>", {
+				text : assetsclass[i].assetCategory,
+				value : assetsclass[i].id
+			});
+			$("#assetsclass").append(a);
+			if (assetsclass[i].assetCategory != "全部") {
+				$("#iu_assets_class").append(b);
+			}
+		}
+// 		$("#assetsstate").empty();
+// 		$("#iu_assets_state").empty();
+		for (var i = 0; i < assetsstate.length; i++) {
+			var a = $("<option>", {
+				text : assetsstate[i].information,
+				value : assetsstate[i].information
+			});
+			var b = $("<option>", {
+				text : assetsstate[i].information,
+				value : assetsstate[i].id
+			});
+			if (assetsstate[i].information != "全部") {
+				$("#iu_assets_state").append(b);
+			}
+			$("#assetsstate").append(a);
+		}
+// 		$("#iu_way").empty();
+		for (var i = 0; i < assetsway.length; i++) {
+			var a = $("<option>", {
+				text : assetsway[i].information,
+				value : assetsway[i].id
+			});
+			$("#iu_way").append(a);
+		}
+		$("#iu_department_no").empty();
+		$("#iu_department").empty();
+// 		$("#department").empty();
+// 		var c=$("<option>", {
+// 			text : "全部",
+// 			value : null
+// 		});
+// 		$("#department").append(c);
+		var s="";
+		for (var i = 0; i < department.big.length; i++) {
+			if(department.big[i].department!="集团总部"){
+			s+="<li><a  onclick='showsondp(this)'>"+department.big[i].department+"</a><ul class='bm_ul'>";
+			for(var j = 0; j < department.small.length; j++){
+				if(department.small[j].pId==department.big[i].id){
+					s+="<li title='"+department.small[j].no+"' onclick='clickdepartment(this)' id='"+department.small[j].id+"'>"+department.small[j].department+"</li>";
+				}
+			}
+			s+="</ul></li>";
+			}else{
+				var s1="";
+				s1+="<span>"+department.big[i].department+"</span><ul>";
+				for(var j = 0; j < department.small.length; j++){
+				if(department.small[j].pId==department.big[i].id){
+					s1+="<li title='"+department.small[j].no+"'onclick='clickdepartment(this)' id='"+department.small[j].id+"'>"+department.small[j].department+"</li>";
+				}
+				}
+				s1+="</ul>";
+				$(".bm_con_div2").html(s1);
+			}
+		}
+		s+="</ul></li>";
+		$("#park").html(s);
+		
+		$("#iu_contractor").empty();
+		for (var i = 0; i < contractor.length; i++) {
+			var a = $("<option>", {
+				text : contractor[i].name,
+				value : contractor[i].id
+			});
+			$("#iu_contractor").append(a);
+		}
+		$("#iu_supplier").empty();
+		for (var i = 0; i < supplier.length; i++) {
+			var a = $("<option>", {
+				text : supplier[i].supplierName,
+				value : supplier[i].id
+			});
+			$("#iu_supplier").append(a);
+		}
+
+		select();
+	})
+	//获取所有承包商
+	function selectallbasecontractor() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbasecontractor",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有供应商
+	function selectallsupplier() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallsupplier",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取保修外包
+	function selectallsundryassetsway() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallsundryassetsway",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取资产类型
+	function getallassetsclass() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbaseassetclass",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取资产状态
+	function getallsundryassetsstate() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallsundryassetsstate",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有部门
+	function selectallbasedepartment() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbasedepartment",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有位置
+	function selectallposition() {
+		var data
+		$.ajax({
+			url : pathName + "/position/positionList",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	$(document).ready(function() {
+		$(".input-daterange").datepicker({
+			format : "yyyy-mm-dd",
+			language : "zh-CN",
+			keyboardNavigation : false,
+			forceParse : false,
+			autoclose : true,
+		});
+		$(".input-date-time").datetimepicker({
+			format : "yyyy-mm-dd",
+			language : "zh-CN",
+			weekStart : 1,
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			showMeridian : 1,
+			minuteStep : 10
+		});
+		$(".input-date-time-h").datetimepicker({
+			format : "yyyy-mm-dd",
+			language : "zh-CN",
+			weekStart : 1,
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			showMeridian : 1,
+			minuteStep : 1
+		});
+
+	});
+	//查询
+	function select() {
+		$
+				.ajax({
+					url : pathName + "/assets/selectassets?no="
+							+ $("#zcbh").val() + "&positionNo="
+							+ $("#wzbh").val() + "&departmentNo="
+							+ $("#bmbh").val() + "&supplierName="
+							+ $("#gys").val() + "&assetState="
+							+ $("#assetsstate").val() + "&wokerName="
+							+ $("#sqyg").val() + "&assetClass="
+							+ $("#assetsclass").val() + "&type="
+							+ $("#xh").val() + "&repair1=" + $("#bxrq1").val()
+							+ "&repair2=" + $("#bxrq2").val() + "&stuse1="
+							+ $("#stuse1").val() + "&stuse2="
+							+ $("#stuse2").val() + "&page=" + $("#page").html()
+							+ "&size=" + $("#size").val(),
+					type : "get",
+					/* data : JSON.stringify({
+						no : $("#zcbh").val(),
+						positionNo : $("#wzbh").val(),
+						departmentNo : $("#bmbh").val(),
+						supplierName : $("#gys").val(),
+						assetState : $("#assetsstate").val(),
+						wokerName : $("#sqyg").val(),
+						assetClass : $("#assetsclass").val(),
+						type : $("#xh").val(),
+						repair1 : $("#bxrq1").val(),
+						repair2 : $("#bxrq2").val(),
+						stuse1 : $("#stuse1").val(),
+						stuse2 : $("#stuse2").val(),
+						page : null,
+						length : null
+					}), */
+					/* dataType : "json", */
+					/* <tr>
+							<td><div>
+									<input name="check_qx" type="checkbox" />
+								</div></td>
+							<td><div>10001</div></td>
+							<td><div>电话座机</div></td>
+							<td><div>使用中</div></td>
+							<td><div>办公用品</div></td>
+							<td><div>管理员</div></td>
+							<td>
+								<div class="tb_cz">
+									<a class="xg">修改</a> <a class="ck">查看</a> <a class="sc">删除</a>
+								</div>
+							</td>
+						</tr> */
+					async : false,
+					contentType : "application/json;charset=UTF-8",
+					success : function(data1) {
+						data1 = eval('(' + data1 + ')');
+						$("#page").html(data1.page);
+						$("#pagesize").html(data1.pagesize);
+						$("#count").html(data1.count);
+						$("#start").html(data1.start);
+						$("#end").html(data1.end);
+						var assets = data1.assets;
+						$("#tb").empty();
+						for (var i = 0; i < assets.length; i++) {
+							var str = "";
+							str += "<tr class='data' id=" + assets[i].id
+									+ " onclick=click1(this)>";
+							/* str += $("<input>", {
+								name : 'check_qx',
+								type : 'checkbox'
+							}); */
+							str += "<td><div><input class='check_qx' type='checkbox'/></div></td>";
+							str += "<td><div>" + assets[i].no
+									+ "</div></td><td><div>"
+									+ assets[i].assetDesc
+									+ "</div></td><td><div>"
+									+ assets[i].sundryAssetsState.information
+									+ "</div></td><td><div>"
+									+ assets[i].baseAssetClass.assetCategory
+									+ "</div></td><td><div>";
+							if (assets[i].worker != null) {
+								str += assets[i].worker.name
+										+ "</div></td><td>";
+							} else {
+								str += "</div></td><td>";
+							}
+							str += "<div class='tb_cz'>";
+							/* str += $("<a>", {
+								"class" : "xg",
+								onclick : "update(" + assets[i].id + ")"
+							}); */
+							str += "<a class='xg' onclick='update("
+									+ assets[i].id
+									+ ")'>修改</a> <a class='ck' onclick='see("
+									+ assets[i].id
+									+ ")'>查看</a> <a class='sc'  onclick='deleteassets("
+									+ assets[i].id + ")'>删除</a>";
+							/* str += $("<a>", {
+								"class" : "ck",
+								onclick : "see(" + assets[i].id + ")"
+							});
+							str += $("<a>", {
+								"class" : "sc",
+								onclick : "delete(" + assets[i].id + ")"
+							}); */
+							str += "</div></td></tr>";
+							$("#tb").append(str);
+						}
+						if (assets.length < $("#size").val()) {
+							for (var i = 0; i < ($("#size").val() - assets.length); i++) {
+								var str = "<tr><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div class='tb_cz'><a class='xg'></a></div></td></tr>";
+								$("#tb").append(str);
+							}
+						}
+					}
+				})
+	}
+
+	Date.prototype.Format = function(fmt) { //author: meizz 
+		var o = {
+			"M+" : this.getMonth() + 1, //月份 
+			"d+" : this.getDate(), //日 
+			"h+" : this.getHours(), //小时 
+			"m+" : this.getMinutes(), //分 
+			"s+" : this.getSeconds(), //秒 
+			"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+			"S" : this.getMilliseconds()
+		//毫秒 
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+						: (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+	//点击tr
+	function click1(t) {
+		$(".data").removeAttr("style");
+		$(".check_qx").removeAttr("checked");
+		$(t).attr("style", "background-color: #ffff99");
+		$("input[type=checkbox]", t).prop("checked", "checked");
+	}
+	//清空那个小窗口
+	function clear() {
+		$("#iu_id").val("");
+		$("#iu_no").val("");
+		$("#iu_desc").val("");
+		$("#iu_public").val("");
+		$("#iu_department_no").val("");
+		$("#iu_department").val("");
+		$("#iu_department").val("");
+		$("#iu_department_name").val("");
+		$("#iu_position_no").val("");
+		$("#iu_position").val("");
+		$("#iu_assets_class").val("");
+		$("#iu_assets_state").val("");
+		$("#iu_worker").val("");
+		$("#iu_type").val("");
+		$("#iu_serial").val("");
+		$("#iu_manufacturer").val("");
+		$("#iu_contractor").val("");
+		$("#iu_way").val("");
+		$("#iu_enddate").val("");
+		$("#iu_enddate").val("");
+		$("#iu_way_note").val("");
+		$("#iu_asset_note").val("");
+		$("#iu_supplier").val("");
+		$("#iu_start").val("");
+		$("#iu_start").val("");
+		$("#iu_value").val("");
+		$("#iu_price").val("");
+		$("#iu_life").val("");
+		$("#iu_clear").val("");
+		$("#iu_clear").val("");
+		$("#iu_note").val("");
+	}
+	//添加按钮
+	function add() {
+		clear();
+		$("#iu_no_check").attr("src", "");
+		$("#iu_no").removeAttr("readonly");
+		$("#iu_no").attr("onblur", "checkno(this)");
+		$("#add").show();
+		$("#save").hide();
+		$('.zx_yy').show();
+	}
+	//真添加
+	function realadd() {
+		if (check()) {
+			$.ajax({
+				url : pathName + "/assets/add",
+				data : JSON.stringify({
+					no : $("#iu_no").val(),
+					assetDesc : $("#iu_desc").val(),
+					publicProperty : $("#iu_public").val(),
+					departmentId : $("#iu_department").val(),
+					positionId : $("#iu_position").val(),
+					classId : $("#iu_assets_class").val(),
+					stateId : $("#iu_assets_state").val(),
+					wokerId : $("#iu_worker").val(),
+					type : $("#iu_type").val(),
+					serialNo : $("#iu_serial").val(),
+					manufacturer : $("#iu_manufacturer").val(),
+					contractorId : $("#iu_contractor").val(),
+					wayId : $("#iu_way").val(),
+					warrantyDeadline : $("#iu_enddate").val(),
+					wayNote : $("#iu_way_note").val(),
+					assetNote : $("#iu_asset_note").val(),
+					supplierId : $("#iu_supplier").val(),
+					startDate : $("#iu_start").val(),
+					assetValue : $("#iu_value").val(),
+					purchaserPrice : $("#iu_price").val(),
+					lifeSpan : $("#iu_life").val(),
+					clearDate : $("#iu_clear").val(),
+					note : $("#iu_note").val()
+				}),
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8"
+			})
+			alert("添加成功");
+			select();
+			$('.zx_yy').hide();
+		}
+	}
+	//修改按钮
+	function update(id) {
+		$("#iu_no_check").attr("src", "");
+		$("#iu_no").attr("readonly", "readonly");
+		$("#iu_no").attr("onblur", "");
+		$("#add").hide();
+		$("#save").show();
+		clear();
+		$('.zx_yy').show();
+		var asset = selectbypk(id);
+		$("#iu_id").val(asset.id);
+		$("#iu_no").val(asset.no);
+		$("#iu_desc").val(asset.assetDesc);
+		$("#iu_public").val(asset.publicProperty);
+		$("#iu_assets_class").val(asset.classId);
+		$("#iu_assets_state").val(asset.stateId);
+		$("#iu_type").val(asset.type);
+		$("#iu_serial").val(asset.serialNo);
+		$("#iu_manufacturer").val(asset.manufacturer);
+		$("#iu_contractor").val(asset.contractorId);
+		$("#iu_way").val(asset.wayId);
+		$("#iu_enddate").val("");
+		if (asset.warrantyDeadline != null) {
+			$("#iu_enddate").val(
+					new Date(asset.warrantyDeadline).Format("yyyy-MM-dd"));
+		}
+		$("#iu_way_note").val(asset.wayNote);
+		$("#iu_asset_note").val(asset.assetNote);
+		$("#iu_supplier").val(asset.supplierId);
+		$("#iu_start").val("");
+		if (asset.startDate != null) {
+			$("#iu_start").val(new Date(asset.startDate).Format("yyyy-MM-dd"));
+		}
+		$("#iu_value").val(asset.assetValue);
+		$("#iu_price").val(asset.purchaserPrice);
+		$("#iu_life").val(asset.lifeSpan);
+		$("#iu_clear").val("");
+		if (asset.clearDate != null) {
+			$("#iu_clear").val(new Date(asset.clearDate).Format("yyyy-MM-dd"));
+		}
+		$("#iu_note").val(asset.note);
+		pubchannge();
+		if(asset.baseDepartment!=null){
+		$("#iu_department_no").val(asset.baseDepartment.no);
+		$("#iu_department_name").val(asset.baseDepartment.department);
+		$("#iu_department").val(asset.departmentId);
+		changedepartment(asset.departmentId);
+		$("#iu_position_no").val(asset.position.no);
+		$("#iu_position").val(asset.positionId);
+		$("#iu_worker").val(asset.wokerId);
+		}
+	}
+	function realupdate() {
+		if (check()) {
+			$.ajax({
+				url : pathName + "/assets/update",
+				data : JSON.stringify({
+					id : $("#iu_id").val(),
+					no : $("#iu_no").val(),
+					assetDesc : $("#iu_desc").val(),
+					publicProperty : $("#iu_public").val(),
+					departmentId : $("#iu_department").val(),
+					positionId : $("#iu_position").val(),
+					classId : $("#iu_assets_class").val(),
+					stateId : $("#iu_assets_state").val(),
+					wokerId : $("#iu_worker").val(),
+					type : $("#iu_type").val(),
+					serialNo : $("#iu_serial").val(),
+					manufacturer : $("#iu_manufacturer").val(),
+					contractorId : $("#iu_contractor").val(),
+					wayId : $("#iu_way").val(),
+					warrantyDeadline : $("#iu_enddate").val(),
+					wayNote : $("#iu_way_note").val(),
+					assetNote : $("#iu_asset_note").val(),
+					supplierId : $("#iu_supplier").val(),
+					startDate : $("#iu_start").val(),
+					assetValue : $("#iu_value").val(),
+					purchaserPrice : $("#iu_price").val(),
+					lifeSpan : $("#iu_life").val(),
+					clearDate : $("#iu_clear").val(),
+					note : $("#iu_note").val()
+				}),
+				type : "post",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8"
+			})
+			alert("修改成功");
+			select();
+			$('.zx_yy').hide();
+		}
+	}
+	//检查更新和新加的必填字段
+	function check() {
+		if ($("#iu_no").val() == null || $("#iu_no").val() == ""
+				|| $("#iu_desc").val() == null || $("#iu_desc").val() == ""
+				|| $("#iu_public").val() == null || $("#iu_public").val() == ""
+				|| $("#iu_assets_class").val() == null
+				|| $("#iu_assets_class").val() == ""
+				|| $("#iu_assets_state").val() == null
+				|| $("#iu_assets_state").val() == ""
+				|| $("#iu_way").val() == null || $("#iu_way").val() == ""
+				|| $("#iu_supplier").val() == null
+				|| $("#iu_supplier").val() == ""
+				|| $("#iu_start").val() == null || $("#iu_start").val() == ""
+				|| $("#iu_price").val() == null || $("#iu_price").val() == "") {
+			alert("必填数据没填完1");
+			return false;
+		}
+		if ($("#iu_public").val() == 0) {
+			if ($("#iu_department").val() == null
+					|| $("#iu_department").val() == ""
+					|| $("#iu_position").val() == null
+					|| $("#iu_position").val() == ""
+					|| $("#iu_worker").val() == null
+					|| $("#iu_worker").val() == "") {
+				alert("必填数据没填完");
+				return false;
+			}
+		}
+		return true;
+	}
+	//上一页
+	function pageup() {
+		var page = $("#page").html();
+		var pagesize = $("#pagesize").val();
+		if (page == "") {
+			alert("还没查询");
+		} else if (page == 1) {
+			alert("已经是第一页了");
+		} else {
+			$("#page").html(page - 1);
+			select();
+		}
+	}
+	//下一页
+	function pagedown() {
+		var page = $("#page").html();
+		var pagesize = $("#pagesize").html();
+		if (page == "") {
+			alert("还没查询");
+		} else if (page == pagesize) {
+			alert("已经是尾页了");
+		} else {
+			$("#page").html(page-1 + 2);
+			select();
+		}
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+	//根据主键查资产
+	function selectbypk(id) {
+		var data;
+		$.ajax({
+			url : pathName + "/assets/selectbypk",
+			data : {
+				id : id
+			},
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//根据主键删除
+	function deletebypk(id) {
+		$.ajax({
+			url : pathName + "/assets/deletebypk",
+			data : {
+				id : id
+			},
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8"
+		})
+	}
+	//查看资产
+	function see(id) {
+		$("[id^='s_']").each(function(){
+		　　　　$(this).html("");
+		　　})
+		  
+		var assets = selectbypk(id);
+		$("#s_no").html(assets.no);
+		$("#s_desc").html(assets.assetDesc);
+		$("#s_way").html(assets.sundryAssetsWay.information);
+		
+		$("#s_supplier").html(assets.supplier.supplierName);
+		
+		$("#s_price").html(assets.purchaserPrice);
+		$("#s_class").html(assets.baseAssetClass.assetCategory);
+		$("#s_start_date").html(assets.startDate);
+		$("#s_state").html(assets.sundryAssetsState.information);
+		$("#s_life").html(assets.lifeSpan);
+	
+		$("#s_value").html(assets.assetValue);
+		$("#s_type").html(assets.type);
+		$("#s_way_note").html(assets.wayNote);
+		$("#s_serial_no").html(assets.serialNo);
+		$("#s_asset_note").html(assets.assetNote);
+		$("#s_manufacturer").html(assets.manufacturer);
+		$("#s_note").html(assets.note);
+		if(assets.baseContractor!=null){
+			$("#s_contractor").html(assets.baseContractor.name);}
+			if(assets.worker!=null){
+			$("#s_woker").html(assets.worker.name);}
+			if(assets.baseDepartment!=null){
+			$("#s_department").html(assets.baseDepartment.department);}
+			if(assets.position!=null){
+			$("#s_position").html(assets.position.position);}
+		$('.ck_yy').show();
+		
+	}
+	//删除
+	function deleteassets(id) {
+		$('.sc_yy').show();
+		$("#deleteid").val(id);
+	}
+	 function realdelete() {
+		 deletebypk($("#deleteid").val());
+		 alert("删除成功");
+		 $('.sc_yy').hide();
+		 select(); 
+	}
+	function hidedelete() {
+		 $('.sc_yy').hide();
+	}
+	//重置
+	function reset() {
+		$("input").val("");
+		$("#d_name").val("");
+		$("#assetsstate").val("");
+		$("#assetsclass").val("");
+	}
+	//查看全部
+	function seeall() {
+		reset();
+		$("#size").val(20);
+		select();
+		$('.button_sh img').attr('src', 'img/sousuo_x1.png');
+		$('.main').slideUp();
+	}
+	//公共财产切换
+	function pubchannge() {
+		if ($("#iu_public").val() == 1) {
+			$(".xz_sel1").val("");
+			$(".xz_sel1").attr("disabled", "disabled");
+			$(".public").html("");
+			$(".xz_inp2").val("");
+		} else {
+			$(".xz_sel1").removeAttr("disabled");
+			$(".public").html("*");
+		}
+	}
+	//部门改了
+	function changedepartment(id) {
+		$.ajax({
+			url : pathName + "/assets/changedepartment",
+			data : {
+				id : id
+			},
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				$("#iu_worker").html("");
+				$("#iu_position").html("");
+				var worker = data.worker;
+				var position = data.position;
+				for (var i = 0; i < worker.length; i++) {
+					var a = $("<option>", {
+						text : worker[i].name,
+						value : worker[i].id
+					});
+					$("#iu_worker").append(a);
+				}
+				$("#iu_worker").val("");
+				for (var i = 0; i < position.length; i++) {
+					var a = $("<option>", {
+						text : position[i].position,
+						value : position[i].id
+					});
+					$("#iu_position").append(a);
+				}
+				$("#iu_position").val("");
+				$("#iu_position_no").val("");
+				$("#iu_department_no").val(data.no);
+			}
+		})
+	}
+	//只改部门
+	function changedepartment1(id) {
+	if(id=="全部"){
+	$("#bmbh").val("");
+	}else{
+		$.ajax({
+			url : pathName + "/assets/onlychangedepartment",
+			data : {
+				id : id
+			},
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				$("#bmbh").val(data.no);
+				$("#department").val(data.id);
+			}
+		})}
+	}
+	//位置改了
+	function changeposition(id) {
+		$.ajax({
+			url : pathName + "/assets/changeposition",
+			data : {
+				id : id
+			},
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				$("#iu_position_no").val(data.no);
+			}
+		})
+	}
+	//检查资产编号
+	function checkno(node) {
+		if($("#iu_no").val() == "" || $("#iu_no").val() == null) {
+			$("#iu_no_check").attr("src", "img/shoptmsc3.png");
+			$("#add").attr("disabled", "disabled");
+		} else if(escape($("#iu_no").val()).indexOf("%u") >= 0) {
+			$("#iu_no_check").attr("src", "img/shoptmsc4.png");
+			$("#add").attr("disabled", "disabled");
+		} else {
+			$.ajax({
+				url : pathName + "/assets/checkno",
+				data : {
+					no : $("#iu_no").val()
+				},
+				type : "get",
+				dataType : "json",
+				async : false,
+				contentType : "application/json;charset=UTF-8",
+				success : function(data1) {
+					if (data1) {
+						$("#iu_no_check").attr("src", "img/ddcxsh1.png");
+						$("#add").removeAttr("disabled");
+						$("#iu_no_text").html("");
+						$("#iu_no_check").show();
+					} else {
+						$("#iu_no_check").attr("src", "img/shoptmsc2.png");
+						$("#add").attr("disabled", "disabled");
+						$("#iu_no_check").show();
+					}
+					node.blur();
+				}
+			});
+		}
+	}
+	function showchoose() {
+		$(".bm_yy").show();
+	}
+	function showsondp(t){
+		$('.bm_ul').hide();
+		$(t).parent().children('ul').slideDown();
+	}
+	function clickdepartment(t){
+		if($(".zx_yy").is(":hidden")){
+			$("#department").val($(t).attr("id"));
+			$("#bmbh").val($(t).attr("title"));
+			$("#department_name").val($(t).html());
+		}else{
+			$("#iu_department").val($(t).attr("id"));
+			$("#iu_department_no").val($(t).attr("title"));
+			$("#iu_department_name").val($(t).html());
+		}
+		$('.bm_ul li,.bm_con_div2 li').removeClass('tr_bg');
+		$(t).addClass('tr_bg');
+	}
+	function closedp() {
+		if($(".zx_yy").is(":hidden")){
+			$("#department").val("");
+			$("#bmbh").val("");
+			$("#department_name").val("");
+		}else{
+			$("#iu_department").val("");
+			$("#iu_department_no").val("");
+			$("#iu_department_name").val("");
+		}
+		$(".bm_yy").hide();
+	}
+	function changedp() {
+		changedepartment($("#iu_department").val());
+		$(".bm_yy").hide();
+	}
+</script>
+
+<body marginwidth="0" marginheight="0" id="assets_html">
+	<!--main-->
+	<div class="main">
+		<ul>
+			<li class="li1">
+				<label for="zcbh">资产编号</label>
+				<input type="text" id="zcbh">
+			</li>
+			<li class="li1">
+				<label>资产类别</label>
+				<select id="assetsclass">
+					<option value="">全部</option>
+				</select>
+			</li>
+			<li class="li1">
+				<label>保修截止日期</label>
+				<input type="text" data-date-format="yyyy-mm-dd" id="bxrq1" class="form-control input-date-time-h" readonly>
+				<span class="span1">--</span>
+				<input type="text" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h" id="bxrq2" readonly>
+			</li>
+			<li class="li1">
+				<label for="wzbh">位置编号</label>
+				<input type="text" id="wzbh">
+			</li>
+			<li class="li1">
+				<label for="sqyg">授权员工</label>
+				<input type="text" id="sqyg">
+			</li>
+			<li class="li1">
+				<label>启用日期</label>
+				<input type="text" data-date-format="yyyy-mm-dd" id="stuse1" class="form-control input-date-time-h" readonly>
+				<span class="span1">--</span>
+				<input type="text" data-date-format="yyyy-mm-dd" id="stuse2" class="form-control input-date-time-h" readonly>
+			</li>
+			<li class="li1">
+				<label for="bmbh">部门</label>
+				<input type="text" class="inp3" id="bmbh" readonly="readonly" />
+				<input id="department" type="hidden">
+				<input style="width: 156px;" id="department_name" type="text" readonly="readonly" onclick="showchoose()">
+				<!-- <select class="inp2" id="department_name" onchange="changedepartment1(this.value)"><option id="d_name" value="全部">全部</option></select> -->
+			</li>
+			<li class="li1">
+				<label>资产状态</label>
+				<select id="assetsstate">
+					<option value="">全部</option>
+				</select>
+			</li>
+			<li class="li3">
+				<button id="xzzc" onclick="add()">添加新资产</button>
+				<button onclick="seeall()">查看全部</button>
+			</li>
+			<li class="li1">
+				<label for="gys">供应商</label>
+				<input type="text" id="gys">
+			</li>
+			<li class="li1">
+				<label for="xh">型号</label>
+				<input type="text" id="xh">
+			</li>
+			<li class="li3">
+				<button onclick="select()">搜&nbsp;索</button>
+				<button onclick="reset()">重&nbsp;置</button>
+			</li>
+
+		</ul>
+	</div>
+
+	<!--展开-->
+	<div class="button_sh">
+		<img src="img/sousuo_s1.png">
+	</div>
+
+	<!--table-->
+	<div class="div_tb">
+		<table border="0" cellspacing="0" cellpadding="0" id="tble">
+			<tbody>
+				<tr class="tr_tb">
+					<td>
+						<div>
+							<!-- <input id="qx" type="checkbox" /> -->
+						</div>
+					</td>
+					<td>
+						<div>资产编号</div>
+					</td>
+					<td>
+						<div>资产名称</div>
+					</td>
+					<td>
+						<div>资产状态</div>
+					</td>
+					<td>
+						<div>资产类别</div>
+					</td>
+					<td>
+						<div>授权员工</div>
+					</td>
+					<td>
+						<div class="tb_cz">操作</div>
+					</td>
+				</tr>
+			</tbody>
+			<tbody id="tb">
+			<tbody>
+				<tr>
+					<td colspan="17" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1">
+									<select id="size" onchange="select()">
+										<option value="10">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+									</select>
+								</li>
+								<li class="t_div2">
+									<img src="img/zuo1.png" onclick="pageup()">
+									<span id="page">1</span>
+									<span>/</span>
+									<span id="pagesize"></span>
+									<img src="img/you1.png" onclick="pagedown()">
+								</li>
+								<li class="t_div3">
+									<span>跳转至</span>
+									<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}">
+									<span>页</span>
+								</li>
+								<li class="t_div4">
+									共
+									<span id="count"></span>
+									条数据，当前显示
+									<span id="start"></span>
+									-
+									<span id="end"></span>
+								</li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="fh" style="width: 1315px;">
+		<button>返&nbsp;回</button>
+	</div>
+
+	<!--新增和修改页面-->
+	<div class="zx_yy" style="height: 747px;">
+		<input type="hidden" id="iu_id">
+		<div class="xz_div_z" style="height: 633px; margin-top: -316.5px;">
+			<div class="xz_title">
+				<img id="xz_close_img" src="img/u122_6.png">
+			</div>
+			<div class="xz_div0">
+				<div class="xz_div1">
+					<ul class="xz_ul">
+						<li class="xz_li1">
+							<label class="lab1">资产编号</label>
+							<input type="text" class="xz_inp11" id="iu_no" maxlength="15" style="width: 219px" onblur="checkno(this)">
+							*
+							<span id="iu_no_text"></span>
+							<img class="li1_xx" src="" id="iu_no_check">
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">资产描述</label>
+							<input type="text" required id="iu_desc">
+							*
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">资产属性</label>
+							<select id="iu_public" onchange="pubchannge()" style="width: 219px">
+								<option value="0">私有财产</option>
+								<option value="1">公共财产</option>
+							</select>
+							*
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">部门</label>
+							<input type="text" class="xz_inp2" readonly id="iu_department_no">
+							<input id="iu_department" type="hidden">
+							<input class="xz_sel1" onclick="showchoose()" readonly="readonly" required id="iu_department_name">
+							<!-- <select class="xz_sel1" required id="iu_department" onchange="changedepartment(this.value)"><option value="1">技术部</option>
+								<option value="2">人事</option>
+								<option value="3">行政</option>
+								<option value="4">财务</option>
+								<option value="5">仓库</option>
+								<option value="6">法务</option></select> -->
+							<span class="public">*</span>
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">位置</label>
+							<input type="text" class="xz_inp2" readonly id="iu_position_no">
+							<select class="xz_sel1" required id="iu_position" onchange="changeposition(this.value)">
+							</select>
+							<span class="public">*</span>
+						</li>
+
+
+
+						<li class="xz_li1">
+							<label class="lab1">资产类型</label>
+							<select id="iu_assets_class"></select>
+							*
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">资产状态</label>
+							<select required id="iu_assets_state"></select>
+							*
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">权授员工</label>
+							<select id="iu_worker">
+
+							</select>
+							<span class="public">*</span>
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">型号</label>
+							<input type="text" id="iu_type">
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">序列号</label>
+							<input type="text" id="iu_serial">
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">生产商</label>
+							<input type="text" id="iu_manufacturer">
+						</li>
+					</ul>
+					<ul class="xz_ul">
+						<li class="xz_li1">
+							<label class="lab1">承包商</label>
+							<select id="iu_contractor" style="width: 222px"></select>
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">保修/外包</label>
+							<select required id="iu_way"></select>
+							*
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">保修截止日期</label>
+							<input type="text" data-date-format="yyyy-mm-dd" id="iu_enddate" class="form-control input-date-time-h" readonly>
+						</li>
+						<li class="xz_li1">
+							<label class="lab2">保修/外包备注</label>
+							<textarea type="text" id="iu_way_note"></textarea>
+						</li>
+						<li class="xz_li1">
+							<label class="lab2">资产备注</label>
+							<textarea type="text" id="iu_asset_note"></textarea>
+						</li>
+					</ul>
+				</div>
+				<div class="xz_div2">
+					<ul>
+						<li class="xz_li2">
+							<label class="lab1">供应商</label>
+							<select id="iu_supplier" style="width: 150px; height: 22px; border: solid 1px #ccc;">
+								<option value="1">哇哈哈有限公司</option>
+							</select>
+							<!-- <input type="text" required id="iu_supplier" /> -->
+							*
+						</li>
+
+						<li class="xz_li2">
+							<label class="lab1">启用日期</label>
+							<input type="text" data-date-format="yyyy-mm-dd" id="iu_start" class="form-control input-date-time-h" required
+								readonly>
+							*
+						</li>
+
+						<li class="xz_li2">
+							<label class="lab1">资产现值</label>
+							<input type="text" required id="iu_value">
+						</li>
+
+						<li class="xz_li2">
+							<label class="lab1">采购价格</label>
+							<input type="text" required id="iu_price">
+							*
+						</li>
+						<li class="xz_li2">
+							<label class="lab1">预期寿命</label>
+							<input type="text" id="iu_life">
+						</li>
+						<li class="xz_li2">
+							<label class="lab1">清理日期</label>
+							<input type="text" data-date-format="yyyy-mm-dd" id="iu_clear" class="form-control input-date-time-h" readonly>
+						</li>
+						<li class="xz_li2">
+							<label class="lab3">备注</label>
+							<textarea type="text" id="iu_note"></textarea>
+						</li>
+					</ul>
+				</div>
+				<div class="but">
+					<button id="save" onclick="realupdate()">保&nbsp;存</button>
+					<button id="add" onclick="realadd()">添&nbsp;加</button>
+					<button id="close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--查看页面-->
+	<div class="ck_yy" style="height: 747px;">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="img/u122_6.png">
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li">
+					<span class="ck_span1">资产编号</span>
+					<span class="ck_span2" id="s_no">1000023</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">承包商</span>
+					<span class="ck_span2" id="s_contractor">美的</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产描述</span>
+					<span class="ck_span2" id="s_desc">中央空调</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">保修/外包</span>
+					<span class="ck_span2" id="s_way">保修</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">位置</span>
+					<span class="ck_span2" id="s_position">技术部第二排第三个工位</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">供应商</span>
+					<span class="ck_span2" id="s_supplier"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">部门</span>
+					<span class="ck_span2" id="s_department">技术部</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">采购价格</span>
+					<span class="ck_span2" id="s_price">2055</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产类型</span>
+					<span class="ck_span2" id="s_class">电器</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">启用日期</span>
+					<span class="ck_span2" id="s_start_date">2014/5/22</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产状态</span>
+					<span class="ck_span2" id="s_state">使用中</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">预期寿命</span>
+					<span class="ck_span2" id="s_life">20年</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">授权员工</span>
+					<span class="ck_span2" id="s_woker">管理员</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产现值</span>
+					<span class="ck_span2" id="s_value">1852</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">型号</span>
+					<span class="ck_span2" id="s_type">10026554622</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">保修/外包备注</span>
+					<span class="ck_span2" id="s_way_note">10026554622</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">系列号</span>
+					<span class="ck_span2" id="s_serial_no">4452654745445674854</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产备注</span>
+					<span class="ck_span2" id="s_asset_note"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">生产商</span>
+					<span class="ck_span2" id="s_manufacturer">美的</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">采购备注</span>
+					<span class="ck_span2" id="s_note"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<!--删除页面-->
+	<div class="sc_yy" style="height: 747px;">
+		<div class="sc_div">
+			<div class="xz_title">
+				<img id="sc_close_img" src="img/u122_6.png" onclick="hidedelete()">
+			</div>
+			<input type="hidden" id="deleteid">
+			<ul class="sc_ul">
+				<li class="sc_li1">确认删除</li>
+				<li class="sc_li3">
+					<button class="qr" onclick="realdelete()">确认</button>
+					<button class="qx" onclick="hidedelete()">取消</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/XZ_zichan.js"></script>
+
+	<div class="bm_yy" hidden="hidden">
+		<div class="bm_tc">
+			<div class="bm_top">
+				<input type="checkbox" id="bm_qd">
+				<label for="bm_qd" onclick="changedp()">确定</label>
+				<img src="img/u122_6.png" onclick="closedp()" />
+			</div>
+			<div class="bm_con">
+				<div class="bm_con_div1">
+					<span>园区</span>
+					<ul id="park">
+						<li>
+							<a>杭州园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+						<li>
+							<a>宁波园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+						<li>
+							<a>金华园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="bm_con_div2">
+					<!-- <span>总部（杭州）</span>
+					<ul>
+						<li>总经办</li>
+						<li>财务部</li>
+						<li>法务部</li>
+						<li>市场部</li>
+						<li>技术部</li>
+					</ul> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/XZ_bumentanchuang.js"></script>
+</body>
+</html>

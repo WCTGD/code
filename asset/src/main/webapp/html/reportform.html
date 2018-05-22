@@ -1,0 +1,1478 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1;charset=utf-8" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_baobiao.css" rel="stylesheet" />
+<link type="text/css" href="css/XZ_bumentanchuang.css" rel="stylesheet" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="css/jquery.gritter.css" />
+<link rel="stylesheet" href="css/datepicker.css" />
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+<script src="js/date-time/bootstrap-datepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+	Date.prototype.Format = function(fmt) { //author: meizz 
+		var o = {
+			"M+" : this.getMonth() + 1, //月份 
+			"d+" : this.getDate(), //日 
+			"h+" : this.getHours(), //小时 
+			"m+" : this.getMinutes(), //分 
+			"s+" : this.getSeconds(), //秒 
+			"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+			"S" : this.getMilliseconds()
+		//毫秒 
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+						: (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+	var pathName = getContextPath();
+	//获取项目
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	$(function() {
+		var assetsclass = getallassetsclass();
+		var department = selectallbasedepartment();
+		var position = getallposition();
+		var s = "";
+		for (var i = 0; i < department.big.length; i++) {
+			if (department.big[i].department != "集团总部") {
+				s += "<li><a  onclick='showsondp(this)'>"
+						+ department.big[i].department
+						+ "</a><ul class='bm_ul'>";
+				for (var j = 0; j < department.small.length; j++) {
+					if (department.small[j].pId == department.big[i].id) {
+						s += "<li title='" + department.small[j].no
+								+ "' onclick='clickdepartment(this)'  id='"
+								+ department.small[j].id + "'>"
+								+ department.small[j].department + "</li>";
+					}
+				}
+				s += "</ul></li>";
+			} else {
+				var s1 = "";
+				s1 += "<span>" + department.big[i].department + "</span><ul>";
+				for (var j = 0; j < department.small.length; j++) {
+					if (department.small[j].pId == department.big[i].id) {
+						s1 += "<li onclick='clickdepartment(this)' id='"
+								+ department.small[j].id + "'>"
+								+ department.small[j].department + "</li>";
+					}
+				}
+				s1 += "</ul>";
+				$(".bm_con_div2").html(s1);
+			}
+		}
+		s += "</ul></li>";
+		$("#park").html(s);
+
+		for (var i = 0; i < assetsclass.length; i++) {
+			var a = "";
+			var b = "";
+			a = "<option value="+assetsclass[i].id+">"
+					+ assetsclass[i].assetCategory + "</option>";
+			b = "<option value="+assetsclass[i].id+">"
+					+ assetsclass[i].assetCategory + "</option>";
+			$("#assetsclass1").append(a);
+			$("#assetsclass2").append(b);
+		}
+
+		var b = "";
+		for (var i = 0; i < department.small.length; i++) {
+			b += "<li><span class='xz_sp1'>></span> <span class='xz_sp1'>";
+			b += department.small[i].department;
+			b += "</span><ul class='xl_ul'>";
+			for (var j = 0; j < position.length; j++) {
+				if (position[j].dId == department.small[i].id) {
+					b += "<li><span class='xz_sp2'>></span><div class='xz_sp1' title='"
+							+ position[j].id + "' onclick='getposition(this)'>";
+					b += position[j].position;
+					b += "</div></li>";
+				}
+			}
+			b += "</ul></li>";
+		}
+		$("#iudata_position").html(b);
+	})
+	function getposition(t) {
+		$('.bb_wz').slideUp();
+		var ht = $(t).html();
+		$("#position_id").val($(t).attr("title"));
+		$('#wz_w').val(ht);
+	}
+	//获取所有位置
+	function getallposition() {
+		var data
+		$.ajax({
+			url : pathName + "/repairlist/selectallposition",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取资产类型
+	function getallassetsclass() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbaseassetclass",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	//获取所有部门
+	function selectallbasedepartment() {
+		var data
+		$.ajax({
+			url : pathName + "/assets/selectallbasedepartment",
+			type : "get",
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				data = data1;
+			}
+		})
+		return data;
+	}
+	function showchoose() {
+		$(".bm_yy").show();
+	}
+	function showsondp(t) {
+		$('.bm_ul').hide();
+		$(t).parent().children('ul').slideDown();
+	}
+	function clickdepartment(t) {
+		$("#department").val($(t).attr("id"));
+		$("#department_name").val($(t).html());
+		$('.bm_ul li,.bm_con_div2 li').removeClass('tr_bg');
+		$(t).addClass('tr_bg');
+	}
+	function closedp() {
+		$("#department").val("");
+		$("#department_name").val("");
+		$(".bm_yy").hide();
+	}
+	function changedp() {
+		$(".bm_yy").hide();
+	}
+	function listclicktr(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		encodeURI()
+		if ($(t).find('input').attr("title") != null) {
+			var day = $(t).find('input').attr("title");
+			var d2 = new Date();
+			var ms = d2.getTime() - day * 86400000;
+			var d1 = new Date(ms);
+			var d1s = d1.Format("yyyy-MM-dd");
+			var d2s = d2.Format("yyyy-MM-dd");
+			$('#listsee').attr(
+					'href',
+					encodeURI($(t).find('input').val() + "&day=" + day + "&d1="
+							+ d1s + "&d2=" + d2s));
+			$('#listdown').attr('href',
+					$(t).find('input').val() + "&d1=" + d1s + "&d2=" + d2s);
+		} else {
+			$('#listsee').attr('href', $(t).find('input').val());
+			$('#listdown').attr('href', $(t).find('input').attr('name'));
+		}
+	}
+	function baseclicktr(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		$('#basesee').attr('href', $(t).find('input').val());
+		$('#basesee').attr('target', new Date().getTime());
+		$('#basedown').attr('href', $(t).find('input').attr('name'));
+	}
+	var assets_down;
+	var assets_see;
+	function assetsclicktr(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		assets_down = $(t).find('input').val();
+		assets_see = $(t).find('input').eq(1).val();
+		// 	$("#assetsdown").attr("href",pathName+$(t).find('input').val()+"?d1="+$("#date1").val()+"&d2="+$("#date2").val()+"&did="+$("#department").val());
+		// 	$("#assetssee").attr("href",$(t).find('input').eq(1).val()+"?d1="+$("#date1").val()+"&d2="+$("#date2").val()+"&did="+$("#department").val());
+	}
+	function assetsdown() {
+		$("#assetsdown").attr("href", "");
+		if (assets_down == null) {
+			return;
+		}
+		$("#assetsdown").attr(
+				"href",
+				pathName + assets_down + "?d1=" + $("#date1").val() + "&d2="
+						+ $("#date2").val() + "&did=" + $("#department").val());
+		document.getElementById("assetsdown").click();
+	}
+	function assetssee() {
+		$("#assetssee").attr("href", "");
+		if (assets_see == null) {
+			return;
+		}
+		$("#assetssee").attr(
+				"href",
+				pathName + assets_see + "?d1=" + $("#date1").val() + "&d2="
+						+ $("#date2").val() + "&did=" + $("#department").val());
+		document.getElementById("assetssee").click();
+	}
+	var position_down;
+	var position_see;
+	function positionclick(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		/* $('.link').removeAttr('href');
+		$('.link').removeAttr('target'); */
+		position_down = $(t).find('input').attr("name");
+		position_see = $(t).find('input').val();
+	}
+	function positiondown() {
+		$("#positiondown").attr("href", "");
+		if (position_down == null) {
+			return;
+		}
+		$("#positiondown").attr("href",
+				pathName + position_down + "?pid=" + $("#position_id").val());
+		document.getElementById("positiondown").click();
+	}
+	function positionsee() {
+		$("#positionsee").attr("href", "");
+		if (position_see == null) {
+			return;
+		}
+		$("#positionsee").attr("href",
+				pathName + position_see + "?pid=" + $("#position_id").val());
+		document.getElementById("positionsee").click();
+	}
+	var day;
+	var d1;
+	var d2;
+	function dayclick(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		day = $(t).find('input').val();
+		d2 = new Date().Format("yyyy-MM-dd");
+		var d = new Date();
+		var ms = d.getTime() - day * 86400000;
+		d1 = new Date(ms).Format("yyyy-MM-dd");
+	}
+	function daydown() {
+		$("#daydown").attr("href", "");
+		if (d1 == null) {
+			return;
+		}
+		$("#daydown").attr(
+				"href",
+				pathName + "/excel/reparlistdown?d1=" + d1 + "&d2=" + d2
+						+ "&assetsClassId=" + $("#assetsclass1").val());
+		document.getElementById("daydown").click();
+	}
+	function daysee() {
+		$("#daysee").attr("href", "");
+		if (d1 == null) {
+			return;
+		}
+		var s = encodeURI($("#assetsclass1").find("option:selected").text());
+		$("#daysee").attr(
+				"href",
+				encodeURI(pathName + "/dayrepariform.html?d1=" + d1 + "&d2="
+						+ d2 + "&assetsClassId=" + $("#assetsclass1").val()
+						+ "&day=" + day + "&assetsclass=" + s));
+		document.getElementById("daysee").click();
+	}
+	var repair_see;
+	var repair_down;
+	function repairclick(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		repair_see = $(t).find('input').val();
+		repair_down = $(t).find('input').attr("name");
+	}
+	function repairdown() {
+		$("#repairdown").attr("href", "");
+		if (repair_down == null) {
+			return;
+		}
+		$("#repairdown").attr(
+				"href",
+				pathName + repair_down + "?d1=" + $("#d1").val() + "&d2="
+						+ $("#d2").val() + "&assetsClassId="
+						+ $("#assetsclass2").val());
+		document.getElementById("repairdown").click();
+	}
+	function repairsee() {
+		$("#repairsee").attr("href", "");
+		if (repair_see == null) {
+			return;
+		}
+		$("#repairsee").attr(
+				"href",
+				pathName + repair_see + "?d1=" + $("#d1").val() + "&d2="
+						+ $("#d2").val() + "&assetsClassId="
+						+ $("#assetsclass2").val());
+		document.getElementById("repairsee").click();
+	}
+	function maintainclick(t) {
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		$("#maintainsee").attr("href", pathName + $(t).find('input').val());
+		$("#maintaindown").attr("href",
+				pathName + $(t).find('input').attr("name"));
+	}
+	function workerclick(t){
+		$(t).addClass('tr_bg').siblings().removeClass('tr_bg');
+		$('#workersee').attr('href', $(t).find('input').val());
+		$('#workersee').attr('target', new Date().getTime());
+		$('#workerdown').attr('href', $(t).find('input').attr('name'));
+	}
+</script>
+
+
+
+</head>
+<body>
+	<div class="bb_content">
+		<ul class="bb_ul" id="bb_ul1">
+			<li>
+				<label>资产类型</label>
+				<select id="assetsclass1">
+					<option value="">全部</option>
+
+				</select>
+			</li>
+		</ul>
+		<ul class="bb_ul" id="bb_ul2">
+			<li>
+				<label>资产类型</label>
+				<select id="assetsclass2">
+					<option value="">全部</option>
+				</select>
+			</li>
+			<li>
+				<label>工单日期</label>
+				<input type="text" id="d1" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" readonly>
+				<span>~</span>
+				<input type="text" id="d2" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" readonly>
+			</li>
+		</ul>
+		<!--资产-->
+		<ul class="bb_ul" id="bb_ul3">
+			<li>
+				<label>部门</label>
+				<input id="department" type="hidden">
+				<input style="width: 156px;" id="department_name" type="text" readonly="readonly" onclick="showchoose()">
+				<!-- <select>
+            	<option>全部</option>
+                <option>总经办</option>
+                <option>技术部</option>
+                <option>市场部</option>
+            </select> -->
+			</li>
+			<!-- <li>
+        	<label>资产编号</label>
+            <select>
+            	<option></option>
+                <option></option>
+                <option></option>
+            </select>
+			<span>~</span>
+            <select>
+            	<option></option>
+                <option></option>
+                <option></option>
+            </select>
+        </li> -->
+			<li>
+				<label>日期</label>
+				<input type="text" data-date-format="yyyy-mm-dd" id="date1" class="form-control input-date-time-h inp1" readonly>
+				<span>~</span>
+				<input type="text" data-date-format="yyyy-mm-dd" id="date2" class="form-control input-date-time-h inp1" readonly>
+			</li>
+		</ul>
+		<ul class="bb_ul" id="bb_ul4">
+			<li>
+				<label>位置</label>
+				<input id="position_id" type="hidden">
+				<input type="text" readonly="readonly" id="wz_w" />
+			</li>
+		</ul>
+
+		<div class="bb_wz" id="iudata_position">
+			<ul>
+				<li class="wz_li">
+					<span class="xz_sp1">></span>
+					<span class="xz_sp1">技术部</span>
+					<ul class="xl_ul">
+						<li>
+							<span class="xz_sp2">></span>
+							<div class="xz_sp1">位置1</div>
+						</li>
+						<li>
+							<span class="xz_sp2">></span>
+							<div class="xz_sp1">位置2</div>
+						</li>
+						<li>
+							<span class="xz_sp2">></span>
+							<div class="xz_sp1">位置3</div>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<ul>
+				<li class="wz_li">
+					<span class="xz_sp1">></span>
+					<span class="xz_sp1">市场部</span>
+					<ul class="xl_ul">
+						<li>
+							<span class="xz_sp2">></span>
+							<div class="xz_sp1">位置1</div>
+						</li>
+						<li>
+							<span class="xz_sp2">></span>
+							<div class="xz_sp1">位置2</div>
+						</li>
+						<li>
+							<span class="xz_sp2">></span>
+							<div class="xz_sp1">位置3</div>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<div class="bb_top">
+				<a class="a_bg">列表</a>
+				<span id="bb_a0">工单</span>
+				<a>基础数据</a>
+				<a>位置</a>
+				<a>预防性维护</a>
+				<a>员工</a>
+				<a>资产</a>
+			</div>
+
+			<!--表0-->
+			<div class="div_tb">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div><input type="hidden" title="5" name="excel/reparlistdown?assetsClassId=&flag=1"
+									value="dayrepariform.html?assetsClassId=&flag=1">工单</div>
+						</td>
+						<td>
+							<div>按工作类别划分的时效为5天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div><input type="hidden" title="10" name="excel/reparlistdown?assetsClassId=&flag=1"
+									value="dayrepariform.html?assetsClassId=&flag=1">工单</div>
+						</td>
+						<td>
+							<div>按工作类别划分的时效为10天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div><input type="hidden" title="15" name="excel/reparlistdown?assetsClassId=&flag=1"
+									value="dayrepariform.html?assetsClassId=&flag=1">工单</div>
+						</td>
+						<td>
+							<div>按工作类别划分的时效为15天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" title="30" name="excel/reparlistdown?assetsClassId=&flag=1"
+									value="dayrepariform.html?assetsClassId=&flag=1">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>按工作类别划分的时效为30天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/repairlistdown?d1=&d2=&assetsClassId="
+									value="repairform.html?d1=&d2=&assetsClassId=">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>工单列表</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/reparlistdetaildown?d1=&d2=&assetsClassId="
+									value="repairdetailform.html?d1=&d2=&assetsClassId=">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>工单细节</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/deletereparlistdown?d1=&d2=&assetsClassId="
+									value="deleterepairlist.html?d1=&d2=&assetsClassId=">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>关闭的工单列表</div>
+						</td>
+					</tr>
+					<!-- <tr>
+            <td><div>工单</div></td>
+            <td><div>时效为10天及以上的工单</div></td>
+          </tr> -->
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/departmentdown" value="departmentform.html">
+								基础数据
+							</div>
+						</td>
+						<td>
+							<div>部门列表</div>
+						</td>
+					</tr>
+					<tr onclick="listclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/supplierDown" value="supplierform.html">
+								基础数据
+							</div>
+						</td>
+						<td>
+							<div>供应商列表</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a class="link" id="listdown">
+						<button>导&nbsp;出</button>
+					</a>
+					<a class="link" id="listsee" target="list">
+						<button id="yl1">预&nbsp;览</button>
+					</a>
+				</div>
+			</div>
+
+			<!--表1-->
+			<div class="gd_yy">
+				<ul class="gd_ul">
+					<li>
+						<label>工单类型</label>
+						<select id="sele">
+							<option value="1" id="op1">按工作类型划分的失效报表</option>
+							<option value="2" id="op2">按时间划分的工单报表</option>
+						</select>
+					</li>
+					<li>
+						<button id="bb_tj">提&nbsp;交</button>
+					</li>
+				</ul>
+			</div>
+			<!--按工作类型划分-->
+			<div class="div_tb1" id="tb1_work">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="dayclick(this)">
+						<td>
+							<div>
+								<input type="hidden" value="5">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>按工作类别划分时效为5天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="dayclick(this)">
+						<td>
+							<div>
+								<input type="hidden" value="10">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>按工作类别划分时效为10天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="dayclick(this)">
+						<td>
+							<div>
+								<input type="hidden" value="15">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>按工作类别划分时效为15天及以上的工单</div>
+						</td>
+					</tr>
+					<tr onclick="dayclick(this)">
+						<td>
+							<div>
+								<input type="hidden" value="30">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>按工作类别划分时效为30天及以上的工单</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="daydown"></a>
+					<button onclick="daydown()">导&nbsp;出</button>
+					<a id="daysee" target="day"></a>
+					<button onclick="daysee()" id="yl2">预&nbsp;览</button>
+				</div>
+			</div>
+			<!--按时间划分-->
+			<div class="div_tb1" id="tb1_time">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="repairclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/repairlistdown" value="/repairform.html">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>工单列表</div>
+						</td>
+					</tr>
+					<tr onclick="repairclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/reparlistdetaildown" value="/repairdetailform.html">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>工单详情</div>
+						</td>
+					</tr>
+					<tr onclick="repairclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/deletereparlistdown" value="/deleterepairlist.html">
+								工单
+							</div>
+						</td>
+						<td>
+							<div>关闭的工单列表</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="repairdown"></a>
+					<button onclick="repairdown()">导&nbsp;出</button>
+					<a id="repairsee" target="rep"></a>
+					<button onclick="repairsee()">预&nbsp;览</button>
+				</div>
+			</div>
+
+			<!--表2-->
+			<div class="div_tb">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="baseclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/departmentdown" value="departmentform.html">
+								基础数据
+							</div>
+						</td>
+						<td>
+							<div>部门列表</div>
+						</td>
+					</tr>
+					<tr onclick="baseclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/supplierDown" value="supplierform.html">
+								基础数据
+							</div>
+						</td>
+						<td>
+							<div>供应商列表</div>
+						</td>
+					</tr>
+					<tr onclick="baseclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" name="excel/supplierdetaildown" value="supplierdetailform.html">
+								基础数据
+							</div>
+						</td>
+						<td>
+							<div>供应商详情</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="basedown">
+						<button>导&nbsp;出</button>
+					</a>
+					<a id="basesee">
+						<button id="yl3">预&nbsp;览</button>
+					</a>
+				</div>
+			</div>
+
+			<!--表3-->
+			<div class="div_tb">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="positionclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/supplierDown" value="/positionhistory.html">
+								位置
+							</div>
+						</td>
+						<td>
+							<div>各位置工单历史</div>
+						</td>
+					</tr>
+					<tr onclick="positionclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/positiondown" value="/positionform.html">
+								位置
+							</div>
+						</td>
+						<td>
+							<div>实际位置列表</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="positiondown"></a>
+					<button onclick="positiondown()">导&nbsp;出</button>
+					<a id="positionsee" target="posiotion"></a>
+					<button id="yl4" onclick="positionsee()">预&nbsp;览</button>
+				</div>
+			</div>
+
+			<!--表4-->
+			<div class="div_tb">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="maintainclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/maintaindown?plan=0" value="/maintainform.html?plan=0">
+								预防性维护
+							</div>
+						</td>
+						<td>
+							<div>预防性维护计划列表</div>
+						</td>
+					</tr>
+					<tr onclick="maintainclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/maintaindetaildown?plan=0" value="/maintaindetailform.html?plan=0">
+								预防性维护
+							</div>
+						</td>
+						<td>
+							<div>预防性维护计划详情</div>
+						</td>
+					</tr>
+					<tr onclick="maintainclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/maintaindown?plan=1" value="/maintainform.html?plan=1">
+								预防性维护
+							</div>
+						</td>
+						<td>
+							<div>预防性维护工单列表</div>
+						</td>
+					</tr onclick="maintainclick(this)">
+					<tr onclick="maintainclick(this)">
+						<td>
+							<div>
+								<input type="hidden" name="/excel/maintaindetaildown?plan=1" value="/maintaindetailform.html?plan=1">
+								预防性维护
+							</div>
+						</td>
+						<td>
+							<div>预防性维护工单详情</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="maintaindown">
+						<button>导&nbsp;出</button>
+					</a>
+					<a id="maintainsee" target="maintain">
+						<button id="yl5">预&nbsp;览</button>
+					</a>
+				</div>
+			</div>
+
+			<!--表5-->
+			<div class="div_tb">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="workerclick(this)">
+						<td>
+							<div><input type="hidden" name="excel/workerdown" value="workerform.html">员工</div>
+						</td>
+						<td>
+							<div>员工列表</div>
+						</td>
+					</tr>
+					<tr onclick="workerclick(this)">
+						<td>
+							<div><input type="hidden" name="excel/workerdetaildown" value="workerdetailform.html">员工</div>
+						</td>
+						<td>
+							<div>员工详情</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="workerdown"><button>导&nbsp;出</button></a>
+					<a id="workersee"><button id="yl6">预&nbsp;览</button></a>
+				</div>
+			</div>
+
+			<!--表6-->
+			<div class="div_tb">
+				<input id="assets_url" type="hidden">
+				<input id="assets_down" type="hidden">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr class="tr_tb">
+						<td>
+							<div>报表组别</div>
+						</td>
+						<td>
+							<div>报表名称</div>
+						</td>
+					</tr>
+					<tr onclick="assetsclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" value="/excel/assetsdown">
+								<input type="hidden" value="/assetsform.html">
+								资产
+							</div>
+						</td>
+						<td>
+							<div>资产列表</div>
+						</td>
+					</tr>
+					<tr onclick="assetsclicktr(this)">
+						<td>
+							<div>
+								<input type="hidden" value="/excel/assetsdetaildown">
+								<input type="hidden" value="/assetsdetailform.html">
+								资产
+							</div>
+						</td>
+						<td>
+							<div>资产详情</div>
+						</td>
+					</tr>
+				</table>
+				<div class="fh">
+					<a id="assetsdown"></a>
+					<button onclick="assetsdown()">导&nbsp;出</button>
+					<a id="assetssee" class="assetssee" target="assets"></a>
+					<button id="yl7" onclick="assetssee()">预&nbsp;览</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--<div class="yl_yy" id="yl_yy1">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img class="ck_close_img" src="img/u122_6.png"/>
+        </div>
+        <div class="yl_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+			  <tr class="tr0">
+				<td colspan="10">
+					<div class="tb_div0">
+						<span class="tb_span1">工单列表</span>
+						<span class="tb_span2">日期范围：2016/6/22~2016/7/22</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr class="tr_tb1">
+				<td><div>工单编号</div></td>
+				<td><div>问题描述</div></td>
+				<td><div>工单类型</div></td>
+				<td><div>资产编号</div></td>
+				<td><div>资产描述</div></td>
+				<td><div>位置编号</div></td>
+				<td><div>接受日期</div></td>
+				<td><div>开始日期</div></td>
+				<td><div>完成日期</div></td>
+				<td><div class="tb_div1">工单状态</div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="fh">
+			<button>导&nbsp;出</button>
+		</div>
+    </div>
+</div>-->
+	<!--<div class="yl_yy" id="yl_yy2">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img class="ck_close_img" src="img/u122_6.png"/>
+        </div>
+        <div class="yl_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+			  <tr class="tr0">
+				<td colspan="10">
+					<div class="tb_div0">
+						<span class="tb_span1">部门列表</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr class="tr_tb1">
+				<td><div>部门编号</div></td>
+				<td><div class="tb_div1">部门描述</div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="fh">
+			<button>导&nbsp;出</button>
+		</div>
+    </div>
+</div>-->
+	<!--<div class="yl_yy" id="yl_yy3">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img class="ck_close_img" src="img/u122_6.png"/>
+        </div>
+        <div class="yl_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+			  <tr class="tr0">
+				<td colspan="10">
+					<div class="tb_div0">
+						<span class="tb_span1">实际位置列表</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr class="tr_tb1">
+				<td><div>位置编号</div></td>
+				<td><div>位置描述</div></td>
+				<td><div>部门编号</div></td>
+				<td><div class="tb_div1">部门描述</div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="fh">
+			<button>导&nbsp;出</button>
+		</div>
+    </div>
+</div>-->
+	<!--<div class="yl_yy" id="yl_yy4">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img class="ck_close_img" src="img/u122_6.png"/>
+        </div>
+        <div class="yl_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+			  <tr class="tr0">
+				<td colspan="10">
+					<div class="tb_div0">
+						<span class="tb_span1">实际位置列表</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr class="tr_tb1">
+				<td><div>任务编号</div></td>
+				<td><div>任务名称</div></td>
+				<td><div class="tb_div1">预计工时</div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="fh">
+			<button>导&nbsp;出</button>
+		</div>
+    </div>
+</div>-->
+	<!--<div class="yl_yy" id="yl_yy5">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img class="ck_close_img" src="img/u122_6.png"/>
+        </div>
+        <div class="yl_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+			  <tr class="tr0">
+				<td colspan="10">
+					<div class="tb_div0">
+						<span class="tb_span1">实际位置列表</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr class="tr_tb1">
+				<td><div>员工编号</div></td>
+				<td><div>姓名</div></td>
+				<td><div>职位</div></td>
+				<td><div>部门</div></td>
+				<td><div>联系方式</div></td>
+				<td><div class="tb_div1">类别</div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="fh">
+			<button>导&nbsp;出</button>
+		</div>
+    </div>
+</div>-->
+	<!--<div class="yl_yy" id="yl_yy6">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img class="ck_close_img" src="img/u122_6.png"/>
+        </div>
+        <div class="yl_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+			  <tr class="tr0">
+				<td colspan="10">
+					<div class="tb_div0">
+						<span class="tb_span1">工单列表</span>
+						<span class="tb_span2">日期范围：2016/6/22~2016/7/22</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr class="tr_tb1">
+				<td><div>资产编号</div></td>
+				<td><div>资产描述</div></td>
+				<td><div>位置编号</div></td>
+				<td><div>资产类别</div></td>
+				<td><div>型号</div></td>
+				<td><div>序列号</div></td>
+				<td><div>状态</div></td>
+				<td><div>部门</div></td>
+				<td><div class="tb_div1">采购价格</div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			  <tr>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div></div></td>
+				<td><div class="tb_div1"></div></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="fh">
+			<button>导&nbsp;出</button>
+		</div>
+    </div>
+</div>-->
+	<div class="bm_yy" hidden="hidden">
+		<div class="bm_tc">
+			<div class="bm_top">
+				<input type="checkbox" id="bm_qd">
+				<label for="bm_qd" onclick="changedp()">确定</label>
+				<img src="img/u122_6.png" onclick="closedp()" />
+			</div>
+			<div class="bm_con">
+				<div class="bm_con_div1">
+					<span>园区</span>
+					<ul id="park">
+						<li>
+							<a>杭州园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+						<li>
+							<a>宁波园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+						<li>
+							<a>金华园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="bm_con_div2">
+					<!-- <span>总部（杭州）</span>
+					<ul>
+						<li>总经办</li>
+						<li>财务部</li>
+						<li>法务部</li>
+						<li>市场部</li>
+						<li>技术部</li>
+					</ul> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/XZ_bumentanchuang.js"></script>
+	<script type="text/javascript" src="js/XZ_baobiao.js"></script>
+
+</body>
+</html>

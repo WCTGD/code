@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_top.css" rel="stylesheet"/>
+<link type="text/css" href="css/XZ_shouye.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<script type="text/javascript" src="js/Authority.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+pathName = getContextPath();
+function getContextPath() {
+	fullPath = document.location.pathname;
+	var index = fullPath.substr(1).indexOf("/");
+	var result = fullPath.substr(0, index + 1);
+	return result;
+}
+$(document).ready(function() {
+	$.ajax({
+		url : pathName + "/getduty",
+		type : "post",
+		async : false,
+		dataType : "json",
+		contentType : "application/json;charset=UTF-8",
+		success : function(data) {
+// 			$("#top_gw").val(data.duty+" "+data.name);
+            var str = "<p>"+data.duty+" "+data.name+" </p>";
+            $("#top_gw").append(str);
+		},
+		error: function(e) { 
+			window.location.href = pathName + "/login.html";
+		}
+	});
+});
+
+
+</script>
+</head>
+
+<body>
+<div class="top">
+   <!--<img class="top_bg" src="img/u0_0.jpg"/>-->
+   <img class="top_img" src="img/u4.png"/> 
+   <a class="top_logo">神洲酷奇资产管理</a>
+   <span class="top_gw" id="top_gw"></span>
+   <span class="time">
+   		<div class="week"></div>
+        <div class="day"></div>
+   </span>
+   <span class="tuic">
+   		<a href="/asset/quit"><img src="img/u31.png" /></a>
+   		
+   </span>
+</div>
+<div class="search">
+	<div class="search_div1">
+    	<div class="search_div2">
+        	<img src="img/u211.png"/>
+            <input type="search" placeholder="Search..."/>
+        </div>
+        <div class="search_div3">Find</div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="content_div">
+    	<img class="u_left" src="img/u_left1.png"/>
+        <div class="content_div1">
+            <div class="content_ul">
+                <a href="index.html?id=assets">
+                    <img src="img/u39.png"/>
+                </a>
+                <a href="index.html?id=user">
+                    <img src="img/u43.png"/>
+                </a>
+                <a href="index.html?id=basicDataList">
+                    <img src="img/u23.png"/>
+                </a>
+                <a href="index.html?id=positionList">
+                    <img src="img/u10.png"/>
+                </a>
+                <a href="index.html?id=repairlist">
+                    <img src="img/u37.png"/>
+                </a>
+                <a href="index.html?id=reportform">
+                    <img src="img/u41.png"/>
+                </a>
+                <a href="index.html?id=recycle">
+                    <img src="img/u51.png"/>
+                </a>
+                <a href="index.html?id=maintain">
+                    <img src="img/u53.png"/>
+                </a>
+            </div>
+        </div>
+        <img class="u_right" src="img/u_right1.png"/>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="js/XZ_top.js"></script>
+<script type="text/javascript" src="js/XZ_shouye.js"></script>
+
+</body>
+</html>

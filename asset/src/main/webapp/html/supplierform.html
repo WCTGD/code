@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_zichanliebiao.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+var pathName = getContextPath();
+//获取项目
+function getContextPath() {
+	var pathName = document.location.pathname;
+	var index = pathName.substr(1).indexOf("/");
+	var result = pathName.substr(0, index + 1);
+	return result;
+}
+	$(function() {
+		select();
+	})
+
+	//供应商
+	function select() {
+		var pageCode = $("#page").html();
+		var pagesize = $("#size").val();
+		$
+				.ajax({
+					url : pathName + "/basicData/basicDataListSupplier",
+					type : "post",
+					dataType : "json",
+					contentType : "application/json;charset=UTF-8",
+					data : JSON.stringify({
+						"pageCode" : pageCode,
+						"pageSize" : pagesize
+					}),
+					success : function(data) {
+						var p = data.page;
+						$("#page").html(p.pageCode);
+						$("#count").html(p.totalRecord);
+						$("#start").html(p.start + 1);
+						$("#end").html(p.end);
+						$("#pagecount").html(p.totalPage);
+						var basicData = data.list;
+						$("#tb").empty();
+						for (var i = 0; i < basicData.length; i++) {
+							var str = "";
+							str += "<tr><td><div>" + basicData[i].no
+									+ "</div></td><td><div>";
+							str += basicData[i].supplierName
+									+ "</div></td><td><div>";
+							str += basicData[i].contactName
+									+ "</div></td><td><div>";
+							str += basicData[i].contactJob
+									+ "</div></td><td><div>";
+							str += basicData[i].telphone
+									+ "</div></td><td><div>";
+							str += basicData[i].service + "</div></td></tr>";
+							$("#tb").append(str);
+						}
+
+						if (basicData.length < Number(pagesize)) {
+							for (var j = 0; j < (pagesize - basicData.length); j++) {
+								var str = "<tr><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td></tr>";
+								$("#tb").append(str);
+							}
+						}
+
+					}
+				})
+	}
+	//上一页
+	function pageup() {
+		var page = $("#page").html();
+		var pagesize = $("#size").val();
+		if (page == "") {
+			alert("还没查询");
+		} else if (page == 1) {
+			alert("已经是第一页了");
+		} else {
+			$("#page").html(page - 1);
+			select();
+		}
+	}
+	//下一页
+	function pagedown() {
+		var page = $("#page").html();
+		var pagesize = $("#pagecount").html();
+		if (page == "") {
+			alert("还没查询");
+		} else if (page == pagesize) {
+			alert("已经是尾页了");
+		} else {
+			$("#page").html(page-1 + 2);
+			select();
+		}
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagecount").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+</script>
+
+
+</head>
+
+<body>
+	<div class="ma_ta">
+		<!--显示块-->
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr class="zero_tr">
+				<td colspan="9" align="center" valign="middle">
+					<div class="tb_div0">
+						<span>供应商列表</span>
+					</div>
+				</td>
+			</tr>
+			<tr class="first_tr">
+				<td>
+					<div>供应商编号</div>
+				</td>
+				<td>
+					<div>供应商名称</div>
+				</td>
+				<td>
+					<div>联系人姓名</div>
+				</td>
+				<td>
+					<div>职位</div>
+				</td>
+				<td>
+					<div>电话号码</div>
+				</td>
+				<td>
+					<div>服务</div>
+				</td>
+			</tr>
+			<tbody id="tb">
+				<tr>
+					<td>
+						<div></div>
+					</td>
+					<td>
+						<div></div>
+					</td>
+					<td>
+						<div></div>
+					</td>
+					<td>
+						<div></div>
+					</td>
+					<td>
+						<div></div>
+					</td>
+					<td>
+						<div></div>
+					</td>
+				</tr>
+			</tbody>
+
+			<tr>
+				<td colspan="9" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1">
+								<select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+								</select>
+							</li>
+							<li class="t_div2">
+								<img src="img/zuo1.png" onclick="pageup()"/>
+								<span>
+									<span id="page">1</span>
+									<span>/</span>
+									<span id="pagecount"></span>
+								</span>
+								<img src="img/you1.png" onclick="pagedown()"/>
+							</li>
+							<li class="t_div3">
+								<span>跳转至</span>
+								<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}" />
+								<span>页</span>
+							</li>
+							<li class="t_div4">
+								共
+								<span id="count"></span>
+								条数据，当前显示
+								<span id="start"></span>
+								-
+								<span id="end"></span>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="fh">
+		<a href="excel/supplierDown"><button>导&nbsp;出</button></a>
+	</div>
+	<script src="js/XZ_gongyingshangliebiaobaobiao.js" type="text/javascript"></script>
+</body>
+</html>

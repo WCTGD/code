@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+
+/*搜索*/
+.search{ background:url(../img/u18.png); width:100%; height:45px; position:relative; margin-top:118px;}
+.search_in{ width:93%; height:23px; position:absolute; top:10px; left:2%; border-radius:12px 0 0 12px; border: solid 1px #999;}
+.search_sp{ display:block; width:36px; height:25px; background:#009dd9; border-radius:0 12px 12px 0; position:absolute;top:10px; left:95%;}
+.search_img{ margin-top:3px; margin-left:7px;}
+
+/*content*/
+/*.content_k{ width:100%; position:fixed; top:118px; left:0; z-index:10; background:#fff;}*/
+.content{ width:100%;height:100%; position:fixed; background:url(../img/login_main.jpg);}
+.content_img1{ position:absolute; left:25%; top:100px;}
+.content_img2{ position:absolute; left:46%; top:100px;}
+.content_img3{ position:absolute; left:67%; top:100px;}
+.content_img4{ position:absolute; left:25%; top:320px;}
+.content_img5{ position:absolute; left:46%; top:320px;}
+.content_img6{ position:absolute; left:67%; top:320px;}

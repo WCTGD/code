@@ -1,0 +1,976 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+	<link type="text/css" href="/asset/css/Xweizhi.css" rel="stylesheet"/>
+	<link type="text/css" href="/asset/css/XZ_delect.css" rel="stylesheet"/>
+	<link href="/asset/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/asset/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/asset/css/jquery-ui-1.10.3.full.min.css" />
+	<link rel="stylesheet" href="/asset/css/jquery.gritter.css" />
+	<link rel="stylesheet" href="/asset/css/datepicker.css" />
+	<link rel="stylesheet" href="/asset/css/bootstrap-datetimepicker.css" />
+	<script type="text/javascript" src="/asset/js/jquery-1.12.3.min.js"></script>
+	<script src="/asset/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="/asset/js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+	<script src="/asset/js/date-time/bootstrap-datetimepicker.js"></script>
+	<script src="/asset/js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	<link type="text/css" href="/asset/css/XZ_bumentanchuang.css" rel="stylesheet"/>
+	
+	<link rel="SHORTCUT ICON" href="/asset/img/logo.ico">
+<title>神洲酷奇资产管理</title>
+</head>
+<script type="text/javascript">
+	pathName = getContextPath();
+	 yq = 86; //园区id
+	 zb = 1;  //总部 id
+	function getContextPath() {
+		fullPath = document.location.pathname;
+		var index = fullPath.substr(1).indexOf("/");
+		var result = fullPath.substr(0, index + 1);
+		return result;
+	}
+	//前一页
+	function before(){
+		var a=$("#pageCode").html();
+		if(a>1){
+			$("#pageCode").html(a-1);
+			select();
+		}else{
+			alert("已经是第一页了")
+		}
+			
+	}
+	//后一页
+	function after(){
+		var b =$("#totalPage").html();
+		var a=$("#pageCode").html();
+		if(a<b){
+			$("#pageCode").html(Number(a)+1);
+			select();
+		}else{
+			alert("已经是最后一页了");
+		}
+		
+	}
+	
+	//跳转
+	function skip(){
+		var skipId= $(".skipId").val();
+		var b =$("#totalPage").html();
+		if(skipId<=b && skipId>=1){
+			$("#pageCode").html(skipId);
+			select();
+		}else{
+			alert("不存在！");
+		}
+	}
+	
+	//每页显示的下拉框
+	function strike(){
+		var size= $("#pageSize").val();
+		$("#pageSize").val(size);
+		select();
+	}
+	
+	// 位置条件查询
+	function select() {
+		var aNo = $("#aNo").val(); // 位置编号
+		var position = $("#positions").val(); //位置描述
+		var department = $("#department").val(); //部门
+		var pageCode = $("#pageCode").text(); 
+		var pagesize = $("#pageSize").val();
+			$.ajax({
+			url : pathName + "/position/positionList",
+			type : "post",
+			async : false,
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			data:JSON.stringify({
+				"aNo":aNo,
+				"position":position,
+				"department":department,
+				"pageCode":pageCode,
+				"pageSize":pagesize
+			}),
+			success : function(data) {
+				var p=data.page;
+				$("#pageCode").html(p.pageCode);
+				$("#totalRecord").html(p.totalRecord);
+				$("#start").html(p.start+1);
+				$("#end").html(p.end);
+				$("#totalPage").html(p.totalPage);
+				var position = data.list;
+				$("#tb").empty();
+				for (var i = 0; i < position.length; i++) {
+					var str = "";
+					str += "<tr class='data' onclick=click1(this) id='"+position[i].id+"'>";
+				    str += "<td> <div> <input class='check_qx' name='id' type='checkbox'/> </div> </td>";
+					str += "<td><div>" + position[i].aNo + "</div></td>";
+					str += "<td><div>" + position[i].department + "</div></td>";
+					str += "<td><div>" + position[i].position + "</div></td>";
+					str += "<td><div class='tb_cz'>";
+					str += "<a class='xg' onclick='updateplace(" + position[i].id + ")'>修改</a> <a class='ck' onclick='seeplace(" + position[i].id + ")'>查看</a> <a class='sc'  onclick='deleteplace(" + position[i].id + ")'>删除</a>";
+					str += "</div></td></tr>";
+// 					console.log(str);
+					$("#tb").append(str);
+				}
+				// 行里数据不够用空白行补充
+				if(position.length< Number(pagesize)){
+					for(var j=0; j<(pagesize-position.length);j++){
+						var str = "<tr><td> <div> <input name='id' type='checkbox'/> </div> </td><td><div class='td_cz'></div></td><td><div class='td_cz'></div></td><td><div class='td_cz'></div></td><td><div class='tb_cz'></div></td></tr>";
+// 						console.log(str);
+						$("#tb").append(str);
+					}
+				}
+// 				var depa = data.departments;
+// 				var name = "全部";
+// 				$('.inp3').empty();
+// 				var str="<option value=''>"+name+"</option>";
+// 				//循环出部门下拉框
+// 				for(var i = 0; i<depa.length; i++){
+// 					str+="<option value='"+depa[i].department+"'>"
+// 									+depa[i].department
+// 									+ "</option> ";
+// 				}
+				$('.inp3').append(str);
+				$('.xg').bind("click",function(){
+					$('.zx_yy').show();		
+				})
+			}
+		})
+	}
+	
+	//条件查询部门下拉框查询部门编号
+// 	function departmentToChange(){
+// 		var department = $('#department').val(); // 选中的部门
+// 		if(department == '' || department == null){
+// 			$('#inpId').val("");
+// 		}
+// 		$.ajax({
+// 			url : pathName+"/position/selectDepartmentByName?department="+department,
+// 			type : "get",
+// 			contentType : "application/json;charset=UTF-8",
+// 			success : function(data) {
+// 				var ln = data.location;
+// 					$('#inpId').val(ln.no);
+					
+// 			}
+// 		})
+// 	}
+	
+	
+	// 添加位置  查询部门
+// 	function newlocation(){
+// 		var id = $('#departmentTo').val(); // 选中的部门id
+// 		judge(id);
+// 		$.ajax({
+// 			url : pathName+"/position/selectDepartment",
+// 			type : "GET",
+// 			dataType : "json",
+// 			contenType : 'application/json;charset=UTF-8',
+// 			success : function(data) {
+// 				var depa = data.departments;
+// 				var name = "全部";
+// 				$('#departmentTo').empty();
+// 				var str="<option value=''>"+name+"</option>";
+// 				// 循环出部门列表
+// 				for(var i = 0; i<depa.length; i++){
+// 					str+="<option value='"+depa[i].id+"'>"
+// 									+depa[i].department
+// 									+ "</option> ";
+// 				}
+// 				$('#departmentTo').append(str);
+// 			}
+// 		})
+// 	}
+	
+	//添加判断座位编号是否空
+	function judge(id){
+		if(id == '' || id == null){
+			//$('#position').removeAttr("disabled");
+			$("#deptId").val("");
+			$("#position").attr({"disabled":"disabled"}); //  位置编号置灰
+			$('#position').css("background-color","#ccc"); // 颜色样式
+			$('#position').css("width","195px"); // 宽
+			$('#position').css("float","left"); // 左
+			$('#position').css("height","22px"); // 高
+			$('#position').attr("placeholder","请选择部门"); // 提示
+			$("#position").val("");
+			$("#no").val("");
+		}
+	}
+	
+	//座位编号不为空解除置灰
+	function judgeFure(){
+		 $("#position").removeAttr("disabled"); //去除置灰
+		 $('#position').attr("placeholder","请输入位置编号"); // 提示
+		 $('#position').css("background-color","#FFF"); // 颜色样式
+	}
+	
+	//部门发生改变时
+	function alterDepartment(){
+		var id = $('#departmentTo').val(); // 选中的部门id
+		judge(id);
+		if(id != ""){
+			judgeFure();
+			$.ajax({
+				url : pathName+"/position/alterDepartment",
+				type : "GET",
+				dataType : "json",
+				data :{
+					"dId":id
+				},
+				success : function(data) {
+					var depa = data.noId;
+					$("#deptId").val(depa.bNo); //部门编号
+				}
+			})
+		}
+	}
+	
+	//查询位置编号
+	function locationNumber(){
+		var id = $('#departments_bid').val(); // bid 部门id
+		var position = $('#position').val(); //座位编号
+		if(id == '' || id == null){
+			$("#deptId").val("");
+		}
+		if(id != "" &&! isNaN(position) && position != ""){
+			$.ajax({	
+				url : pathName+"/position/departmentId",
+				type : "GET",
+				dataType : "json",
+				contenType : 'application/json;charset=UTF-8',
+				data:{
+					"dId":id,
+					"aNo" : position
+				},
+				success : function(data) {
+					var no = data.lc;
+					if(no.judge == "1"){
+						$('#position').val("");
+						alert("已存在!");
+					}
+					$('#no').val(no.aNo);
+					$('#positionTwo').val(no.position);
+				}
+			})
+		}else{
+			$('.xz_inp1').val('');
+			$("#position").val("");
+		}
+		
+	}
+	
+	//全选反选
+// 	function checkboxstrike(){
+// 		var checkboxName=$("#a");
+// 		var checkName=$("input[name='id']");
+		
+// 		for(i=0;i<checkName.size();i++){
+// 			if(checkboxName.get(0).checked){
+// 				checkName.get(i).checked = true;
+// 			}else{
+// 				checkName.get(i).checked = false;
+// 			}
+// 		} 		
+//  	}
+	var id;
+	//删除位置
+	function deleteplace(a){
+		$('.sc_yy').show(); //从display:none还原元素默认或已设置的display属性
+		id=a;
+		$("#cancle").click(function(){
+			$('.sc_yy').hide();
+			
+		});
+	}
+	function realdelete(){
+		alert("删除数据");
+		$.ajax({
+			url : pathName + "/position/delete?id="+id,
+			type : "get",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data){
+				if(data == 2){
+					 $("tr[id='"+id+"']").remove();
+					 select();
+					 return;
+				}else{
+					alert("请先清除未清理数据！");
+				}
+			}
+		}) 
+		$('.sc_yy').hide();
+		 
+	}
+	
+	//修改前查询
+	function updateplace(id){
+		$.ajax({
+			url : pathName + "/position/selectPlaceById?id="+id,
+			type : "get",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var ln = data.locationId;//department  id  bid
+				$('.xz_inp1').val(ln.aNo);//位置编号
+				var depa=data.departments;
+				$('#update_position').val(data.best); // 座位编号
+				$('.update_note').val(ln.note);// 注释
+				$('.updateId').val(ln.id); // 位置id
+				$('#update_judge').val(ln.position); // 位置描述
+// 				var name = "全部";
+// 				$("#update_departments").empty();
+// 					$('#update_departments').append("<option value=''>"+name+"</option>");
+// 					$('#inputId').val(ln.bNo);
+// 				for(var i in depa){
+// 					$('#update_departments').append(
+// 							"<option value='"+depa[i].id+"'>"
+// 									+depa[i].department	
+// 									+ "</option> ");
+// 					if(ln.bid==depa[i].id){ //相等 呈选中状态
+// 						$("#update_departments").children("option[value='"+depa[i].id+"']").attr({"selected":"selected"})
+// 					}
+// 				}
+				$('#inputId').val(ln.bNo); //update_departments_bid
+				$('#update_departments').val(ln.department);
+				$('#update_departments_bid').val(ln.bid);
+			}
+		})
+	}
+	
+	//修改 座位编号不为空解除置灰
+	function judgeUpdate(id){
+		if(id == '' || id == null){
+			//$('#position').removeAttr("disabled");
+			$("#inputId").val("");
+			$("#update_position").attr({"disabled":"disabled"});
+			$('#update_position').css("background-color","#ccc");
+			$('#update_position').css("width","195px");
+			$('#update_position').css("float","left");
+			$('#update_position').css("height","22px");
+			$('#update_position').attr("placeholder","请选择部门");
+			$("#update_position").val("");
+			$("#update_no").val("");
+		}
+	}
+	
+	//修改座位编号不为空解除置灰
+	function judgeFureUpdate(){
+		 $("#update_position").removeAttr("disabled");
+		 $('#update_position').attr("placeholder","请输入位置编号");
+		 $('#update_position').css("background-color","#FFF");
+	}
+	
+	//修改前查询位置编号	部门发生改变时 (暂时不用)
+// 	function lNumber(){
+// 		var idString = $('#update_departments').val(); // d_id
+// 		var id =$('.updateId').val(); // a id
+// 		if(idString == '' || idString == null){
+// 			$("#inputId").val("");
+// 		}
+// 		$("#update_no").val("");
+// 		judgeUpdate(idString);
+// 		if(idString != ""){
+// 			judgeFureUpdate();
+// 			$.ajax({	
+// 				url : pathName+"/position/alterDepartment",
+// 				type : "GET",
+// 				dataType : "json",
+// 				contenType : 'application/json;charset=UTF-8',
+// 				data:{
+// 					"dId":idString,
+// 					"aId":id
+// 				},
+// 				success : function(data) {
+// 					var depa = data.noId;
+// 					$("#inputId").val(depa.bNo);
+// 					$('#update_judge').val(depa.department);
+// 					$("#update_position").val("");
+// 				}
+// 			})
+// 		}else{
+// 			$('.xz_inp1').val('');
+// 		}
+// 	}
+	
+	//查询位置编号 位置编号发生改变时
+	function locationNumberUpdate(){
+		var id = $('#update_departments_bid').val();  //bid
+		var position = $('#update_position').val(); //座位编号
+		if(id == '' || id == null){
+			$("#inputId").val("");
+		}
+		if(id != "" && !isNaN(position) && position != ""){
+			$.ajax({	
+				url : pathName+"/position/departmentId",
+				type : "GET",
+				dataType : "json",
+				contenType : 'application/json;charset=UTF-8',
+				data:{
+					"dId":id,
+					"aNo" : position
+				},
+				success : function(data) {
+					var no = data.lc;
+					if(no.judge == "1"){
+						$('#update_position').val("");
+						alert("已存在!");
+					}
+					$('#update_no').val(no.aNo);
+					$('#update_judge').val(no.position);
+					
+					}
+							})
+		}else{
+			$('.xz_inp1').val('');
+			$("#update_position").val("");
+		}
+		
+	}
+	
+	//查看
+	function seeplace(id){
+		$(".ck_span2").empty();
+		$.ajax({
+			url : pathName + "/position/selectPlaceById?id="+id,
+			type : "get",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var ln = data.locationId;//department  id  bid
+				$(".ck_span2").eq(0).text(ln.aNo);
+				$(".ck_span2").eq(1).text(ln.position);
+				$(".ck_span2").eq(2).text(ln.department);
+				$(".ck_span2").eq(3).text(ln.note);
+			}
+		})
+
+			$('.ck').each(function() {
+			    $(this).click(function(){
+					$('.ck_yy').show();	
+				})
+			});
+	}
+	
+	//查看全部
+	function lookAtAll(){
+		$("#bNo").val(null)
+		$("#aNo").val(null)
+		$("#department").val(null)
+		$("#positions").val(null)
+		$('.button_sh img').attr('src','/asset/img/sousuo_x1.png');
+		$('.main').slideUp();
+		var size=20;
+		$("#pageSize").val(size);
+		select();
+		
+	}
+	
+	//重置 (暂不用)
+	function resetTir(){
+		$("#bNo").val(null)
+		$("#aNo").val(null)
+		$("#department").val(null)
+		$("#positions").val(null)
+	}
+	
+	// 添加提交
+	function form_add_positon() {
+		$("#forms")[0].action = pathName + '/position/insert';
+		$("#forms")[0].submit();
+	}
+	//修改提交
+	function form_update_positon() {
+		$("#formId")[0].action = pathName + '/position/updatePosition';
+		$("#formId")[0].submit();
+	}
+	function shutDown(){
+		$("#formId")[0].action = pathName + '/position/updatePosition';
+		$("#formId")[0].submit();
+	}
+	
+	function click1(t) {
+		$(".data").removeAttr("style");
+		$(".check_qx").removeAttr("checked");
+		$(t).attr("style", "background-color: #ffff99");
+		$("input[type=checkbox]", t).prop("checked", "checked");
+	}
+	
+	function basicD(){
+// 		var divId = $("#divId").val();
+		$.ajax({
+			url : pathName + '/assets/selectallbasedepartment',
+			type : "post",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data){
+				var big = data.big; // 1,2,3,4,5  一级部门 pid  0
+				var small = data.small; // 二级部门
+				$("#yq_id").empty();
+				$("#zbId").empty();
+// 				alert(small[1].pId);
+				document.getElementById("divId").style.display=""; //去除隐藏
+				for(var i=0;i<big.length;i++){
+					if(big[i].id == parseInt(zb)){
+						for(var j=0;j<small.length;j++){
+							if(small[j].pId == big[i].id){  // 判断总部的部门并打印出来
+								var str = "<li class='cl_yq' onclick=clickYq(this) id='"+small[j].id+"'>"+small[j].department+"</li>";
+								$("#zbId").append(str);	
+							}
+						}
+					}else{
+						var str = "<li><a>"+big[i].department+"</a><ul class='bm_ul' id='"+big[i].id+"' ></ul></li>";
+						$("#yq_id").append(str);
+					}
+				}
+				$('.bm_con_div1 a').click(function(){ // 二级菜单收放
+					$('.bm_ul').hide();
+// 					//alert($("#yqId").val());
+					var yq_nm =$(this).parent().children('ul').attr("id");
+					$(this).parent().children('ul').slideDown();
+					$("#"+yq_nm+"").empty();
+					for(var a =0; a<small.length;a++){
+						if(small[a].pId == $(this).parent().children('ul').attr("id")){
+								var string = "<li class='cl_yq' onclick=clickYq(this) id='"+small[a].id+"'>"+small[a].department+"</li> ";
+								$("#"+yq_nm+"").append(string);
+						}
+					}
+				});
+			}	
+		});
+	}
+	
+	function clickYq(a){
+		$(".cl_yq").removeAttr("style");
+		$(a).attr("style", "background-color: #ffff99");
+		if(a.id == '' || a.id == null){
+			$('#inpId').val("");
+		}
+		$.ajax({
+			url : pathName+"/position/selectDepartmentByName?department="+a.id,
+			type : "get",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var ln = data.location;
+					$('#inpId').val(ln.no);
+					$("#yqId").val(ln.department);
+			}
+		})
+	}
+	
+	function confirm(){
+		var yq = $("#yqId").val();
+		$('#divId').hide();
+		$("#department").val(yq);
+		$("#update_departments").val(yq);
+		//$("#departments_bid").val(yq);
+		$("#departmentTo").val(yq);
+		
+		$('#update_position').attr("placeholder","请选择部门");
+		$("#update_position").val("");
+		$("#update_no").val("");
+	}
+	
+	function newTable(){
+		$("#department").val("");
+		$("#update_departments").val("");
+		$("#departmentTo").val("");
+		$("#inpId").val("");
+		$("#deptId").val("");
+		
+		$("#position").attr({"disabled":"disabled"}); //  位置编号置灰
+		$('#position').css("background-color","#ccc"); // 颜色样式
+		$('#position').css("width","195px"); // 宽
+		$('#position').css("float","left"); // 左
+		$('#position').css("height","22px"); // 高
+		$('#position').attr("placeholder","请选择部门"); // 提示
+		$("#position").val("");
+		$("#no").val("");
+	}
+	
+	function basicUpdate(){
+// 		var divId = $("#divId").val();
+		$.ajax({
+			url : pathName + '/assets/selectallbasedepartment',
+			type : "post",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data){
+				var big = data.big;
+				var small = data.small;
+				
+				$("#yq_id").empty();
+				$("#zbId").empty();
+				document.getElementById("divId").style.display=""; //去除隐藏
+				for(var i=0;i<big.length;i++){
+					if(big[i].id == parseInt(zb)){
+						for(var j=0;j<small.length;j++){
+							if(small[j].pId == big[i].id){  // 判断总部的部门并打印出来
+								var str = "<li class='cl_yq' onclick=update_clickYq(this) id='"+small[j].id+"'>"+small[j].department+"</li>";
+								$("#zbId").append(str);	
+							}
+						}
+					}else{
+						var str = "<li><a>"+big[i].department+"</a><ul class='bm_ul' id='"+big[i].id+"' ></ul></li>";
+						$("#yq_id").append(str);
+					}
+				}
+				$('.bm_con_div1 a').click(function(){ // 二级菜单收放
+					$('.bm_ul').hide();
+		//				//alert($("#yqId").val());
+					var yq_nm =$(this).parent().children('ul').attr("id");
+					$(this).parent().children('ul').slideDown();
+					$("#"+yq_nm+"").empty();
+					for(var a =0; a<small.length;a++){
+						if(small[a].pId == $(this).parent().children('ul').attr("id")){
+								var string = "<li class='cl_yq' onclick=update_clickYq(this) id='"+small[a].id+"'>"+small[a].department+"</li> ";
+								$("#"+yq_nm+"").append(string);
+						}
+					}
+				});
+			}	
+		});
+	}
+	
+	function update_clickYq(a){
+		$(".cl_yq").removeAttr("style");
+		$(a).attr("style", "background-color: #ffff99");
+		if(a.id == '' || a.id == null){
+			$('#inputId').val("");
+		}
+		$.ajax({
+			url : pathName+"/position/selectDepartmentByName?department="+a.id,
+			type : "get",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var ln = data.location;
+					$('#inputId').val(ln.no);
+					$("#yqId").val(ln.department);
+					$('#update_departments_bid').val(ln.id);
+			}
+		})
+	}
+	
+	function basicInsert(){
+		$.ajax({
+			url : pathName + '/assets/selectallbasedepartment',
+			type : "post",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data){
+				var big = data.big;
+				var small = data.small;
+				
+				$("#yq_id").empty();
+				$("#zbId").empty();
+				document.getElementById("divId").style.display=""; //去除隐藏
+				for(var i=0;i<big.length;i++){
+					if(big[i].id == parseInt(zb)){
+						for(var j=0;j<small.length;j++){
+							if(small[j].pId == big[i].id){  // 判断总部的部门并打印出来
+								var str = "<li class='cl_yq' onclick=insert_clickYq(this) id='"+small[j].id+"'>"+small[j].department+"</li>";
+								$("#zbId").append(str);	
+							}
+						}
+					}else{
+						var str = "<li><a>"+big[i].department+"</a><ul class='bm_ul' id='"+big[i].id+"' ></ul></li>";
+						$("#yq_id").append(str);
+					}
+				}
+				$('.bm_con_div1 a').click(function(){ // 二级菜单收放
+					$('.bm_ul').hide();
+					var yq_nm =$(this).parent().children('ul').attr("id");
+					$(this).parent().children('ul').slideDown();
+					$("#"+yq_nm+"").empty();
+					for(var a =0; a<small.length;a++){
+						if(small[a].pId == $(this).parent().children('ul').attr("id")){
+								var string = "<li class='cl_yq' onclick=insert_clickYq(this) id='"+small[a].id+"'>"+small[a].department+"</li> ";
+								$("#"+yq_nm+"").append(string);
+						}
+					}
+				});
+			}	
+		});
+	}
+	
+	function insert_clickYq(a){
+		$(".cl_yq").removeAttr("style");
+		$(a).attr("style", "background-color: #ffff99");
+		if(a.id == '' || a.id == null){
+			$('#deptId').val("");
+		}
+		$.ajax({
+			url : pathName+"/position/selectDepartmentByName?department="+a.id,
+			type : "get",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				var ln = data.location;
+					$('#deptId').val(ln.no);
+					$("#yqId").val(ln.department);
+					$('#departments_bid').val(ln.id);
+					 $("#position").removeAttr("disabled"); //去除置灰
+					 $('#position').attr("placeholder","请输入位置编号"); // 提示
+					 $('#position').css("background-color","#FFF"); // 颜色样式
+			}
+		})
+	}
+	
+	
+	
+</script>
+
+<body onload="select()">
+<!--main-->
+<div class="main">
+	<ul>
+		<li class="li1">
+			<label for="wzbh">位置编号</label>
+			<input type="text" id="aNo">
+		</li>
+		<li class="li1">
+			<label for="bmbh">部门</label>
+			<input type="text" readonly class="inp2" id="inpId" />
+			<input type="text" readonly  id="department" class="basicId" onclick="basicD()">
+<!-- 			<select class="inp3" id="department" onchange="departmentToChange()"> -->
+<!-- 			</select> -->
+		</li>
+		<li class="li1">
+			<button id="xzwz" onclick="newTable()">新&nbsp;建</button>
+			<button onclick="lookAtAll()">查看全部</button>
+		</li>
+		<li class="li1">
+			<label for="wzms" >位置描述</label>
+			<input type="text" id="positions">
+		</li>
+		<li class="li2">
+			<button onclick="select()">搜&nbsp;索</button>
+		</li>
+	</ul>
+</div>
+<!--展开-->
+<div class="button_sh">
+	<img src="/asset/img/sousuo_s1.png"/>
+</div>
+
+<!--table-->
+<div class="div_tb">
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr class="tr_tb">
+			<td><div><!-- <input id="a" onclick="checkboxstrike()"  type="checkbox" /> --></div></td>
+			<td><div>位置编号</div></td>
+			<td><div>部门</div></td>
+			<td><div>位置描述</div></td>
+			<td><div class="tb_cz">操作</div></td>
+		</tr>
+		<tbody id="tb">
+		</tbody>
+		<tr>
+			<td colspan="17" class="td_zg">
+				<div>
+					<ul>
+						<li class="t_div1" ><select id="pageSize" onchange="strike()">
+							<option value="10" selected="selected">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+						</select></li>
+						<li class="t_div2"><img src="/asset/img/zuo1.png" onclick="before()" /><span id="pageCode">1</span> <span>/</span><span id="totalPage">1</span>
+							<img src="/asset/img/you1.png" onclick="after()" /></li>
+						<li class="t_div3"><span>跳转至</span> <input type="text" id="skipId" class="skipId" onchange="skip()"/> <span>页</span>
+						</li>
+						<li class="t_div4">共<span id="totalRecord"></span>条数据，当前显示<span id="start">1</span>-<span id="end">10</span></li>
+					</ul>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<!--<div class="fh">
+    <button>返&nbsp;回</button>
+</div>-->
+
+<form action="" method="post" id="forms">
+	<input type="hidden" id="positionTwo" name="position">
+	<div class="zx_yy" style="height: 455px;">
+		<div class="xz_div_z" style="height: 341px; margin-top: -170.5px;">
+			<div class="xz_title">
+				<img id="xz_close_img" src="/asset/img/u122_2.png" />
+			</div>
+			<div class="xz_div0" style="height: 311px;">
+				<div class="xz_div1">
+					<ul class="xz_ul">
+						<li class="xz_li1">
+							<label class="lab1">部门</label>
+							<input type="text" class="xz_inp2" id="deptId" readonly>
+<!-- 							<select id="departmentTo" class="departmentTo" name="bid" onchange="alterDepartment()"> -->
+<!-- 							</select> -->
+							<input type="text" id="departmentTo" readonly class="dId"  onclick="basicInsert()"/>
+							<input type="hidden" id="departments_bid" name="bid">
+							*<!-- <input type="text" class="xz_inp4"readonly value="请选择" style="display: none;" id="bb">  -->
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">座位编号</label>
+							<input class="xz_inp3" type="text" required="required" id="position" placeholder="请输入座位编号" onblur="locationNumber()">
+							<span class="span2">号</span>
+							*<!--  <input type="text" class="xz_inp4"readonly value="请输入！" style="display: none;" id="aa"> -->
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">位置编号</label>
+							<input type="text" class="xz_inp1" readonly required="required" id="no" name="judge">
+						</li>
+						<li class="xz_li2">
+							<label class="lab1">注释</label>
+							<textarea type="text" id="note" name="note"></textarea>
+						</li>
+					</ul>
+				</div>
+				<div class="but">
+					<button id="save" onclick="form_add_positon()">保&nbsp;存</button>
+					<button id="close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<!--查看页面-->
+<div class="ck_yy" style="height: 455px;">
+	<div class="ck_div">
+		<div class="xz_title">
+			<img id="ck_close_img" src="/asset/img/u122_6.png"/>
+		</div>
+		<ul class="ck_ul">
+			<li class="ck_li">
+				<span class="ck_span1">位置编号</span>
+				<span class="ck_span2"></span>
+			</li>
+			<li class="ck_li">
+				<span class="ck_span1">位置描述</span>
+				<span class="ck_span2"></span>
+			</li>
+			<li class="ck_li">
+				<span class="ck_span1">部门</span>
+				<span class="ck_span2"></span></span>
+			</li>
+			<li class="ck_li">
+				<span class="ck_span1">注释</span>
+				<span class="ck_span2"></span></span>
+			</li>
+		</ul>
+	</div>
+</div>
+<!--删除页面-->
+<div class="sc_yy" style="height: 455px;">
+	<div class="sc_div">
+		<div class="xz_title">
+			<img id="sc_close_img" src="/asset/img/u122_6.png"/>
+		</div>
+		<ul class="sc_ul">
+			<li class="sc_li1">确认删除</li>
+			<li class="sc_li3">
+				<button class="qr" id="yes" onclick="realdelete()">确认</button>
+				<button class="qx" id="cancle">取消</button>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<!--修改页面-->
+<form action="" method="post" id="formId">
+	<div class="zx_yy" style="height: 455px;">
+		<div class="xz_div_z" style="height: 341px; margin-top: -170.5px;">
+			<div class="xz_title">
+				<img id="xz_close_img" src="/asset/img/u122_2.png" />
+			</div>
+				<div class="xz_div0" style="height: 311px;">
+				<div class="xz_div1">
+				<input type="hidden" name="id" class="updateId" id="updateId">
+				<input type="hidden" name="judge" id="update_judge">
+					<ul class="xz_ul">
+						<li class="xz_li1">
+							<label class="lab1">部门</label>
+							<input type="text" class="xz_inp2" id="inputId" readonly>
+<!-- 							<select id="update_departments" class="dId" name="bid" onchange="basicUpdate()"> -->
+<!-- 							</select> -->
+							<input type="text" id="update_departments" readonly class="dId"  onclick="basicUpdate()"/>
+							<input type="hidden" id="update_departments_bid" name="bid">
+							*<!-- <input type="text" class="xz_inp4"readonly value="请选择" style="display: none;" id="bb">  -->
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">座位编号</label>
+							<input class="xz_inp3" type="text" required="required" id="update_position" name="position" placeholder="请输入座位编号" onblur="locationNumberUpdate()">
+							<span class="span2">号</span>
+							*<!--  <input type="text" class="xz_inp4"readonly value="请输入！" style="display: none;" id="aa"> -->
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">位置编号</label>
+							<input type="text" class="xz_inp1" readonly required="required" id="update_no" name="aNo">
+						</li>
+						<li class="xz_li2">
+							<label class="lab1">注释</label>
+							<textarea type="text" id="update_note" class="update_note" name="note"></textarea>
+						</li>
+					</ul>
+				</div>
+				<div class="but">
+					<button id="update_save" onclick="form_update_positon()">保&nbsp;存</button>
+					<button id="close" onclick="shutDown()">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<input type="hidden" id="yqId">
+	<input type="hidden" id="dt">
+	<div class="bm_yy" style="display: none" id="divId">
+					<div class="bm_tc">
+						<div class="bm_top">
+							<input type="checkbox" id="bm_qd" onclick="confirm()"> <label for="bm_qd">确定</label>
+							<img src="/asset/img/u122_6.png"  id="tpId"/>
+						</div>
+						<div class="bm_con">
+							<div class="bm_con_div1">
+								<span>园区</span>
+								<ul id="yq_id">
+									<li><a>杭州园区</a>
+										<ul class="bm_ul">
+											<li>财务部</li>
+											<li>行政部</li>
+											<li>运营中心</li>
+										</ul></li>
+									<li><a>宁波园区</a>
+										<ul class="bm_ul">
+											<li>财务部</li>
+											<li>行政部</li>
+											<li>运营中心</li>
+										</ul></li>
+									<li><a>金华园区</a>
+										<ul class="bm_ul">
+											<li>财务部</li>
+											<li>行政部</li>
+											<li>运营中心</li>
+										</ul></li>
+								</ul>
+							</div>
+							<div class="bm_con_div2">
+								<span>集团总部</span>
+								<ul id="zbId">
+									<li>总经办</li>
+									<li>财务部</li>
+									<li>法务部</li>
+									<li>市场部</li>
+									<li>技术部</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+		</div>
+</form>
+	<script type="text/javascript" src="/asset/js/XZ_weizhi.js"></script>
+	<script type="text/javascript" src="/asset/js/XZ_delect.js"></script>
+	<script type="text/javascript" src="/asset/js/XZ_bumentanchuang.js"></script>
+</body>
+</html>

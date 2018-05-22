@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input,select,textarea{ margin: 0; padding: 0; outline:none;}
+table,tr,td{ margin:0; padding:0;}
+
+/*content*/
+.div_tb{width:96%; padding:10px 0;overflow:auto; margin:auto; font-size:12px; color:#333; text-align:center; white-space:nowrap; margin:auto;}
+table{ margin:auto; min-width:1100px;}
+table .tr_tb{background: #73c8e9;}
+.div_tb .tb_div0{ height:50px;border:solid 1px #009dd9; position:relative;}
+.tb_span1{ display:block; height:50px; line-height:50px; color:#009dd9; font-size:20px; text-align:center; width:364px; position:absolute; left:50%; margin-left:-182px;}
+.tb_span2{ display:block; height:50px; line-height:50px; color:#000; font-size:14px; font-weight:700; position:absolute; right:30px;}
+.div_tb div{border-bottom:solid 1px #999;border-left:solid 1px #999; height:18px; line-height:18px; padding:5px 30px;}
+.tb_div1{border-right:solid 1px #999;}
+
+table .tb_div2{border:solid 1px #009dd9;}
+.td_zg{ overflow:hidden; height:28px; line-height:28px; position:relative;}
+.t_div1{ float:left; margin-top:-2px;}
+.t_div2{ overflow:hidden; float:left; margin-left:20px;}
+.t_div2 img{ float:left; margin-top:3px;}
+.t_div2 span{ float:left; font-size:14px; font-weight:bold; margin-left:10px; margin-right:10px;}
+.t_div3{ float:left; font-size:12px; margin-left:20px;}
+.t_div3 input{ width:40px; margin-top:-2px; outline:none;}
+.t_div4{ width:180px; font-size:12px; position:absolute; left:50%; margin-left:-90px; text-align:center;}
+
+.fh{ width:96%; margin:auto; overflow:hidden;}
+.fh button{ width: 90px; height: 28px; font-size: 12px; margin-top:30px; float:right; margin-left:20px;}

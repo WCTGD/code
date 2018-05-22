@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyb2c.dao.RecycleMapper" >
+  <resultMap id="BaseResultMap" type="com.xyb2c.pojo.Recycle" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fk_id" property="fkId" jdbcType="INTEGER" />
+    <result column="tb_name" property="tbName" jdbcType="VARCHAR" />
+    <result column="operation" property="operation" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, fk_id, tb_name, operation, create_time, type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.RecycleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from recycle
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from recycle
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from recycle
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xyb2c.pojo.RecycleExample" >
+    delete from recycle
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xyb2c.pojo.Recycle" >
+    insert into recycle (id, fk_id, tb_name, 
+      operation, create_time, type
+      )
+    values (#{id,jdbcType=INTEGER}, #{fkId,jdbcType=INTEGER}, #{tbName,jdbcType=VARCHAR}, 
+      #{operation,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xyb2c.pojo.Recycle" >
+    insert into recycle
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fkId != null" >
+        fk_id,
+      </if>
+      <if test="tbName != null" >
+        tb_name,
+      </if>
+      <if test="operation != null" >
+        operation,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fkId != null" >
+        #{fkId,jdbcType=INTEGER},
+      </if>
+      <if test="tbName != null" >
+        #{tbName,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null" >
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xyb2c.pojo.RecycleExample" resultType="java.lang.Integer" >
+    select count(*) from recycle
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update recycle
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.fkId != null" >
+        fk_id = #{record.fkId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tbName != null" >
+        tb_name = #{record.tbName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operation != null" >
+        operation = #{record.operation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update recycle
+    set id = #{record.id,jdbcType=INTEGER},
+      fk_id = #{record.fkId,jdbcType=INTEGER},
+      tb_name = #{record.tbName,jdbcType=VARCHAR},
+      operation = #{record.operation,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      type = #{record.type,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xyb2c.pojo.Recycle" >
+    update recycle
+    <set >
+      <if test="fkId != null" >
+        fk_id = #{fkId,jdbcType=INTEGER},
+      </if>
+      <if test="tbName != null" >
+        tb_name = #{tbName,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null" >
+        operation = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xyb2c.pojo.Recycle" >
+    update recycle
+    set fk_id = #{fkId,jdbcType=INTEGER},
+      tb_name = #{tbName,jdbcType=VARCHAR},
+      operation = #{operation,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectRecycle" resultMap="BaseResultMap">
+  	select * from recycle where 1=1
+  	 	<if test="recycle.type !='' &amp;&amp; recycle.type != null ">
+  	 		and type=#{recycle.type}
+  	 	</if> 
+  	 	<if test="recycle.createTime !='' &amp;&amp; recycle.createTime != null ">
+  	 		and create_time between #{start} and #{end}
+  	 	</if>
+  	limit #{page.start},#{page.pageSize} 
+  </select>
+  
+  <select id="recycleCount" resultType="java.lang.Integer">
+  	select count(*) from recycle where 1=1
+  	<if test="recycle.type !='' &amp;&amp; recycle.type != null ">
+  	 		and type=#{recycle.type}
+  	</if>
+  	<if test="recycle.createTime !='' &amp;&amp; recycle.createTime != null ">
+  	 		and create_time between #{start} and #{end}
+  	</if>
+  </select>
+  
+  <select id="selectRecycleType" resultMap="BaseResultMap">
+  	select * from recycle GROUP BY type
+  </select>
+  
+  <select id="selectRecycleById" resultMap="BaseResultMap">
+  	select * from recycle where id=#{id}
+  </select>
+  
+  <update id="updateRecycleByFkidByTbname">
+  	update 
+  	<if test="tbName != 'assets' ">
+  	${tbName} set flag='1' where id=#{fkId}
+  	</if>
+  	<if test="tbName == 'assets' ">
+  	${tbName} set `show`='1' where id=#{fkId}
+  	</if>
+  </update>
+  
+  <delete id="deleteRecycleById">
+  	 delete from recycle where id=#{id}
+  </delete>
+</mapper>

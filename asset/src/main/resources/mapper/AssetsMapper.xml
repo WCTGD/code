@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyb2c.dao.AssetsMapper" >
+  <resultMap id="BaseResultMap" type="com.xyb2c.pojo.Assets" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="contractor_id" property="contractorId" jdbcType="INTEGER" />
+    <result column="asset_desc" property="assetDesc" jdbcType="VARCHAR" />
+    <result column="way_id" property="wayId" jdbcType="INTEGER" />
+    <result column="warranty_deadline" property="warrantyDeadline" jdbcType="DATE" />
+    <result column="way_note" property="wayNote" jdbcType="VARCHAR" />
+    <result column="asset_note" property="assetNote" jdbcType="VARCHAR" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="state_id" property="stateId" jdbcType="INTEGER" />
+    <result column="woker_id" property="wokerId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
+    <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="asset_value" property="assetValue" jdbcType="DOUBLE" />
+    <result column="purchaser_price" property="purchaserPrice" jdbcType="DOUBLE" />
+    <result column="life_span" property="lifeSpan" jdbcType="VARCHAR" />
+    <result column="clear_date" property="clearDate" jdbcType="DATE" />
+    <result column="public_property" property="publicProperty" jdbcType="INTEGER" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="regain_time" property="regainTime" jdbcType="TIMESTAMP" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="show" property="show" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, no, contractor_id, asset_desc, way_id, warranty_deadline, way_note, asset_note, 
+    position_id, department_id, class_id, state_id, woker_id, type, serial_no, manufacturer, 
+    supplier_id, start_date, asset_value, purchaser_price, life_span, clear_date, public_property, 
+    note, regain_time, delete_time, create_time, modify_time, `show`
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.AssetsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from assets
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from assets
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from assets
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xyb2c.pojo.AssetsExample" >
+    delete from assets
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xyb2c.pojo.Assets" >
+    insert into assets (id, no, contractor_id, 
+      asset_desc, way_id, warranty_deadline, 
+      way_note, asset_note, position_id, 
+      department_id, class_id, state_id, 
+      woker_id, type, serial_no, 
+      manufacturer, supplier_id, start_date, 
+      asset_value, purchaser_price, life_span, 
+      clear_date, public_property, note, 
+      regain_time, delete_time, create_time, 
+      modify_time, `show`)
+    values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, #{contractorId,jdbcType=INTEGER}, 
+      #{assetDesc,jdbcType=VARCHAR}, #{wayId,jdbcType=INTEGER}, #{warrantyDeadline,jdbcType=DATE}, 
+      #{wayNote,jdbcType=VARCHAR}, #{assetNote,jdbcType=VARCHAR}, #{positionId,jdbcType=INTEGER}, 
+      #{departmentId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, #{stateId,jdbcType=INTEGER}, 
+      #{wokerId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{serialNo,jdbcType=VARCHAR}, 
+      #{manufacturer,jdbcType=VARCHAR}, #{supplierId,jdbcType=INTEGER}, #{startDate,jdbcType=DATE}, 
+      #{assetValue,jdbcType=DOUBLE}, #{purchaserPrice,jdbcType=DOUBLE}, #{lifeSpan,jdbcType=VARCHAR}, 
+      #{clearDate,jdbcType=DATE}, #{publicProperty,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, 
+      #{regainTime,jdbcType=TIMESTAMP}, #{deleteTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{show,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xyb2c.pojo.Assets" >
+    insert into assets
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="contractorId != null" >
+        contractor_id,
+      </if>
+      <if test="assetDesc != null" >
+        asset_desc,
+      </if>
+      <if test="wayId != null" >
+        way_id,
+      </if>
+      <if test="warrantyDeadline != null" >
+        warranty_deadline,
+      </if>
+      <if test="wayNote != null" >
+        way_note,
+      </if>
+      <if test="assetNote != null" >
+        asset_note,
+      </if>
+      <if test="positionId != null" >
+        position_id,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="stateId != null" >
+        state_id,
+      </if>
+      <if test="wokerId != null" >
+        woker_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="serialNo != null" >
+        serial_no,
+      </if>
+      <if test="manufacturer != null" >
+        manufacturer,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="assetValue != null" >
+        asset_value,
+      </if>
+      <if test="purchaserPrice != null" >
+        purchaser_price,
+      </if>
+      <if test="lifeSpan != null" >
+        life_span,
+      </if>
+      <if test="clearDate != null" >
+        clear_date,
+      </if>
+      <if test="publicProperty != null" >
+        public_property,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="regainTime != null" >
+        regain_time,
+      </if>
+      <if test="deleteTime != null" >
+        delete_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="show != null" >
+        `show`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="contractorId != null" >
+        #{contractorId,jdbcType=INTEGER},
+      </if>
+      <if test="assetDesc != null" >
+        #{assetDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="wayId != null" >
+        #{wayId,jdbcType=INTEGER},
+      </if>
+      <if test="warrantyDeadline != null" >
+        #{warrantyDeadline,jdbcType=DATE},
+      </if>
+      <if test="wayNote != null" >
+        #{wayNote,jdbcType=VARCHAR},
+      </if>
+      <if test="assetNote != null" >
+        #{assetNote,jdbcType=VARCHAR},
+      </if>
+      <if test="positionId != null" >
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="stateId != null" >
+        #{stateId,jdbcType=INTEGER},
+      </if>
+      <if test="wokerId != null" >
+        #{wokerId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="manufacturer != null" >
+        #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="assetValue != null" >
+        #{assetValue,jdbcType=DOUBLE},
+      </if>
+      <if test="purchaserPrice != null" >
+        #{purchaserPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="lifeSpan != null" >
+        #{lifeSpan,jdbcType=VARCHAR},
+      </if>
+      <if test="clearDate != null" >
+        #{clearDate,jdbcType=DATE},
+      </if>
+      <if test="publicProperty != null" >
+        #{publicProperty,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="regainTime != null" >
+        #{regainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null" >
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="show != null" >
+        #{show,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xyb2c.pojo.AssetsExample" resultType="java.lang.Integer" >
+    select count(*) from assets
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update assets
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.no != null" >
+        no = #{record.no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractorId != null" >
+        contractor_id = #{record.contractorId,jdbcType=INTEGER},
+      </if>
+      <if test="record.assetDesc != null" >
+        asset_desc = #{record.assetDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wayId != null" >
+        way_id = #{record.wayId,jdbcType=INTEGER},
+      </if>
+      <if test="record.warrantyDeadline != null" >
+        warranty_deadline = #{record.warrantyDeadline,jdbcType=DATE},
+      </if>
+      <if test="record.wayNote != null" >
+        way_note = #{record.wayNote,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetNote != null" >
+        asset_note = #{record.assetNote,jdbcType=VARCHAR},
+      </if>
+      <if test="record.positionId != null" >
+        position_id = #{record.positionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.departmentId != null" >
+        department_id = #{record.departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.classId != null" >
+        class_id = #{record.classId,jdbcType=INTEGER},
+      </if>
+      <if test="record.stateId != null" >
+        state_id = #{record.stateId,jdbcType=INTEGER},
+      </if>
+      <if test="record.wokerId != null" >
+        woker_id = #{record.wokerId,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serialNo != null" >
+        serial_no = #{record.serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manufacturer != null" >
+        manufacturer = #{record.manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supplierId != null" >
+        supplier_id = #{record.supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="record.startDate != null" >
+        start_date = #{record.startDate,jdbcType=DATE},
+      </if>
+      <if test="record.assetValue != null" >
+        asset_value = #{record.assetValue,jdbcType=DOUBLE},
+      </if>
+      <if test="record.purchaserPrice != null" >
+        purchaser_price = #{record.purchaserPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.lifeSpan != null" >
+        life_span = #{record.lifeSpan,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clearDate != null" >
+        clear_date = #{record.clearDate,jdbcType=DATE},
+      </if>
+      <if test="record.publicProperty != null" >
+        public_property = #{record.publicProperty,jdbcType=INTEGER},
+      </if>
+      <if test="record.note != null" >
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regainTime != null" >
+        regain_time = #{record.regainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.deleteTime != null" >
+        delete_time = #{record.deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.show != null" >
+        `show` = #{record.show,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update assets
+    set id = #{record.id,jdbcType=INTEGER},
+      no = #{record.no,jdbcType=VARCHAR},
+      contractor_id = #{record.contractorId,jdbcType=INTEGER},
+      asset_desc = #{record.assetDesc,jdbcType=VARCHAR},
+      way_id = #{record.wayId,jdbcType=INTEGER},
+      warranty_deadline = #{record.warrantyDeadline,jdbcType=DATE},
+      way_note = #{record.wayNote,jdbcType=VARCHAR},
+      asset_note = #{record.assetNote,jdbcType=VARCHAR},
+      position_id = #{record.positionId,jdbcType=INTEGER},
+      department_id = #{record.departmentId,jdbcType=INTEGER},
+      class_id = #{record.classId,jdbcType=INTEGER},
+      state_id = #{record.stateId,jdbcType=INTEGER},
+      woker_id = #{record.wokerId,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=VARCHAR},
+      serial_no = #{record.serialNo,jdbcType=VARCHAR},
+      manufacturer = #{record.manufacturer,jdbcType=VARCHAR},
+      supplier_id = #{record.supplierId,jdbcType=INTEGER},
+      start_date = #{record.startDate,jdbcType=DATE},
+      asset_value = #{record.assetValue,jdbcType=DOUBLE},
+      purchaser_price = #{record.purchaserPrice,jdbcType=DOUBLE},
+      life_span = #{record.lifeSpan,jdbcType=VARCHAR},
+      clear_date = #{record.clearDate,jdbcType=DATE},
+      public_property = #{record.publicProperty,jdbcType=INTEGER},
+      note = #{record.note,jdbcType=VARCHAR},
+      regain_time = #{record.regainTime,jdbcType=TIMESTAMP},
+      delete_time = #{record.deleteTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      `show` = #{record.show,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xyb2c.pojo.Assets" >
+    update assets
+    <set >
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="contractorId != null" >
+        contractor_id = #{contractorId,jdbcType=INTEGER},
+      </if>
+      <if test="assetDesc != null" >
+        asset_desc = #{assetDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="wayId != null" >
+        way_id = #{wayId,jdbcType=INTEGER},
+      </if>
+      <if test="warrantyDeadline != null" >
+        warranty_deadline = #{warrantyDeadline,jdbcType=DATE},
+      </if>
+      <if test="wayNote != null" >
+        way_note = #{wayNote,jdbcType=VARCHAR},
+      </if>
+      <if test="assetNote != null" >
+        asset_note = #{assetNote,jdbcType=VARCHAR},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="stateId != null" >
+        state_id = #{stateId,jdbcType=INTEGER},
+      </if>
+      <if test="wokerId != null" >
+        woker_id = #{wokerId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        serial_no = #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="manufacturer != null" >
+        manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="assetValue != null" >
+        asset_value = #{assetValue,jdbcType=DOUBLE},
+      </if>
+      <if test="purchaserPrice != null" >
+        purchaser_price = #{purchaserPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="lifeSpan != null" >
+        life_span = #{lifeSpan,jdbcType=VARCHAR},
+      </if>
+      <if test="clearDate != null" >
+        clear_date = #{clearDate,jdbcType=DATE},
+      </if>
+      <if test="publicProperty != null" >
+        public_property = #{publicProperty,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="regainTime != null" >
+        regain_time = #{regainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null" >
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="show != null" >
+        `show` = #{show,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xyb2c.pojo.Assets" >
+    update assets
+    set no = #{no,jdbcType=VARCHAR},
+      contractor_id = #{contractorId,jdbcType=INTEGER},
+      asset_desc = #{assetDesc,jdbcType=VARCHAR},
+      way_id = #{wayId,jdbcType=INTEGER},
+      warranty_deadline = #{warrantyDeadline,jdbcType=DATE},
+      way_note = #{wayNote,jdbcType=VARCHAR},
+      asset_note = #{assetNote,jdbcType=VARCHAR},
+      position_id = #{positionId,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      class_id = #{classId,jdbcType=INTEGER},
+      state_id = #{stateId,jdbcType=INTEGER},
+      woker_id = #{wokerId,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      serial_no = #{serialNo,jdbcType=VARCHAR},
+      manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      supplier_id = #{supplierId,jdbcType=INTEGER},
+      start_date = #{startDate,jdbcType=DATE},
+      asset_value = #{assetValue,jdbcType=DOUBLE},
+      purchaser_price = #{purchaserPrice,jdbcType=DOUBLE},
+      life_span = #{lifeSpan,jdbcType=VARCHAR},
+      clear_date = #{clearDate,jdbcType=DATE},
+      public_property = #{publicProperty,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR},
+      regain_time = #{regainTime,jdbcType=TIMESTAMP},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      `show` = #{show,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExamplePage" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.AssetsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from assets
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    limit #{start},#{size}
+  </select>
+  
+   <!-- qkr -->
+   <select id="assetsSelect" resultMap="BaseResultMap">
+  	select * from assets where `show`='1' limit #{start},#{pageSize}
+  </select>
+  <select id="countAssets" resultType="java.lang.Integer">
+  	select count(*) from assets where `show`='1'
+  </select>
+  <update id="deleteAssetsByNo" parameterType="com.xyb2c.pojo.Assets">
+  	update assets set `show`='0' where `no`=#{no}
+  </update>
+  <select id="selectAssets" resultMap="BaseResultMap">
+  	select * from assets where  `show`='1' 
+  </select>
+  <select id="selectByNo" resultMap="BaseResultMap">
+  	select * from assets where  `show`='1' and `no`=#{no}
+  </select>
+  <select id="selectAssetsByShow" resultMap="BaseResultMap">
+  	select * from assets where  `show`='0'
+  </select>
+</mapper>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_zichanliebiao.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+	var pathName = getContextPath();
+	//获取项目
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	$(function() {
+		select();
+	})
+	function select() {
+		$
+				.ajax({
+					url : pathName + "/excel/workerselect",
+					type : "get",
+					dataType : "json",
+					data : {
+						size : $("#size").val(),
+						page : $("#page").html()
+					},
+					async : false,
+					contentType : "application/json;charset=UTF-8",
+					success : function(data1) {
+						$("#count").html(data1.count);
+						$("#pagesize").html(data1.pagesize);
+						$("#start").html(data1.start);
+						$("#end").html(data1.end);
+						var data = data1.data;
+						var a = "";
+						for (var i = 0; i < data.length; i++) {
+							a += "<tr><td><div>";
+							a += data[i].id;
+							a += "</div></td><td><div>"
+							a += data[i].name;
+							a += "</div></td><td><div>"
+							a += data[i].job;
+							a += "</div></td><td><div>"
+							if (data[i].department != null) {
+								a += data[i].department;
+							}
+							a += "</div></td><td><div>"
+							if (data[i].mobilePhone != null) {
+								a += data[i].mobilePhone;
+							}
+							a += "</div></td><td><div>"
+							if (data[i].information != null) {
+								a += data[i].information;
+							}
+							a += "</div></td></tr>";
+						}
+						for (var i = 0; i < $("#size").val()
+								- data.length; i++) {
+							a += "<tr><td><div></div></td><td><div>";
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div class='tb_div1'></div></td></tr>";
+						}
+						$("#tablebd").html(a);
+
+					}
+				})
+	}
+	//翻页
+	function pageleft() {
+		if ($("#page").html() == 1) {
+			alert("已经是第一页了");
+		} else {
+			$("#page").html($("#page").html() - 1)
+		}
+		select();
+	}
+	function pageright() {
+		if ($("#page").html() == $("#pagesize").html()) {
+			alert("已经是尾页了");
+		} else {
+			$("#page").html(parseInt($("#page").html()) + 1);
+		}
+		select();
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div class="ma_ta">
+		<!--显示块-->
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr class="zero_tr">
+				<td colspan="9" align="center" valign="middle">
+					<div class="tb_div0">
+						<span>员工列表</span>
+					</div>
+				</td>
+			</tr>
+			<tr class="first_tr">
+				<td>
+					<div>员工编号</div>
+				</td>
+				<td>
+					<div>姓名</div>
+				</td>
+				<td>
+					<div>职位</div>
+				</td>
+				<td>
+					<div>部门</div>
+				</td>
+				<td>
+					<div>联系方式</div>
+				</td>
+				<td>
+					<div>类别</div>
+				</td>
+			</tr>
+			<tbody id="tablebd"></tbody>
+			<tr>
+				<td colspan="9" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1">
+								<select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+								</select>
+							</li>
+							<li class="t_div2">
+								<img src="img/zuo1.png" onclick="pageleft()" />
+								<span id="page">1</span>
+								<span>/</span>
+								<span id="pagesize"></span>
+								<img src="img/you1.png" onclick="pageright()" />
+							</li>
+							<li class="t_div3">
+								<span>跳转至</span>
+								<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}" />
+								<span>页</span>
+							</li>
+							<li class="t_div4">
+								共
+								<span id="count"></span>
+								条数据，当前显示
+								<span id="start"></span>
+								<span>-</span>
+								<span id="end"></span>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="fh">
+		<a href="excel/workerdown">
+			<button>导&nbsp;出</button>
+		</a>
+
+	</div>
+	<script type="text/javascript" src="js/XZ_yuangongliebiaobaobiao.js"></script>
+</body>
+</html>

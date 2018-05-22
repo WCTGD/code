@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+/*main*/
+.main{ width: 100%; height: 184px;}
+.main ul{ width: 1086px; height: 124px; padding: 30px 0; margin: auto; overflow: hidden;}
+.main ul .li1{ float: left; height: 28px; overflow: hidden; display: inline-block; margin-right: 20px; margin-bottom: 20px;}
+.main ul .li2{ float: left; height: 28px; overflow: hidden; display: inline-block; margin-right: 20px; margin-bottom: 20px; margin-left:40px;}
+.main .li1 label{ font-size: 18px; color: #000; font-weight: bold; text-align: right;  float: left; margin-right: 20px; line-height: 28px;}
+.main .li1 input{ width: 222px; height: 26px; border: 0; border: solid 1px #ccc;}
+.main .li2 label{ font-size: 12px; color: #666; line-height: 28px; float: left; margin: 0 20px 0 5px;}
+.main .li2 input{ width: 14px; height: 14px; border: 0;border: solid 1px #ccc; float: left; margin-top: 7px;}
+.main button{ width: 90px; height: 28px; font-size: 12px;}
+/*table*/
+.tr_bg{ background:#ffff99;}
+.ma_ta{ width:96%; margin:auto; overflow:auto;}
+.ma_ta table{ border-top:solid 1px #666; border-left:solid 1px #666; margin:auto; min-width:1100px;}
+.ma_ta .first_tr div{ background:#003333; color:#ccc;}
+.ma_ta div{ font-family:"微软雅黑"; font-size:12px; color:#333; display:block; text-align:center; height:28px; line-height:28px; padding:0 20px; border-bottom:solid 1px #666; border-right:solid 1px #666; }
+.ma_ta div p{ float:left; margin:0 5px; cursor:pointer;color:#009dd9;}
+
+.td_zg{ overflow:hidden; height:28px; background:#fff; line-height:28px; position:relative;}
+.td_zg ul{overflow:hidden;}
+.t_div1{ float:left;}
+.t_div2{ overflow:hidden; float:left; margin-left:20px;}
+.t_div2 img{ float:left; margin-top:8px;}
+.t_div2 span{ float:left; font-size:14px; font-weight:bold; margin-left:10px; margin-right:10px;}
+.t_div3{ float:left; font-size:12px; margin-left:20px;}
+.t_div3 input{ width:40px; outline:none; height:20px; line-height: 20px;}
+.t_div4{ width:180px; font-size:12px; position:absolute; left:50%; margin-left:-90px; text-align:center;}
+
+.fh{ width:96%; margin:auto; overflow:hidden;}
+.fh button{ width: 90px; height: 28px; font-size: 12px; margin-top:30px; float:right; margin-left:20px;}
+/*新安全指导*/
+.aqzd_yy{width:100%; height: 100%; position:fixed; z-index:10; top:0; left:0; background:rgba(0,0,0,0.5); display: none;}
+.aqzd_k{width:500px; height: 200px; background: #fff; position: absolute; left: 50%; margin-left: -250px; top: 50%; margin-top: -100px;}
+.aqzd_div1{width:400px; height: 26px; margin: 50px; overflow: hidden; position: relative;}
+.div1_sc{float:left;}
+.div1_sc label{font-size:14px; margin-right: 10px;}
+.div1_sc input{width:274px; height: 24px; border:1px solid #999;color: #333;}
+.div1_sc_button{width:80px; height: 24px; line-height: 24px; text-align: center;float:left; border: 1px solid #999; margin-left: -1px; color: #333; }
+.in_file{position: absolute; width: 78px; height: 24px; right: 6px; opacity: 0;}
+.aqzd_div2{ float:right; margin-right: 54px;}
+.aqzd_div2 button{width:80px; height: 24px; font-size: 12px; margin-left: 20px;}

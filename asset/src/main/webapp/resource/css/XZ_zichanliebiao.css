@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+/*table*/
+.tr_bg{ background:#ffff99;}
+.ma_ta{ width:96%; margin:auto; overflow:auto; white-space:nowrap;padding: 10px 0;}
+.ma_ta table{ border-top:solid 1px #003333; border-left:solid 1px #666; margin:auto; min-width:1100px; }
+.ma_ta .tb_div0{ height: 40px; line-height: 40px; background: #fff;}
+.ma_ta .first_tr div{ background:#003333; color:#ccc;}
+.ma_ta .zero_tr span{ color:#003333; font-size:20px;}
+.zero_tr a{ display:inline-block; padding:0px 10px; border:solid 1px #ccc; font-size:12px; color:#999;}
+.ma_ta div{ font-family:"微软雅黑"; font-size:12px; color:#333; display:block; text-align:center; height:18px; line-height:18px; padding:5px 20px; border-bottom:solid 1px #666;  border-right:solid 1px #666;}
+.ma_ta div p{ float:right; margin:0 5px; cursor:pointer;color:#999;}
+.td_zg{ overflow:hidden; height:28px; line-height:28px; position:relative; background: #fff;}
+.t_div1{ float:left; margin-top:-2px;}
+.t_div2{ overflow:hidden; float:left; margin-left:20px;}
+.t_div2 img{ float:left; margin-top:3px;}
+.t_div2 span{ float:left; font-size:14px; font-weight:bold; margin-left:10px; margin-right:10px;}
+
+.t_div3{ float:left; font-size:12px; margin-left:20px;}
+.t_div3 input{ width:40px;outline:none; margin-top: -2px;}
+.t_div4{ width:180px; font-size:12px; position:absolute; left:50%; margin-left:-90px; text-align:center;}
+
+.fh{ width:96%; margin:auto; overflow:hidden;}
+.fh button{ width: 90px; height: 28px; font-size: 12px; margin-top:30px; float:right; margin-left:20px;}

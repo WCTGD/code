@@ -1,0 +1,290 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_zichanliebiao.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+	var pathName = getContextPath();
+	//获取项目
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	//获取url中的参数
+	function getUrlParam(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+		var r = window.location.search.substr(1).match(reg); //匹配目标参数
+		if (r != null)
+			return unescape(r[2]);
+		return null; //返回参数值
+	}
+	var d1;
+	var d2;
+	var did;
+	$(function() {
+		d1 = getUrlParam('d1');
+		d2 = getUrlParam('d2');
+		did = getUrlParam('did');
+		$("#down").attr("href","excel/assetsdetaildown?d1="+d1+"&d2="+d2+"&did="+did);
+		select();
+	})
+	function select() {
+		$
+				.ajax({
+					url : pathName + "/excel/formselect",
+					type : "get",
+					data : {
+						d1 : d1,
+						d2 : d2,
+						did : did,
+						page : $("#page").html(),
+						size : $("#size").val()
+					},
+					dataType : "json",
+					async : false,
+					contentType : "application/json;charset=UTF-8",
+					success : function(data1) {
+						$("#page").html(data1.page);
+						$("#pagesize").html(data1.pagesize);
+						$("#count").html(data1.count);
+						$("#start").html(data1.start);
+						$("#end").html(data1.end);
+						var assets = data1.assets;
+						$("#tb").empty();
+						for (var i = 0; i < assets.length; i++) {
+							var str = "";
+							str += "<tr><td><div>" + assets[i].no
+									+ "</div></td>";
+							str += "<td><div>" + assets[i].assetDesc
+									+ "</div></td>";
+							str += "<td><div>" + assets[i].sundryAssetsState.information
+									+ "</div></td>";		
+							if (assets[i].position != null) {
+								str += "<td><div>" + assets[i].position.no
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].baseDepartment != null) {
+								str += "<td><div>"
+									+ assets[i].baseDepartment.no
+									+ "</div></td>";
+								str += "<td><div>"
+										+ assets[i].baseDepartment.department
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+								str += "<td><div></div></td>";
+							}
+							
+							str += "<td><div>"
+									+ assets[i].baseAssetClass.assetCategory
+									+ "</div></td>";
+							
+							if (assets[i].serialNo != null) {
+								str += "<td><div>" + assets[i].serialNo
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].type != null) {
+								str += "<td><div>" + assets[i].type
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].manufacturer != null) {
+								str += "<td><div>" + assets[i].manufacturer
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							
+							if (assets[i].note != null) {
+								str += "<td><div>" + assets[i].note
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].warrantyDeadline != null) {
+								str += "<td><div>" + assets[i].warrantyDeadline
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].supplier != null) {
+								str += "<td><div>" + assets[i].supplier.contactName
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							
+							if (assets[i].purchaserPrice != null) {
+								str += "<td><div>" + assets[i].purchaserPrice
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].startDate != null) {
+								str += "<td><div>" + assets[i].startDate
+										+ "</div></td>";
+							} else {
+								str += "<td><div></div></td>";
+							}
+							if (assets[i].woker != null) {
+								str += "<td><div>" + assets[i].woker.name
+										+ "</div></td></tr>";
+							} else {
+								str += "<td><div></div></td></tr>";
+							}
+							
+							$("#tb").append(str);
+						}
+						if (assets.length < $("#size").val()) {
+							for (var i = 0; i < ($("#size").val() - assets.length); i++) {
+								var str ="<tr><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td></tr>";
+								$("#tb").append(str);
+							}
+						}
+					}
+				})
+	}
+	//上一页
+	function pageup() {
+		var page = $("#page").html();
+		var pagesize = $("#pagesize").val();
+		if (page == "") {
+			alert("还没查询");
+		} else if (page == 1) {
+			alert("已经是第一页了");
+		} else {
+			$("#page").html(page - 1);
+			select();
+		}
+	}
+	//下一页
+	function pagedown() {
+		var page = $("#page").html();
+		var pagesize = $("#pagesize").html();
+		if (page == "") {
+			alert("还没查询");
+		} else if (page == pagesize) {
+			alert("已经是尾页了");
+		} else {
+			$("#page").html(page - 1 + 2);
+			select();
+		}
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+</script>
+
+
+
+</head>
+
+<body>
+<div class="ma_ta"><!--显示块-->
+    	<table border="0" cellspacing="0" cellpadding="0">
+          <tr class="zero_tr">
+            <td class="zero_td" colspan="16" align="center" valign="middle"><div class="tb_div0"><span>资产详情</span></div></td>
+          </tr>
+          <tr class="first_tr">
+            <td><div>资产编号</div></td>
+            <td><div>资产描述</div></td>
+            <td><div>资产状态</div></td>
+            <td><div>位置编号</div></td>
+            <td><div>部门编号</div></td>
+            <td><div>部门描述</div></td>
+            <td><div>资产类别</div></td>
+            <td><div>序列号</div></td>
+            <td><div>型号</div></td>
+            <td><div>生产商</div></td>
+            <td><div>资产注释</div></td>
+            <td><div>保修截止日期</div></td>
+            <td><div>供应商姓名</div></td>
+            <td><div>采购价格</div></td>
+            <td><div>启用日期</div></td>
+            <td><div>授权员工</div></td>
+          </tr>
+          <tbody id="tb"></tbody>
+          <tr>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+            <td><div></div></td>
+          </tr>
+         
+          <tr>
+            <td colspan="16" class="td_zg">
+            	<div>
+						<ul>
+							<li class="t_div1">
+								<select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+								</select>
+							</li>
+							<li class="t_div2">
+								<img src="img/zuo1.png" onclick="pageup()">
+								<span id="page">1</span>
+								<span>/</span>
+								<span id="pagesize"></span>
+								<img src="img/you1.png" onclick="pagedown()">
+							</li>
+							<li class="t_div3">
+								<span>跳转至</span>
+								<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}">
+								<span>页</span>
+							</li>
+							<li class="t_div4">
+								共
+								<span id="count"></span>
+								条数据，当前显示
+								<span id="start"></span>
+								-
+								<span id="end"></span>
+							</li>
+						</ul>
+					</div>
+            </td>
+          </tr>
+        </table>
+	</div>
+	<div class="fh">
+		<a id="down"><button>导&nbsp;出</button></a>
+	</div>
+	<script type="text/javascript" src="js/XZ_zichanxiangqing.js"></script>
+</body>
+</html>

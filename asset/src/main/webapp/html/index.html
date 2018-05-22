@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_top.css" rel="stylesheet" />
+<link type="text/css" href="css/XZ_index.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+//获取url中的参数
+function getUrlParam(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+	var r = window.location.search.substr(1).match(reg); //匹配目标参数
+	if (r != null)
+		return unescape(r[2]);
+	return null; //返回参数值
+}
+	pathName = getContextPath();
+	function getContextPath() {
+		fullPath = document.location.pathname;
+		var index = fullPath.substr(1).indexOf("/");
+		var result = fullPath.substr(0, index + 1);
+		return result;
+	}
+	$(document).ready(function() {
+		$.ajax({
+			url : pathName + "/getduty",
+			type : "POST",
+			async : false,
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				// 			$("#top_gw").val(data.duty+" "+data.name);
+				var str = "<p>" + data.duty + " " + data.name + " </p>";
+				$("#top_gw").append(str);
+			},
+			error: function(e) { 
+				window.location.href = pathName + "/login.html";
+			} 
+		});
+	});
+	$(function() {
+		var id=getUrlParam("id");
+		document.getElementById(id).click();
+	})
+
+	function changef(name) {
+		$('.ifs').attr('hidden', 'hidden');
+		$('iframe[name="' + name + '"]').removeAttr('hidden');
+		$("#chin").html($('iframe[name="' + name + '"]').attr("title"));
+	}
+	function closs(x){
+		
+		var fram=$('iframe[name="' + x + '"]');
+		if(fram.attr('hidden')==null){
+			if($('#'+x).next().attr('class')!=null){
+				$('#'+x).next().trigger("click");
+				$('#'+x).next().find("a").trigger("click");
+			}else if($('#'+x).prev().attr('class')!=null){
+				$('#'+x).prev().trigger("click");
+				$('#'+x).prev().find("a").trigger("click");
+			}
+		}
+		$('iframe[name="' + x + '"]').remove();
+		if($('.ifs').eq(0).attr("title")==null){
+		$("#chin").html("");}
+	}
+	function addtag(t) {
+		var a = $(t).parent();
+		var nowli=a.attr('target');
+		a.removeAttr('href');
+		var n = ($('.right_tb').width() - 100) / 120
+		var b = true;
+		for (var i = 0; i < $('.ifs').length; i++) {
+			if (a.attr('target') == $('.ifs').eq(i).attr('name')) {
+				b = false;
+				break;
+			}
+		}
+		if (b) {
+			if ($(".right_tb li").length <= n) {
+				/* save(); */
+				$('.right_tb li').css({
+					"background" : "#003333",
+					"color" : "#fff"
+				})
+				nowli=new Date().getTime();
+				$(".right_tb")
+						.append(
+								'<li id="'+nowli+'" class="right_zm" ><img class="tb_gb" src="img/u122_6.png" onclick="closs('+nowli+')"/><a href="#" onclick="changef('
+								+ nowli+ ')">'
+										+ $(t).attr('title') + '</a></li>')
+
+				a.attr('target', nowli);
+				a.attr('href', a.attr('class') + '.html');
+				$('.ifs').attr('hidden', 'hidden');
+				$(".right")
+						.append(
+								'<iframe title="'+$(t).attr("title")+'" class="ifs" width="100%" height="100%" marginwidth=0 marginheight=0 frameborder=0 scrolling=auto name="'
+										+ nowli + '"></iframe>')
+
+				a.trigger("click");
+				/* a.removeAttr('target'); */
+				$('.right_tb li').click(function() {
+					$(this).css({
+						"background" : "#dadada",
+						"color" : "#333"
+					}).siblings().css({
+						"background" : "#003333",
+						"color" : "#fff"
+					});
+				})
+				$(".tb_gb").click(function() {
+					$(this).parent(this).remove()
+				})
+				$("#chin").html($(t).attr("title"));
+			} else {
+				alert("标签太多了，可以先删除一些！");
+			}
+		} else {
+			$("#chin").html($(t).attr("title"));
+			$('.ifs').attr('hidden', 'hidden');
+			$('iframe[name="' + a.attr('target') + '"]').removeAttr('hidden');
+			$('#'+nowli).css({"background":"#dadada","color":"#333"}).siblings().css({"background":"#003333","color":"#fff"});	
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div id="" hidden="hidden"></div>
+	<!--top-->
+	<div class="top">
+		<!--/*<img class="top_bg" src="img/u0_0.png"-->
+		<img class="top_img" src="img/u4.png" />
+		<span class="top_logo">神洲酷奇资产管理</span>
+		<span class="top_gw" id="top_gw"></span>
+		<span class="time">
+			<div class="week"></div>
+			<div class="day"></div>
+		</span>
+		<span class="tuic">
+			<a href="/asset/quit">
+				<img src="img/u31.png" />
+			</a>
+		</span>
+		<!--标签栏-->
+		<ul class="right_tb">
+			<!--   	<li class="right_zm">
+        	<a title="资产" target="zm">资&nbsp;产</a>
+            <img class="tb_gb" src="img/u122_6.png"/>
+        </li>   
+        <li class="right_zm">
+        	<a title="资产" target="zm">资&nbsp;产</a>
+            <img class="tb_gb" src="img/u122_6.png"/>
+        </li> -->
+		</ul>
+		<!--title-->
+		<ul class="title">
+			<li>首页</li>
+			<li>></li>
+			<li id="chin"></li>
+		</ul>
+	</div>
+
+	<!--left-->
+	<div class="left">
+		<a title="搜索" href="home.html">
+			<img class="menu_img" src="img/u144.png" />
+		</a>
+		<a class="assets">
+			<img class="menu_img" id="assets" title="资产" src="img/u140.png" onclick="addtag(this)" />
+		</a>
+		<a title="位置" class="positionList">
+			<img class="menu_img" id="positionList" src="img/u134.png" title="位置" onclick="addtag(this)" />
+		</a>
+		<a class="reportform">
+			<img class="menu_img" id="reportform" src="img/u136.png" title="报表" onclick="addtag(this)" />
+		</a>
+		<a class="user">
+			<img class="menu_img" id="user" src="img/u142.png" title="员工" onclick="addtag(this)"/>
+		</a>
+		<a class="repairlist">
+			<img class="menu_img" id="repairlist" src="img/u138.png" title="工单" onclick="addtag(this)"/>
+		</a>
+		<a class="basicDataList">
+			<img class="menu_img" id="basicDataList" src="img/u146.png" title="基础数据" onclick="addtag(this)"/>
+		</a>
+		<a class="maintain">
+			<img class="menu_img" id="maintain" src="img/u148.png" title="维护" onclick="addtag(this)"/>
+		</a>
+		<a class="recycle">
+			<img class="menu_img" id="recycle" src="img/u147.png" title="回收站" onclick="addtag(this)"/>
+		</a>
+	</div>
+
+	<!--right-->
+	<div class="right">
+		<!-- <iframe id="right_iframe" src="assets.html" width="100%" height="100%" marginwidth=0 marginheight=0 frameborder=0
+			scrolling=auto name="0"></iframe> -->
+	</div>
+	<script type="text/javascript" src="js/XZ_top.js"></script>
+	<script type="text/javascript" src="js/XZ_index.js"></script>
+
+</body>
+</html>

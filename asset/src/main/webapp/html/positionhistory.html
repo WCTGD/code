@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="css/XZ_lishigongdan.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+<script type="text/javascript">
+Date.prototype.Format = function(fmt) { //author: meizz 
+	var o = {
+		"M+" : this.getMonth() + 1, //月份 
+		"d+" : this.getDate(), //日 
+		"h+" : this.getHours(), //小时 
+		"m+" : this.getMinutes(), //分 
+		"s+" : this.getSeconds(), //秒 
+		"q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+		"S" : this.getMilliseconds()
+	//毫秒 
+	};
+	if (/(y+)/.test(fmt))
+		fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+				.substr(4 - RegExp.$1.length));
+	for ( var k in o)
+		if (new RegExp("(" + k + ")").test(fmt))
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+					: (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
+}
+	var pathName = getContextPath();
+	//获取项目
+	function getContextPath() {
+		var pathName = document.location.pathname;
+		var index = pathName.substr(1).indexOf("/");
+		var result = pathName.substr(0, index + 1);
+		return result;
+	}
+	//获取url中的参数
+	function getUrlParam(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+		var r = window.location.search.substr(1).match(reg); //匹配目标参数
+		if (r != null)
+			return unescape(r[2]);
+		return null; //返回参数值
+	}
+	var pid;
+	$(function() {
+		pid = getUrlParam('pid');
+		$("#down").attr("href", "excel/positionhistorydown?pid=" + pid);
+		select();
+	})
+	function select() {
+		$
+				.ajax({
+					url : pathName + "/excel/positionrepairselect",
+					type : "get",
+					dataType : "json",
+					data : {
+						pid : pid,
+						flag:1,
+						size : $("#size").val(),
+						page : $("#page").html()
+					},
+					async : false,
+					contentType : "application/json;charset=UTF-8",
+					success : function(data1) {
+						$("#count").html(data1.count);
+						$("#pagesize").html(data1.pagesize);
+						$("#start").html(data1.start);
+						$("#end").html(data1.end);
+						var repairList = data1.repairList;
+						var a = "";
+						for (var i = 0; i < repairList.length; i++) {
+							a += "<tr><td><div>";
+							a += repairList[i].assets.position.no;
+							a += "</div></td><td><div>"
+							a += repairList[i].assets.position.position;
+							a += "</div></td><td><div>"
+							a += repairList[i].assets.baseDepartment.department;
+							a += "</div></td><td><div>"
+							a += repairList[i].no;
+							a += "</div></td><td><div>"
+							if (repairList[i].note != null) {
+								a += repairList[i].note;
+							}
+							a += "</div></td><td><div>";
+							a += repairList[i].wokerorderClass.information;
+							a += "</div></td><td><div>";
+							a += repairList[i].assets.no;
+							a += "</div></td><td><div>";
+							a += repairList[i].assets.baseAssetClass.assetCategory;
+							a += "</div></td><td><div>";
+							a += new Date(repairList[i].createTime).Format("yyyy-MM-dd");
+							a += "</div></td><td><div>";
+							if (repairList[i].startTime != null) {
+								a += new Date(repairList[i].startTime).Format("yyyy-MM-dd");
+							}
+							a += "</div></td><td><div>";
+							if (repairList[i].realFinishTime != null) {
+								a += new Date(repairList[i].realFinishTime).Format("yyyy-MM-dd");
+							}
+							a += "</div></td><td><div class='tb_div1'>";
+							a += repairList[i].wokerorderState.information;
+							a += "</div></td></tr>";
+						}
+						for (var i = 0; i < $("#size").val()
+								- repairList.length; i++) {
+							a += "<tr><td><div></div></td><td><div>";
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div>"
+							a += "</div></td><td><div class='tb_div1'></div></td></tr>";
+						}
+						$("#tablebd").html(a);
+
+					}
+				})
+	}
+	//翻页
+	function pageleft() {
+		if($("#page").html()==1){
+			alert("已经是第一页了");
+		}else{
+			$("#page").html($("#page").html()-1)
+		}
+		select();
+	}
+	function pageright() {
+		if($("#page").html()==$("#pagesize").html()){
+			alert("已经是尾页了");
+		}else{
+			$("#page").html(parseInt($("#page").html())+1);
+		}
+		select();
+	}
+	//页面跳转
+	function jump() {
+		var page = $("#jump").val();
+		var pagesize = $("#pagesize").html();
+		if ((!(/^\d+$/.test(page))) || page == 0) {
+			alert("页面输入不合法");
+		} else if (page > pagesize) {
+			alert("超过最大页");
+		} else {
+			$("#page").html(page);
+			select();
+		}
+	}
+</script>
+
+</head>
+
+<body>
+	<div class="div_tb">
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr class="tr0">
+				<td colspan="12">
+					<div class="tb_div0">
+						<span class="tb_span1">工单历史</span>
+					</div>
+				</td>
+			</tr>
+			<tr class="tr_tb">
+				<td>
+					<div>位置编号</div>
+				</td>
+				<td>
+					<div>位置描述</div>
+				</td>
+				<td>
+					<div>部门</div>
+				</td>
+				<td>
+					<div>工单编号</div>
+				</td>
+				<td>
+					<div>问题描述</div>
+				</td>
+				<td>
+					<div>工单类型</div>
+				</td>
+				<td>
+					<div>资产编号</div>
+				</td>
+				<td>
+					<div>资产类型</div>
+				</td>
+				<td>
+					<div>接受日期</div>
+				</td>
+				<td>
+					<div>开始日期</div>
+				</td>
+				<td>
+					<div>完成日期</div>
+				</td>
+				<td>
+					<div class="tb_div1">工单状态</div>
+				</td>
+			</tr>
+			<tbody id="tablebd"></tbody>
+			<tr>
+				<td colspan="12" class="td_zg">
+					<div>
+						<ul>
+							<li class="t_div1">
+								<select id="size" onchange="select()">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+								</select>
+							</li>
+							<li class="t_div2">
+								<img src="img/zuo1.png" onclick="pageleft()" />
+								<span id="page">1</span>
+								<span>/</span>
+								<span id="pagesize"></span>
+								<img src="img/you1.png" onclick="pageright()" />
+							</li>
+							<li class="t_div3">
+								<span>跳转至</span>
+								<input type="text" id="jump" onkeypress="if(event.keyCode==13) {jump()}" />
+								<span>页</span>
+							</li>
+							<li class="t_div4">
+								共
+								<span id="count"></span>
+								条数据，当前显示
+								<span id="start"></span>
+								<span>-</span>
+								<span id="end"></span>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="fh">
+		<a id="down">
+			<button>导&nbsp;出</button>
+		</a>
+	</div>
+	<script type="text/javascript" src="js/XZ_lishigongdan.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+
+/*搜索*/
+.search{ width:100%; height:36px; position:relative; margin-top:100px; background:#fff;}
+.search_div1{ width: 300px; height:36px;float:right; background:#cecece;}
+.search_div2{ width: 220px; height:24px; background:#fff; float:left; overflow:hidden; margin-top:5px; margin-left:8px; border: solid 1px #ccc;border-radius:5px 0 0 5px;}
+.search_div2 img{ float:left; margin-top:3px; margin-left:5px;}
+.search_div2 input{ float:left; border:none; height:23px; line-height:23px; width:185px; margin-left:5px;}
+.search_div3{ width:60px; height:24px; line-height:26px; text-align:center; font-size:14px; font-weight:bold; margin-top:5px; color:#1d5163; background:#a8cddf; float:left; border-radius:0 5px 5px 0; border:solid 1px #74a5b3; cursor:pointer;}
+
+/*content*/
+.content{ width:100%;height:100%; position:fixed; background:url(../img/u0.jpg) center;}
+.content_div{ width:600px; height:200px; overflow:hidden; position:absolute; left:50%; margin-left:-300px; top:50%; margin-top:-100px;}
+.u_left{ float:left; margin-top:55px; margin-right:30px; cursor:pointer; width: 40px; height: auto;}
+.u_right{float:left; margin-top:55px; margin-left:30px; cursor:pointer;width: 40px;height: auto;}
+.content_div1{ width:400px; height:100%; margin:auto;float:left; overflow:hidden;}
+.content_ul{ height:100%; }
+.content_ul a{ width:100px; height:200px; float:left;}
+.content_ul a img{ display:block; margin:auto; margin-top:52px; width: 62px; height: auto;}
+.content_ul a img:hover{-webkit-transform:scale(1.1); -moz-transform:scale(1.1); -o-transform:scale(1.1); transform:scale(1.1);}

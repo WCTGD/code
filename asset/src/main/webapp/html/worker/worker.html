@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href="/asset/"/>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <link rel="SHORTCUT ICON" href="img/logo.ico">
+    <title>神洲酷奇资产管理</title>
+    <link href="css/worker.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.form.js"></script>
+    
+    <style type="text/css">
+    	#current{
+    		margin:0 0 0 10px
+    	}
+    	#pages{
+    		margin:0 10px 0 0
+    	}
+    </style>
+    
+</head>
+<body>
+    
+    <div class="main">
+        <ul>
+            <li class="li1">
+                <label for="wh">员工编号</label>
+                <input type="text" id="wh">
+            </li>
+            <li class="li1">
+                <label for="zc">职位</label>
+                <input type="text" id="zc">
+            </li>
+            <li class="li1">
+                <button id="query">搜&nbsp;索</button>
+            </li>
+            <li class="li1">
+                <label for="mc">员工姓名</label>
+                <input type="text" id="mc">
+            </li>
+            <li class="li1">
+                <label for="rw">部门</label>
+                <input type="text" id="rw">
+            </li>
+            <li class="li1">
+                <button id="all">查看全部</button>
+                <button class="scgd" id="xzyg">新员工</button>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="ma_ta"><!--显示块-->
+    	<table border="0" cellspacing="0" cellpadding="0">
+          <tr class="first_tr" >
+            <td><div>员工编号</div></td>
+            <td><div>姓名</div></td>
+            <td><div>职位</div></td>
+            <td><div>部门</div></td>
+            <td><div class="tb_cz">操作</div></td>
+          </tr>
+          
+          <tr>
+            <td colspan="10" class="td_zg">
+            	<div>
+                <ul>
+                    <li class="t_div1">
+                        <select id="size">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="60">60</option>
+                        </select>
+                    </li>
+                    <li class="t_div2">
+                        <img src="img/zuo1.png"/>
+                        <span id="current"></span><span style="margin: 0">/</span><span id="pages"></span>
+                        <img src="img/you1.png"/>
+                    </li>
+                    <li class="t_div3">
+                        <span>跳转至</span>
+                        <input id="go" type="text" name="go"/>
+                        <span>页</span>
+                    </li>
+                    <li class="t_div4">共<span id="total"></span>条数据，当前显示<span id="start"></span>-<span id="end"></span></li>
+                </ul>
+            </div>
+            </td>
+          </tr>
+        </table>
+	</div>
+    <button class="fh">返回</button>
+    
+<!--新增页面-->
+<div class="zx_yy" id="add">
+    <div class="xz_div_z">
+    	<div class="xz_title">
+            <img id="xz_close_img" src="img/u122_2.png"/>
+        </div>
+        <div class="xz_div0">
+        	<div class="xz_div1"> 
+        	<form id="myform_add" method="post">
+            	<ul class="xz_ul">
+                    
+                    <li>
+                    	<label>员工姓名</label>
+                        <input type="text" name="name" required/>*
+                    </li>
+                    <li>
+                    	<label>邮箱</label>
+                        <input type="text" name="email"/>
+                    </li>
+                    <li>
+                    	<label>部门</label>
+                        <select id="depart" name="department.id">
+                        </select>*
+                    </li>
+                    <li>
+                    	<label>家庭电话</label>
+                        <input type="text" name="homePhone"/>
+                    </li>
+                    <li>
+                    	<label>职位</label>
+                        <input type="text" required="required" name="job"/>*
+                    </li>
+                    <li>
+                    	<label>手机号码</label>
+                        <input type="text" required="required" name="mobilePhone"/>
+                    </li>
+                    <li>
+                    	<label>位置</label>
+                        <select name="position.id">
+                        	<option></option>
+                        </select>*
+                    </li>
+                    
+                    
+                    <li>
+                    	<label>类别</label>
+                        <select name="swc.id">
+                        	<option>普通员工</option>
+                            <option>行政人员</option>
+                        </select>*
+                    </li>
+                    <li>
+                    	<label>地址</label>
+                        <textarea name="address"></textarea>
+                    </li>
+                </ul>
+                </form>
+            </div>
+            <div class="but">
+                <button id="save">保&nbsp;存</button>
+                <button id="close">关&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div> 
+<div class="zx_yy" id="update">
+    <div class="xz_div_z">
+    	<div class="xz_title">
+            <img id="xz_close_img" src="img/u122_2.png"/>
+        </div>
+        <div class="xz_div0">
+        	<div class="xz_div1"> 
+        	<form id="myform_update" method="post">
+            	<ul class="xz_ul">
+                	<li>
+                    	<label>员工编号</label>
+                        <input type="text" name="no" class="zd" readonly/>
+                    </li>
+                    
+                    <li>
+                    	<label>员工姓名</label>
+                        <input type="text" name="name" required/>*
+                    </li>
+                    <li>
+                    	<label>邮箱</label>
+                        <input type="text" name="email"/>
+                    </li>
+                    <li>
+                    	<label>部门</label>
+                        <select id="depart" name="department.id">
+                        </select>*
+                    </li>
+                    <li>
+                    	<label>家庭电话</label>
+                        <input type="text" name="homePhone"/>
+                    </li>
+                    <li>
+                    	<label>职位</label>
+                        <input type="text" required="required" name="job"/>*
+                    </li>
+                    <li>
+                    	<label>手机号码</label>
+                        <input type="text" required="required" name="mobilePhone"/>
+                    </li>
+                    <li>
+                    	<label>位置</label>
+                        <select name="position.id">
+                        	<option></option>
+                        </select>*
+                    </li>
+                    
+                    
+                    <li>
+                    	<label>类别</label>
+                        <select name="swc.id">
+                        	<option>普通员工</option>
+                            <option>行政人员</option>
+                        </select>*
+                    </li>
+                    <li>
+                    	<label>地址</label>
+                        <textarea name="address"></textarea>
+                    </li>
+                </ul>
+                </form>
+            </div>
+            <div class="but">
+                <button id="save">保&nbsp;存</button>
+                <button id="close">关&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!--查看页面-->
+<div class="ck_yy">
+	<div class="ck_div">
+    	<div class="xz_title">
+            <img id="ck_close_img" src="img/u122_2.png"/>
+        </div>
+        <ul class="ck_ul">
+            <li class="ck_li">
+                <span class="ck_span1">员工编号</span>
+                <span class="ck_span2">1000023</span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">手机号码</span>
+                <span class="ck_span2">10225465</span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">员工姓名</span>
+                <span class="ck_span2">管理员</span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">邮箱</span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">部门</span>
+                <span class="ck_span2">技术部</span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">家庭电话</span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">职位</span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">地址</span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">位置</span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1"></span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1">类别</span>
+                <span class="ck_span2"></span>
+            </li>
+            <li class="ck_li">
+                <span class="ck_span1"></span>
+                <span class="ck_span2"></span>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+<!--删除页面-->
+<div class="sc_yy">
+	<div class="sc_div">
+    	<div class="xz_title">
+            <img id="sc_close_img" src="img/u122_2.png"/>
+        </div>
+        <ul class="sc_ul">
+        	<li class="sc_li1">确认删除</li>
+            <li class="sc_li2">
+            	<button id="ok">确定</button>
+            	<button id="cancle">取消</button>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="js/yuangong.js"></script>
+<script type="text/javascript" src="js/worker.js"></script>
+
+</body>
+</html>

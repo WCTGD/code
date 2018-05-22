@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyb2c.dao.PositionMapper" >
+  <resultMap id="BaseResultMap" type="com.xyb2c.pojo.Position" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="d_id" property="dId" jdbcType="INTEGER" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap type="com.xyb2c.pojo.LocationConditions" id="BaseResultsMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+  	<result column="bid" property="bid" jdbcType="INTEGER" />
+  	<result column="bno" property="bNo" jdbcType="VARCHAR"/>
+  	<result column="ano" property="aNo" jdbcType="VARCHAR"/>
+  	<result column="position" property="position" jdbcType="VARCHAR" />
+  	<result column="department" property="department" jdbcType="VARCHAR" />
+  	<result column="judge" property="judge" jdbcType="VARCHAR" />
+  	<result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap type="com.xyb2c.pojo.BaseDepartment" id="DepartmentMap">
+  	<id column="id" property="id" jdbcType="INTEGER"/>
+  	<result column="no" property="no" jdbcType="VARCHAR"/>
+  	<result column="department" property="department" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, no, d_id, position, note, create_time, modify_time, flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.PositionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from position
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from position
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByExample" parameterType="com.xyb2c.pojo.PositionExample" >
+    delete from position
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from position where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xyb2c.pojo.Position" >
+    insert into position (id, no, d_id, 
+      position, note, create_time, 
+      modify_time)
+    values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, #{dId,jdbcType=INTEGER}, 
+      #{position,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP)
+  </insert>
+  <insert id="insertSelective" parameterType="com.xyb2c.pojo.Position" >
+    insert into position
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="dId != null" >
+        d_id,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="dId != null" >
+        #{dId,jdbcType=INTEGER},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xyb2c.pojo.PositionExample" resultType="java.lang.Integer" >
+    select count(*) from position
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update position
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.no != null" >
+        no = #{record.no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dId != null" >
+        d_id = #{record.dId,jdbcType=INTEGER},
+      </if>
+      <if test="record.position != null" >
+        position = #{record.position,jdbcType=VARCHAR},
+      </if>
+      <if test="record.note != null" >
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update position
+    set id = #{record.id,jdbcType=INTEGER},
+      no = #{record.no,jdbcType=VARCHAR},
+      d_id = #{record.dId,jdbcType=INTEGER},
+      position = #{record.position,jdbcType=VARCHAR},
+      note = #{record.note,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      flag = #{record.flag,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xyb2c.pojo.Position" >
+    update position
+    <set >
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="dId != null" >
+        d_id = #{dId,jdbcType=INTEGER},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xyb2c.pojo.Position" >
+    update position
+    set no = #{no,jdbcType=VARCHAR},
+      d_id = #{dId,jdbcType=INTEGER},
+      position = #{position,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      flag = #{flag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="positionList" resultMap="BaseResultsMap" >
+  	select b.no as bno,a.no as ano, b.department as department , a.position as position , a.note as note,
+  		   a.id as id,a.d_id as bid
+    from position a LEFT JOIN base_department b on a.d_id=b.id
+     WHERE a.flag = '1' 
+     		<if test="locationConditions.aNo != '' &amp;&amp; locationConditions.aNo != null" >
+     			and a.`no` like CONCAT('%',#{locationConditions.aNo,jdbcType=VARCHAR},'%')
+     		</if>
+<!-- 		    <if test="locationConditions.bNo != '' &amp;&amp; locationConditions.bNo != null ">  -->
+<!-- 		     	and b.`no` like CONCAT('%',#{locationConditions.bNo,jdbcType=VARCHAR},'%') -->
+<!-- 		    </if> -->
+		    <if test="locationConditions.department != '' &amp;&amp; locationConditions.department != null ">
+		     	and b.department like CONCAT('%',#{locationConditions.department,jdbcType=VARCHAR},'%')
+		    </if>
+		    <if test="locationConditions.position !='' &amp;&amp; locationConditions.position != null " >
+		    	and a.position like CONCAT('%',#{locationConditions.position ,jdbcType=VARCHAR},'%')
+		    </if>
+	 ORDER BY b.no 
+     limit #{page.start},#{page.pageSize} 
+  </select>
+  <select id="positionCount" resultType="java.lang.Integer">
+  	select count(*) from position a LEFT JOIN base_department b on a.d_id=b.id
+  	 WHERE a.flag = '1' 
+     		<if test="locationConditions.aNo != '' &amp;&amp; locationConditions.aNo != null" >
+     			and a.`no` like CONCAT('%',#{locationConditions.aNo,jdbcType=VARCHAR},'%')
+     		</if>
+<!-- 		    <if test="locationConditions.bNo != '' &amp;&amp; locationConditions.bNo != null ">  -->
+<!-- 		     	and b.`no` like CONCAT('%',#{locationConditions.bNo,jdbcType=VARCHAR},'%') -->
+<!-- 		    </if> -->
+		    <if test="locationConditions.department != '' &amp;&amp; locationConditions.department != null ">
+		     	and b.department like CONCAT('%',#{locationConditions.department,jdbcType=VARCHAR},'%')
+		    </if>
+		    <if test="locationConditions.position !='' &amp;&amp; locationConditions.position != null " >
+		    	and a.position like CONCAT('%',#{locationConditions.position ,jdbcType=VARCHAR},'%')
+		    </if>
+  </select>
+  <select id="positionListPage" resultMap="BaseResultsMap" parameterType="com.xyb2c.pojo.PageBean" >
+  	select b.no as bno, b.department as department , a.position as position,a.id as id
+    from position a LEFT JOIN base_department b ON a.d_id=b.id WHERE a.flag='1' limit #{start},#{pageSize} 
+  </select>
+  <select id="selectDepartment" resultMap="DepartmentMap">
+  	select * from base_department
+  </select>
+  <select id="selectDepartmentById" resultMap="DepartmentMap">
+  	select * from base_department where id = #{id}
+  </select>
+  <select id="selectLocationNumberByDepartmentId" resultMap="BaseResultsMap" parameterType="java.lang.Integer">
+  	SELECT MAX(a.`no`) as ano, b.`no` as bno,b.department as department from position a RIGHT JOIN base_department b ON a.d_id=b.id WHERE a.d_id=#{id,jdbcType=INTEGER} and a.flag='1'
+  </select>
+  <select id="updateLocationNumberByDepartmentId" resultMap="BaseResultsMap" parameterType="java.lang.Integer">
+    SELECT MAX(a.`no`) as ano, b.`no` as bno,a.d_id as bid,b.department as department from position a RIGHT JOIN base_department b ON a.d_id=b.id WHERE a.flag='1' and a.id=#{aid,jdbcType=INTEGER}
+  </select>
+  <select id="selectPlaceById" resultMap="BaseResultsMap" parameterType="java.lang.Integer">
+  	select a.id as id,a.`no` as ano,a.d_id as bid,a.position as position,a.note as note,b.department as department,b.no as bno from position a LEFT JOIN base_department b on a.d_id=b.id WHERE a.id=#{id,jdbcType=INTEGER} and a.flag='1'
+  </select>
+  <update id="deleteById"  parameterType="java.lang.Integer">
+    update position set flag='0' where id=#{id}
+  </update>
+  <update id="updateById" parameterType="com.xyb2c.pojo.LocationConditions">
+    update position set no=#{aNo},d_id=#{bid},position=#{judge},note=#{note}  WHERE id=#{id} and flag='1'
+  </update>
+  <insert id="insertPosition">
+  	insert into position (no,d_id,position,note,flag) values(#{judge,jdbcType=VARCHAR}, #{bid,jdbcType=INTEGER}, 
+      #{position,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR},1)
+  </insert>
+  <select id="selectLocationNumberByDepartment" resultMap="DepartmentMap"  parameterType="com.xyb2c.pojo.LocationConditions">
+  	select * from base_department where id=#{id}
+  </select>
+  <select id="selectlc"  resultMap="BaseResultsMap">
+  	select no as ano from position
+  </select>
+   <update id="deletePositionByNo" parameterType="com.xyb2c.pojo.Position">
+  	update position set `flag`='0' where `no`=#{no}
+  </update>
+  <select id="selectPositionByNo" resultMap="BaseResultMap">
+  	select * from position where `no`=#{no} and flag='1'
+  </select>
+  <select id="selectPosition" resultMap="BaseResultMap">
+  	select * from position
+  </select>
+  <select id="selectPositionByShow" resultMap="BaseResultsMap">
+  	select a.`no` as ano,b.department as department,a.d_id as bid,a.position as position,a.note as note from position a left JOIN base_department b ON a.d_id=b.id 
+	WHERE a.id=#{id,jdbcType=INTEGER} 
+  </select>
+</mapper>

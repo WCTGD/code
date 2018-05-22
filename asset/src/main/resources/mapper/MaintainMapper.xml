@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xyb2c.dao.MaintainMapper" >
+  <resultMap id="BaseResultMap" type="com.xyb2c.pojo.Maintain" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="frequency" property="frequency" jdbcType="INTEGER" />
+    <result column="daynum" property="daynum" jdbcType="INTEGER" />
+    <result column="startdate" property="startdate" jdbcType="DATE" />
+    <result column="enddate" property="enddate" jdbcType="DATE" />
+    <result column="last_date" property="lastDate" jdbcType="DATE" />
+    <result column="workday" property="workday" jdbcType="INTEGER" />
+    <result column="p_id" property="pId" jdbcType="INTEGER" />
+    <result column="job_id" property="jobId" jdbcType="INTEGER" />
+    <result column="a_id" property="aId" jdbcType="INTEGER" />
+    <result column="workerorder_state_id" property="workerorderStateId" jdbcType="INTEGER" />
+    <result column="plan" property="plan" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, no, name, unit, frequency, daynum, startdate, enddate, last_date, workday, p_id, 
+    job_id, a_id, workerorder_state_id, plan, flag, create_time, modify_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.MaintainExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from maintain
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from maintain
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from maintain
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xyb2c.pojo.MaintainExample" >
+    delete from maintain
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xyb2c.pojo.Maintain" >
+    insert into maintain (id, no, name, 
+      unit, frequency, daynum, 
+      startdate, enddate, last_date, 
+      workday, p_id, job_id, 
+      a_id, workerorder_state_id, plan, 
+      flag, create_time, modify_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{unit,jdbcType=VARCHAR}, #{frequency,jdbcType=INTEGER}, #{daynum,jdbcType=INTEGER}, 
+      #{startdate,jdbcType=DATE}, #{enddate,jdbcType=DATE}, #{lastDate,jdbcType=DATE}, 
+      #{workday,jdbcType=INTEGER}, #{pId,jdbcType=INTEGER}, #{jobId,jdbcType=INTEGER}, 
+      #{aId,jdbcType=INTEGER}, #{workerorderStateId,jdbcType=INTEGER}, #{plan,jdbcType=INTEGER}, 
+      #{flag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xyb2c.pojo.Maintain" >
+    insert into maintain
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="frequency != null" >
+        frequency,
+      </if>
+      <if test="daynum != null" >
+        daynum,
+      </if>
+      <if test="startdate != null" >
+        startdate,
+      </if>
+      <if test="enddate != null" >
+        enddate,
+      </if>
+      <if test="lastDate != null" >
+        last_date,
+      </if>
+      <if test="workday != null" >
+        workday,
+      </if>
+      <if test="pId != null" >
+        p_id,
+      </if>
+      <if test="jobId != null" >
+        job_id,
+      </if>
+      <if test="aId != null" >
+        a_id,
+      </if>
+      <if test="workerorderStateId != null" >
+        workerorder_state_id,
+      </if>
+      <if test="plan != null" >
+        plan,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="frequency != null" >
+        #{frequency,jdbcType=INTEGER},
+      </if>
+      <if test="daynum != null" >
+        #{daynum,jdbcType=INTEGER},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=DATE},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=DATE},
+      </if>
+      <if test="lastDate != null" >
+        #{lastDate,jdbcType=DATE},
+      </if>
+      <if test="workday != null" >
+        #{workday,jdbcType=INTEGER},
+      </if>
+      <if test="pId != null" >
+        #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="jobId != null" >
+        #{jobId,jdbcType=INTEGER},
+      </if>
+      <if test="aId != null" >
+        #{aId,jdbcType=INTEGER},
+      </if>
+      <if test="workerorderStateId != null" >
+        #{workerorderStateId,jdbcType=INTEGER},
+      </if>
+      <if test="plan != null" >
+        #{plan,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xyb2c.pojo.MaintainExample" resultType="java.lang.Integer" >
+    select count(*) from maintain
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update maintain
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.no != null" >
+        no = #{record.no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unit != null" >
+        unit = #{record.unit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.frequency != null" >
+        frequency = #{record.frequency,jdbcType=INTEGER},
+      </if>
+      <if test="record.daynum != null" >
+        daynum = #{record.daynum,jdbcType=INTEGER},
+      </if>
+      <if test="record.startdate != null" >
+        startdate = #{record.startdate,jdbcType=DATE},
+      </if>
+      <if test="record.enddate != null" >
+        enddate = #{record.enddate,jdbcType=DATE},
+      </if>
+      <if test="record.lastDate != null" >
+        last_date = #{record.lastDate,jdbcType=DATE},
+      </if>
+      <if test="record.workday != null" >
+        workday = #{record.workday,jdbcType=INTEGER},
+      </if>
+      <if test="record.pId != null" >
+        p_id = #{record.pId,jdbcType=INTEGER},
+      </if>
+      <if test="record.jobId != null" >
+        job_id = #{record.jobId,jdbcType=INTEGER},
+      </if>
+      <if test="record.aId != null" >
+        a_id = #{record.aId,jdbcType=INTEGER},
+      </if>
+      <if test="record.workerorderStateId != null" >
+        workerorder_state_id = #{record.workerorderStateId,jdbcType=INTEGER},
+      </if>
+      <if test="record.plan != null" >
+        plan = #{record.plan,jdbcType=INTEGER},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update maintain
+    set id = #{record.id,jdbcType=INTEGER},
+      no = #{record.no,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      unit = #{record.unit,jdbcType=VARCHAR},
+      frequency = #{record.frequency,jdbcType=INTEGER},
+      daynum = #{record.daynum,jdbcType=INTEGER},
+      startdate = #{record.startdate,jdbcType=DATE},
+      enddate = #{record.enddate,jdbcType=DATE},
+      last_date = #{record.lastDate,jdbcType=DATE},
+      workday = #{record.workday,jdbcType=INTEGER},
+      p_id = #{record.pId,jdbcType=INTEGER},
+      job_id = #{record.jobId,jdbcType=INTEGER},
+      a_id = #{record.aId,jdbcType=INTEGER},
+      workerorder_state_id = #{record.workerorderStateId,jdbcType=INTEGER},
+      plan = #{record.plan,jdbcType=INTEGER},
+      flag = #{record.flag,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xyb2c.pojo.Maintain" >
+    update maintain
+    <set >
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="frequency != null" >
+        frequency = #{frequency,jdbcType=INTEGER},
+      </if>
+      <if test="daynum != null" >
+        daynum = #{daynum,jdbcType=INTEGER},
+      </if>
+      <if test="startdate != null" >
+        startdate = #{startdate,jdbcType=DATE},
+      </if>
+      <if test="enddate != null" >
+        enddate = #{enddate,jdbcType=DATE},
+      </if>
+      <if test="lastDate != null" >
+        last_date = #{lastDate,jdbcType=DATE},
+      </if>
+      <if test="workday != null" >
+        workday = #{workday,jdbcType=INTEGER},
+      </if>
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="jobId != null" >
+        job_id = #{jobId,jdbcType=INTEGER},
+      </if>
+      <if test="aId != null" >
+        a_id = #{aId,jdbcType=INTEGER},
+      </if>
+      <if test="workerorderStateId != null" >
+        workerorder_state_id = #{workerorderStateId,jdbcType=INTEGER},
+      </if>
+      <if test="plan != null" >
+        plan = #{plan,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xyb2c.pojo.Maintain" >
+    update maintain
+    set no = #{no,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      frequency = #{frequency,jdbcType=INTEGER},
+      daynum = #{daynum,jdbcType=INTEGER},
+      startdate = #{startdate,jdbcType=DATE},
+      enddate = #{enddate,jdbcType=DATE},
+      last_date = #{lastDate,jdbcType=DATE},
+      workday = #{workday,jdbcType=INTEGER},
+      p_id = #{pId,jdbcType=INTEGER},
+      job_id = #{jobId,jdbcType=INTEGER},
+      a_id = #{aId,jdbcType=INTEGER},
+      workerorder_state_id = #{workerorderStateId,jdbcType=INTEGER},
+      plan = #{plan,jdbcType=INTEGER},
+      flag = #{flag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExamplePage" resultMap="BaseResultMap" parameterType="com.xyb2c.pojo.MaintainExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from maintain
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    limit #{start},#{length}
+  </select>
+  
+  
+  <select id="selectSupplierByShow" resultMap="BaseResultMap">
+  	select * from maintain where flag='0'
+  </select>
+</mapper>

@@ -1,0 +1,1083 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="/asset/css/XZ_bumentanchuang.css" rel="stylesheet"/>
+
+<link type="text/css" href="/asset/css/XZ_jichushujuzhongxin.css"
+	rel="stylesheet" />
+<link type="text/css" href="/asset/css/XZ_delect.css" rel="stylesheet" />
+<link href="/asset/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/asset/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/asset/css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="/asset/css/jquery.gritter.css" />
+<link rel="stylesheet" href="/asset/css/datepicker.css" />
+<link rel="stylesheet" href="/asset/css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="/asset/js/jquery-1.12.3.min.js"></script>
+<script src="/asset/js/date-time/bootstrap-datepicker.js"></script>
+<script src="/asset/js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="/asset/js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="/asset/js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="/asset/js/ajaxfileupload.js" type="text/javascript"></script>
+
+
+<title>神洲酷奇资产管理</title>
+</head>
+<script type="text/javascript">
+	
+</script>
+<body onload="select()">
+	<div class="nav">
+		<a class="b">部门</a>
+		<a >资产</a>
+		<a >员工</a> 
+		<a onclick="">位置</a>
+		<!--  <a onclick="selectAssetClasses()">资产类别</a> -->
+		<a >供应商</a> 
+		<a >承包商</a> 
+		<a >安全操作指导</a> 
+		<a id="zh">综合</a>
+	</div>
+	<div class="main_m">
+		<input type="hidden" id="hidId" />
+		<div class="ma_ta">
+			<input type="hidden" id="bm">
+			<!--显示块-->
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>部门编号</div></td>
+					<td><div>部门描述</div></td>
+				</tr>
+				<tbody id="tb">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="pageSize"
+									onchange="strike()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+								</select></li>
+								<li class="t_div2"><img src="/asset/img/zuo1.png"
+									onclick="before()" /><span id="pageCode">1</span> <span>/</span><span
+									id="totalPage">1</span> <img src="/asset/img/you1.png"
+									onclick="after()" /></li>
+								<li class="t_div3"><span>跳转至</span> <input type="text"
+									id="skipId" class="skipId" onchange="skip()" /> <span>页</span>
+								</li>
+								<li class="t_div4">共<span id="totalRecord"></span>条数据，当前显示<span
+									id="start">1</span>- <span id="end">10</span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="fh_bc" onclick="saveDepartment()">保&nbsp;存</button>
+				<button class="fh_zj" onclick="addDepartment()">增&nbsp;加</button>
+				<button class="sc" onclick="deleteDepartment()">删&nbsp;除</button>
+			</div>
+		</div>
+		<div class="ma_ta">
+			<!--显示块-->
+			<input type="hidden" id="zcId2" >
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>资产编号</div></td>
+					<td><div>资产描述</div></td>
+				</tr>
+				<tbody id="tb_zc">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="pageSize_zc"
+									onchange="strike_zc()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+								</select></li>
+								<li class="t_div2"><img src="/asset/img/zuo1.png"
+									onclick="before_zc()" /><span id="pageCode_zc">1</span> <span>/</span><span
+									id="totalPage_zc">1</span> <img src="/asset/img/you1.png"
+									onclick="after_zc()" /></li>
+								<li class="t_div3"><span>跳转至</span> <input type="text"
+									id="skipId_zc" onchange="skip_zc()" /> <span>页</span></li>
+								<li class="t_div4">共<span id="totalRecord_zc"></span>条数据，当前显示<span
+									id="start_zc">1</span>-<span id="end_zc">10</span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="sc" onclick="deleteAssets()">删&nbsp;除</button>
+				<button id="xzc" onclick="add()">新资产</button>
+			</div>
+		</div>
+		<div class="ma_ta">
+			<input type="hidden" id="workerId" />
+			<!--显示块-->
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>员工编号</div></td>
+					<td><div>员工姓名</div></td>
+				</tr>
+				<tbody id="tb_yg">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="size">
+										<option value="10">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+										<option value="60">60</option>
+								</select></li>
+								<li class="t_div2" id="wo"><img src="/asset/img/zuo1.png" />
+									<span id="current"></span><span style="margin: 0">/</span><span
+									id="pages"></span> <img src="/asset/img/you1.png" /></li>
+								<li class="t_div3"><span>跳转至</span> <input id="go"
+									type="text" name="go" /> <span>页</span></li>
+								<li class="t_div4">共<span id="total"></span>条数据，当前显示<span
+									id="start_yg"></span>-<span id="end_yg"></span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="sc" onclick="deleteWorker()">删&nbsp;除</button>
+				<button id="xyg">新员工</button>
+			</div>
+		</div>
+		<div class="ma_ta">
+			<input type="hidden" id="positionIds">
+			<!--显示块-->
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>位置编号</div></td>
+					<td><div>位置描述</div></td>
+				</tr>
+				<tbody id="tb_wz">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="pageSize_wz"
+									onchange="strike_wz()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+								</select></li>
+								<li class="t_div2"><img src="/asset/img/zuo1.png"
+									onclick="before_wz()" /><span id="pageCode_wz">1</span> <span>/</span><span
+									id="totalPage_wz">1</span> <img src="/asset/img/you1.png"
+									onclick="after_wz()" /></li>
+								<li class="t_div3"><span>跳转至</span> <input type="text"
+									id="skipId_wz" onchange="skip_wz()" /> <span>页</span></li>
+								<li class="t_div4">共<span id="totalRecord_wz"></span>条数据，当前显示<span
+									id="start_wz">1</span>-<span id="end_wz">10</span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="sc" onclick="deletePosition()">删&nbsp;除</button>
+				<button id="xwz" onclick="newlocation()">新位置</button>
+			</div>
+		</div>
+		<!-- 		<div class="ma_ta"> -->
+		<!-- 			<!--显示块-->
+		<!-- 			<input type="hidden" id="deleteAssetClassesId"> -->
+		<!-- 			<table border="0" cellspacing="0" cellpadding="0"> -->
+		<!-- 				<tr class="first_tr"> -->
+		<!-- 					<td><div>资产类别代码</div></td> -->
+		<!-- 					<td><div>资产类别描述</div></td> -->
+		<!-- 				</tr> -->
+		<!-- 				<tbody id="tb_ac"> -->
+		<!--          		</tbody> -->
+		<!-- 				<tr> -->
+		<!--             <td colspan="2" class="td_zg"> -->
+		<!--                 <div> -->
+		<!--                     <ul> -->
+		<!--                         <li class="t_div1"> -->
+		<!--                             <select id="pageSize_ac" onchange="strike_ac()"> -->
+		<!-- 									<option value="10" selected="selected">10</option> -->
+		<!-- 									<option value="20">20</option> -->
+		<!-- 									<option value="30">30</option> -->
+		<!-- 							</select> -->
+		<!--                         </li> -->
+		<!--                       		<li class="t_div2"><img src="/asset/img/zuo1.png" onclick="before_ac()" /><span id="pageCode_ac">1</span> <span>/</span><span id="totalPage_ac">1</span> -->
+		<!-- 								<img src="/asset/img/you1.png" onclick="after_ac()" /></li> -->
+		<!-- 							<li class="t_div3"><span>跳转至</span> <input type="text" id="skipId_ac" onchange="skip_ac()"/> <span>页</span>  -->
+		<!-- 							</li> -->
+		<!-- 							<li class="t_div4">共<span id="totalRecord_ac"></span>条数据，当前显示<span id="start_ac">1</span>-<span id="end_ac">10</span></li> -->
+		<!--                     </ul> -->
+		<!--                 </div> -->
+		<!--             </td> -->
+		<!--           </tr> -->
+		<!-- 			</table> -->
+		<!-- 			<div class="fh"> -->
+		<!-- 				<button>返&nbsp;回</button> -->
+		<!-- 				<button class="fh_bc" onclick="saveAssetClasses()">保&nbsp;存</button> -->
+		<!-- 				<button class="fh_zj" onclick="addAssetClasses()">增&nbsp;加</button> -->
+		<!-- 				<button class="sc" onclick="deleteAssetClasses()">删&nbsp;除</button> -->
+		<!-- 			</div> -->
+		<!-- 		</div> -->
+		<div class="ma_ta">
+			<input type="hidden" id="supplierOn" />
+			<!--显示块-->
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>供应商编号</div></td>
+					<td><div>供应商姓名</div></td>
+				</tr>
+				<tbody id="tb_gys">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="pageSize_gys"
+									onchange="strike_gys()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+								</select></li>
+								<li class="t_div2"><img src="/asset/img/zuo1.png"
+									onclick="before_gys()" /><span id="pageCode_gys">1</span> <span>/</span><span
+									id="totalPage_gys">1</span> <img src="/asset/img/you1.png"
+									onclick="after_gys()" /></li>
+								<li class="t_div3"><span>跳转至</span> <input type="text"
+									id="skipId_gys" onchange="skip_gys()" /> <span>页</span></li>
+								<li class="t_div4">共<span id="totalRecord_gys"></span>条数据，当前显示<span
+									id="start_gys">1</span>-<span id="end_gys">10</span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="sc" onclick="deleteSupplierByNo()">删&nbsp;除</button>
+				<button id="xgys" onclick="addSupplier()">新供应商</button>
+				<button id="gy_ck" onclick="supplierSelectByOn()">查看</button>
+				<button id="gy_xg" class="gy_xg" onclick="updateSupplier()">修改</button>
+			</div>
+		</div>
+		<div class="ma_ta">
+			<!--显示块-->
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>承包商编号</div></td>
+					<td><div>承包商姓名</div></td>
+				</tr>
+				<tbody id="tb_bc">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="pageSize_bc"
+									onchange="strike_bc()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+								</select></li>
+								<li class="t_div2"><img src="/asset/img/zuo1.png"
+									onclick="before_bc()" /><span id="pageCode_bc">1</span> <span>/</span><span
+									id="totalPage_bc">1</span> <img src="/asset/img/you1.png"
+									onclick="after_bc()" /></li>
+								<li class="t_div3"><span>跳转至</span> <input type="text"
+									id="skipId_bc" onchange="skip_bc()" /> <span>页</span></li>
+								<li class="t_div4">共<span id="totalRecord_bc"></span>条数据，当前显示<span
+									id="start_bc">1</span>-<span id="end_bc">10</span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="sc" onclick="deleteBaseContractorByNo()">删&nbsp;除</button>
+				<button id="xcbs" onclick="addBaseContractorByNo()">新承包商</button>
+				<button id="cb_ck" onclick="baseContractorSelectByOn()">查看</button>
+				<button id="cb_xg" onclick="updateBaseContractor()">修改</button>
+			</div>
+		</div>
+		<div class="ma_ta">
+			<!--显示块-->
+			<input type="hidden" id="sgId" />
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="first_tr">
+					<td><div>安全操作指导编号</div></td>
+					<td><div>安全操作指导名称</div></td>
+				</tr>
+				<tbody id="tb_sg">
+				</tbody>
+				<tr>
+					<td colspan="2" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1"><select id="pageSize_sg"
+									onchange="strike_sg()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+								</select></li>
+								<li class="t_div2"><img src="/asset/img/zuo1.png"
+									onclick="before_sg()" /><span id="pageCode_sg">1</span> <span>/</span><span
+									id="totalPage_sg">1</span> <img src="/asset/img/you1.png"
+									onclick="after_sg()" /></li>
+								<li class="t_div3"><span>跳转至</span> <input type="text"
+									id="skipId_sg" onchange="skip_sg()" /> <span>页</span></li>
+								<li class="t_div4">共<span id="totalRecord_sg"></span>条数据，当前显示<span
+									id="start_sg">1</span>-<span id="end_sg">10</span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+
+			</table>
+			<div class="fh">
+				<!--<button>返&nbsp;回</button>-->
+				<button class="sc" onclick="deleteSecurityGuidance()">删&nbsp;除</button>
+				<button id="aqzd">新安全指导</button>
+				<form action="" method="post" id="formIds" onsubmit="download(this)">
+					<input type="submit" value="下载">
+				</form>
+			</div>
+		</div>
+
+		<input type="hidden" id="swsId"> <input type="hidden"
+			id="swcId"> <input type="hidden" id="satId"> <input
+			type="hidden" id="sawId"> <input type="hidden" id="sulId">
+		<input type="hidden" id="sjpId"> <input type="hidden"
+			id="trocId"> <input type="hidden" id="deleteAssetClassesId">
+		<div class="ma_ta">
+			<!--显示块-->
+			<!--综合-->
+			<div class="zh_yy">
+				<div class="zh_div_z">
+					<div class="zh_title">
+						<span>综合</span> <img id="zh_close_img" src="/asset/img/u122_6.png" />
+					</div>
+					<div class="zh_div0">
+						<ul class="zh_ul0">
+							<li class="zh_li0">
+								<!-- 工单状态列表 -->
+								<div class="zh_li1">工单状态列表</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="sws">
+									</ul>
+								</div>
+								<div class="zh_li2" id="swsbutton"></div> 
+								<input type="hidden" id="swsNo">
+
+								<div class="zh_li1">工单类型列表</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="swc">
+									</ul>
+								</div>
+								<div class="zh_li2" id="swcbutton"></div>
+								<input type="hidden" id="swcNo">
+								<div class="zh_li1">工作类别</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="sul">
+									</ul>
+								</div>
+								<div class="zh_li2" id="sulbutton"></div>
+								<input type="hidden" id="sulNo">
+							</li>
+							<li class="zh_li0">
+								<div class="zh_li1">员工类别列表</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="troc">
+									</ul>
+								</div>
+								<div class="zh_li2" id="trocbutton"></div>
+								<input type="hidden" id="trocNo">
+								<div class="zh_li1">资产状态列表</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="sat">
+										<li class="zh_li1">资产状态列表</li>
+									</ul>
+								</div>
+								<div class="zh_li2" id="satbutton"></div>
+								<input type="hidden" id="satNo">	
+								
+								<input type="hidden" id="sawNo">	
+								<div class="zh_li1">保修/外包</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="saw">
+									</ul>
+								</div>
+								<div class="zh_li2" id="sawbutton"></div>
+							</li>
+							
+							<li class="zh_li0">
+								<div class="zh_li1">工作优先级列表</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="sjp">
+									</ul>
+								</div>
+								<div class="zh_li2" id="sjpbutton"></div>
+								<input type="hidden" id="sjpNo">
+								
+								<div class="zh_li1">资产类型</div>
+								<div class="zh_ul1_div">
+									<ul class="zh_ul1" id="zclb">
+									</ul>
+								</div>
+								<div class="zh_li2" id="zclbbutton"></div>
+								<input type="hidden" id="zclbNo">
+							</li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!--新承包商-->
+	<input type="hidden" id="BaseContractorNo" />
+	<form action="" method="post" id="formBaseContractor">
+		<div class="xcbs_yy">
+			<div class="xcbs_div_z">
+				<div class="xz_title">
+					<img class="xz_close_img" src="/asset/img/u122_6.png" />
+				</div>
+				<div class="xcbs_div">
+					<div class="xcbs_ul_k">
+						<ul class="xcbs_ul">
+							<li><label>承包商编号</label> <input type="text" class="zd"
+								name="no" id="BContractorNo" readonly /></li>
+							<li><label>州/省</label> <input type="text" name="province" /></li>
+							<li><label>承包商名称</label> <input type="text" name="name" />*</li>
+							<li><label>城市</label> <input type="text" name="city" /></li>
+							<li><label>联系人姓名</label> <input type="text"
+								name="contactName" />*</li>
+							<li><label>电话号码</label> <input type="text" name="telphone" />*</li>
+							<li><label>E-Mail</label> <input type="text" name="email" /></li>
+							<li><label>传真电话</label> <input type="text" name="fax" /></li>
+							<li><label class="xcbs_lab1">地址</label> <textarea
+									name="address"></textarea></li>
+							<li><label class="xcbs_lab1">服务</label> <textarea
+									name="service"></textarea>*</li>
+						</ul>
+					</div>
+					<div class="but">
+						<button class="xz_save" onclick="form_insert_BaseContractor()">保&nbsp;存</button>
+						<button class="xz_close">关&nbsp;闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<!--供应商查看页面-->
+	<div class="gyck_yy">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img class="ck_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li"><span class="ck_span1">供应商编号</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">供应商名称</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">联系人职位</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">联系人姓名</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">E-Mail</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">电话号码</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">州/省</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">城市</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">邮编</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">国家</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">传真电话</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1"></span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">地址</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">服务</span> <span
+					class="ck_span2"></span></li>
+			</ul>
+		</div>
+	</div>
+
+	<!--承包商查看页面-->
+	<div class="cbck_yy">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img class="ck_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li"><span class="ck_span1">承包商编号</span> <span
+					class="ck_span2">1000023</span></li>
+				<li class="ck_li"><span class="ck_span1">承包商名称</span> <span
+					class="ck_span2">娃哈哈有限公司</span></li>
+				<li class="ck_li"><span class="ck_span1">联系人姓名</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">E-Mail</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">电话号码</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">州/省</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">城市</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">传真电话</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">地址</span> <span
+					class="ck_span2"></span></li>
+				<li class="ck_li"><span class="ck_span1">服务</span> <span
+					class="ck_span2"></span></li>
+			</ul>
+		</div>
+	</div>
+	<!--新增和修改页面/asset/-->
+	<div class="zxzc_yy" style="height: 747px;">
+		<input type="hidden" id="iu_id">
+		<div class="xz_div_z" style="height: 633px; margin-top: -316.5px;">
+			<div class="xz_title">
+				<img id="xz_close_img" src="/asset/img/u122_6.png">
+			</div>
+			<div class="xz_div0">
+				<div class="xz_div1">
+					<ul class="xz_ul">
+						<li class="xz_li1">
+							<label class="lab1">资产编号</label>
+							<input type="text" class="xz_inp11" id="iu_no" maxlength="15" style="width: 219px" onblur="checkno(this)">
+							*
+							<span id="iu_no_text"></span>
+							<img class="li1_xx" src="" id="iu_no_check">
+						</li>
+						<li class="xz_li1"><label class="lab1">资产描述</label> <input
+							type="text" required id="iu_desc">*</li>
+						<li class="xz_li1"><label class="lab1">公共财产</label><select
+							id="iu_public" onchange="pubchannge()" style="width: 222px">
+								<option value="0">私有财产</option>
+								<option value="1">公共财产</option>
+						</select>*</li>
+						<li class="xz_li1">
+							<label class="lab1">部门</label>
+							<input type="text" class="xz_inp2" readonly id="iu_department_no">
+							<input id="iu_department" type="hidden">
+							<input class="xz_sel1" onclick="showchoose()" readonly="readonly" required id="iu_department_name">
+							<!-- <select class="xz_sel1" required id="iu_department" onchange="changedepartment(this.value)"><option value="1">技术部</option>
+								<option value="2">人事</option>
+								<option value="3">行政</option>
+								<option value="4">财务</option>
+								<option value="5">仓库</option>
+								<option value="6">法务</option></select> -->
+							<span class="public">*</span>
+						</li>
+						<li class="xz_li1">
+							<label class="lab1">位置</label>
+							<input type="text" class="xz_inp2" readonly id="iu_position_no">
+							<select class="xz_sel1" required id="iu_position" onchange="changeposition(this.value)">
+							</select>
+							<span class="public">*</span>
+						</li>
+
+
+
+						<li class="xz_li1"><label class="lab1">资产类型</label> <select
+							id="iu_assets_class">
+						</select>*</li>
+						<li class="xz_li1"><label class="lab1">资产状态</label> <select
+							required id="iu_assets_state">
+						</select>*</li>
+						<li class="xz_li1"><label class="lab1">授权员工</label> <select
+							id="iu_worker">
+								<option></option>
+						</select><span class="public">*</span></li>
+						<li class="xz_li1"><label class="lab1">型号</label> <input
+							type="text" id="iu_type"></li>
+						<li class="xz_li1"><label class="lab1">序列号</label> <input
+							type="text" id="iu_serial"></li>
+						<li class="xz_li1"><label class="lab1">生产商</label> <input
+							type="text" id="iu_manufacturer"></li>
+					</ul>
+					<ul class="xz_ul">
+						<li class="xz_li1"><label class="lab1">承包商</label> <select
+							id="iu_contractor" style="width: 222px"></select></li>
+						<li class="xz_li1"><label class="lab1">保修/外包</label> <select
+							required id="iu_way"></select>*</li>
+						<li class="xz_li1"><label class="lab1">保修截止日期</label> <input
+							type="text" data-date-format="yyyy-mm-dd" id="iu_enddate"
+							class="form-control input-date-time-h" readonly></li>
+						<li class="xz_li1"><label class="lab2">保修/外包备注</label> <textarea
+								type="text" id="iu_way_note"></textarea></li>
+						<li class="xz_li1"><label class="lab2">资产备注</label> <textarea
+								type="text" id="iu_asset_note"></textarea></li>
+					</ul>
+				</div>
+				<div class="xz_div2">
+					<ul>
+						<li class="xz_li2"><label class="lab1">供应商</label><select
+							id="iu_supplier"
+							style="width: 150px; height: 22px; border: solid 1px #ccc;"></select>
+							<!-- <input type="text" required id="iu_supplier" /> -->*</li>
+
+						<li class="xz_li2"><label class="lab1">启用日期</label> <input
+							type="text" data-date-format="yyyy-mm-dd" id="iu_start"
+							class="form-control input-date-time-h" required readonly>*</li>
+
+						<li class="xz_li2"><label class="lab1">资产现值</label> <input
+							type="text" required id="iu_value"></li>
+
+						<li class="xz_li2"><label class="lab1">采购价格</label> <input
+							type="text" required id="iu_price">*</li>
+						<li class="xz_li2"><label class="lab1">预期寿命</label> <input
+							type="text" id="iu_life"></li>
+						<li class="xz_li2"><label class="lab1">清理日期</label> <input
+							type="text" data-date-format="yyyy-mm-dd" id="iu_clear"
+							class="form-control input-date-time-h" readonly></li>
+						<li class="xz_li2"><label class="lab3">备注</label> <textarea
+								type="text" id="iu_note"></textarea></li>
+					</ul>
+				</div>
+				<div class="but">
+					<button id="add" onclick="realadd()" class="xz_save">添&nbsp;加</button>
+					<button id="close" class="xz_close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--新资产-->
+	<!-- 	<div class="zxzc_yy"> -->
+	<!-- 		<div class="xz_div_z"> -->
+	<!-- 			<div class="xz_title"> -->
+	<!-- 				<img class="xz_close_img" src="img/u122_6.png" /> -->
+	<!-- 			</div> -->
+	<!-- 			<div class="xz_div0"> -->
+	<!-- 				<div class="xz_div1"> -->
+	<!-- 					<ul class="xz_ul"> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">资产编号</label> <input -->
+	<!-- 							type="text" class="xz_inp1" readonly /></li> -->
+
+	<!-- 						<li class="xz_li1"><label class="lab1">资产描述</label> <input -->
+	<!-- 							type="text" required />*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">资产属性</label> <select -->
+	<!-- 							required> -->
+	<!-- 								<option>公共资产</option> -->
+	<!-- 								<option>普通资产</option> -->
+	<!-- 						</select>*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">部门</label> <input -->
+	<!-- 							type="text" class="xz_inp2" readonly /> <select class="xz_sel1" -->
+	<!-- 							required> -->
+	<!-- 								<option></option> -->
+	<!-- 						</select>*</li> -->
+
+	<!-- 						<li class="xz_li1"><label class="lab1">资产类型</label> <select -->
+	<!-- 							required> -->
+	<!-- 								<option>办公用品</option> -->
+	<!-- 								<option>电子</option> -->
+	<!-- 								<option>机械</option> -->
+	<!-- 								<option>电器</option> -->
+	<!-- 								<option>场地</option> -->
+	<!-- 								<option>洗涤与清洁</option> -->
+	<!-- 						</select>*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">资产状态</label> <select -->
+	<!-- 							required> -->
+	<!-- 								<option>使用中</option> -->
+	<!-- 								<option>闲置</option> -->
+	<!-- 								<option>报废</option> -->
+	<!-- 								<option>入库</option> -->
+	<!-- 								<option>丢失</option> -->
+	<!-- 						</select>*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">权授员工</label> <select -->
+	<!-- 							required> -->
+	<!-- 								<option></option> -->
+	<!-- 						</select>*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">型号</label> <input -->
+	<!-- 							type="text" /></li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">序列号</label> <input -->
+	<!-- 							type="text" /></li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">生产商</label> <input -->
+	<!-- 							type="text" /></li> -->
+	<!-- 					</ul> -->
+	<!-- 					<ul class="xz_ul"> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">承包商</label> <select> -->
+	<!-- 								<option></option> -->
+	<!-- 								<option></option> -->
+	<!-- 						</select></li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">保修/外包</label> <select -->
+	<!-- 							required> -->
+	<!-- 								<option>保修</option> -->
+	<!-- 								<option>外包</option> -->
+	<!-- 								<option>无</option> -->
+	<!-- 						</select>*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">保修截止日期</label> <input -->
+	<!-- 							type="text" data-date-format="yyyy-mm-dd" -->
+	<!-- 							class="form-control input-date-time-h inp1" readonly></li> -->
+	<!-- 						<li class="xz_li1"><label class="lab1">位置</label> <input -->
+	<!-- 							type="text" class="xz_inp2" readonly /> <select class="xz_sel1" -->
+	<!-- 							required> -->
+	<!-- 								<option></option> -->
+	<!-- 						</select>*</li> -->
+	<!-- 						<li class="xz_li1"><label class="lab2">保修/外包备注</label> <textarea -->
+	<!-- 								type="text"></textarea></li> -->
+	<!-- 						<li class="xz_li1"><label class="lab2">资产备注</label> <textarea -->
+	<!-- 								type="text"></textarea></li> -->
+	<!-- 					</ul> -->
+	<!-- 				</div> -->
+	<!-- 				<div class="xz_div2"> -->
+	<!-- 					<ul> -->
+	<!-- 						<li class="xz_li2"><label class="lab1">供应商</label> <input -->
+	<!-- 							type="text" required />*</li> -->
+
+	<!-- 						<li class="xz_li2"><label class="lab1">启用日期</label> <input -->
+	<!-- 							type="text" data-date-format="yyyy-mm-dd" -->
+	<!-- 							class="form-control input-date-time-h inp1" readonly>*</li> -->
+
+	<!-- 						<li class="xz_li2"><label class="lab1">资产现值</label> <input -->
+	<!-- 							type="text" required /></li> -->
+
+	<!-- 						<li class="xz_li2"><label class="lab1">采购价格</label> <input -->
+	<!-- 							type="text" required />*</li> -->
+	<!-- 						<li class="xz_li2"><label class="lab1">预期寿命</label> <input -->
+	<!-- 							type="text" /></li> -->
+	<!-- 						<li class="xz_li2"><label class="lab1">清理日期</label> <input -->
+	<!-- 							type="text" data-date-format="yyyy-mm-dd" -->
+	<!-- 							class="form-control input-date-time-h inp1" readonly></li> -->
+	<!-- 						<li class="xz_li2"><label class="lab3">备注</label> <textarea -->
+	<!-- 								type="text"></textarea></li> -->
+	<!-- 					</ul> -->
+	<!-- 				</div> -->
+	<!-- 				<div class="but"> -->
+	<!-- 					<button class="xz_save">保&nbsp;存</button> -->
+	<!-- 					<button class="xz_close">关&nbsp;闭</button> -->
+	<!-- 				</div> -->
+	<!-- 			</div> -->
+	<!-- 		</div> -->
+	<!-- 	</div> -->
+	<!--新员工-->
+	<div class="xyg_yy">
+		<div class="xcbs_div_z">
+			<div class="xz_title">
+				<img class="xz_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<div class="xcbs_div">
+				<div class="xcbs_ul_k">
+					<ul class="xcbs_ul">
+						<li><label>员工编号</label> <input type="text" class="zd"
+							readonly /></li>
+
+						<li><label>员工姓名</label> <input type="text" required />*</li>
+						<li><label>邮箱</label> <input type="text" /></li>
+						<li><label>部门</label> <select>
+								<option></option>
+						</select>*</li>
+						<li><label>家庭电话</label> <input type="text" /></li>
+						<li><label>职位</label> <input type="text" required />*</li>
+						<li><label>手机号码</label> <input type="text" required /></li>
+						<li><label>位置</label> <select>
+								<option></option>
+						</select>*</li>
+
+
+						<li><label>类别</label> <select>
+								<option>普通员工</option>
+								<option>行政人员</option>
+						</select>*</li>
+						<li class="li1"><label>地址</label> <textarea class="area1"></textarea>
+						</li>
+					</ul>
+				</div>
+				<div class="but">
+					<button class="xz_save">保&nbsp;存</button>
+					<button class="xz_close">关&nbsp;闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form action="" method="post" id="forms">
+		<input type="hidden" id="positionTwo" name="position">
+		<!--新位置-->
+		<div class="xwz_yy" style="height: 455px;">
+			<div class="xcbs_div_z" style="height: 341px; margin-top: -170.5px;">
+				<div class="xz_title">
+					<img class="xz_close_img" src="/asset/img/u122_6.png" />
+				</div>
+				<div class="xcbs_div" style="height: 311px;">
+					<div class="xcbs_ul_k">
+						<ul class="xcbs_ul1">
+							<li><label>部门</label> 
+							<input type="text" class="inp2 zd" id="deptId" readonly /> 
+							<select class="sel1" id="departmentTo" name="bid" onchange="alterDepartment()"></select>*</li>
+							<li><label>座位编号</label> <input class="xz_inp3" type="text"
+								required="required" id="position" placeholder="请输入座位编号"
+								onblur="locationNumber()" /> <span class="span2">号</span>*</li>
+							<li><label>位置编号</label> <input type="text" class="zd"
+								readonly required="required" id="no" name="judge" /></li>
+							<li class="li2"><label>注释</label> <textarea type="text"
+									id="note" name="note"></textarea></li>
+						</ul>
+					</div>
+					<div class="but">
+						<button class="xz_save" onclick="form_add_positon()">保&nbsp;存</button>
+						<button id="close">关&nbsp;闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+	<!--新供应商-->
+	<form action="" method="post" id="formSupplier">
+		<div class="xgys_yy">
+			<div class="xcbs_div_z">
+				<div class="xz_title">
+					<img class="xz_close_img" src="/asset/img/u122_6.png" />
+				</div>
+				<div class="xcbs_div">
+					<div class="xcbs_ul_k">
+						<ul class="xgys_ul1">
+							<li><label>供应商编号</label> <input type="text" class="zd"
+								id="supplierNo" name="no" readonly /></li>
+							<li><label>供应商名称</label> <input type="text" required
+								id="supplierName" name="supplierName" />*</li>
+							<li><label>联系人姓名</label> <input type="text" required
+								id="contactName" name="contactName" />*</li>
+							<li><label>联系人职位</label> <input type="text" id="contactJob"
+								name="contactJob" /></li>
+							<li><label>E-Mail</label> <input type="text" id="email"
+								name="email" onchange="EMail()" /></li>
+							<li class="li3"><label>地址</label> <textarea
+									id="contactAddress" name="contactAddress"></textarea></li>
+						</ul>
+						<ul class="xgys_ul1">
+							<li><label>州/省</label> <input type="text" id="province"
+								name="province" /></li>
+							<li><label>城市</label> <input type="text" id="city"
+								name="city" /></li>
+							<li><label>邮编</label> <input type="text" id="zipCode"
+								name="zipCode" /></li>
+							<li><label>国家</label> <input type="text" id="country"
+								name="country" /></li>
+							<li><label>电话号码</label> <input type="text" required
+								id="telphone" name="telphone" onchange="telphoneJudge()" />*</li>
+							<li><label>传真电话</label> <input type="text" id="fax"
+								name="fax" /></li>
+							<li><label>服务</label> <textarea id="service" name="service"></textarea>*</li>
+						</ul>
+					</div>
+					<div class="but">
+						<button class="xz_save" onclick="form_add_Supplier()">保&nbsp;存</button>
+						<button class="xz_gbs">关&nbsp;闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<!--删除页面-->
+	<div class="sc_yy" style="height: 455px;">
+		<div class="sc_div">
+			<div class="xz_title">
+				<img id="sc_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<ul class="sc_ul">
+				<li class="sc_li1">确认删除</li>
+				<li class="sc_li3">
+					<button class="qr" id="yes">确认</button>
+					<button class="qx" id="cancle">取消</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<form action="" method="post" id="formSupplierUpdate">
+		<div class="xgys_yy">
+			<div class="xcbs_div_z">
+				<div class="xz_title">
+					<img class="xz_close_img" src="/asset/img/u122_6.png" />
+				</div>
+				<div class="xcbs_div">
+					<div class="xcbs_ul_k">
+						<ul class="xgys_ul1">
+							<li><label>供应商编号</label> <input type="text" class="zd"
+								id="update_supplierNo" name="no" readonly /></li>
+							<li><label>供应商名称</label> <input type="text" required
+								id="update_supplierName" name="supplierName" />*</li>
+							<li><label>联系人姓名</label> <input type="text" required
+								id="update_contactName" name="contactName" />*</li>
+							<li><label>联系人职位</label> <input type="text"
+								id="update_contactJob" name="contactJob" /></li>
+							<li><label>E-Mail</label> <input type="text"
+								id="update_email" name="email" onchange="EMail()" /></li>
+							<li class="li3"><label>地址</label> <textarea
+									id="update_contactAddress" name="contactAddress"></textarea></li>
+						</ul>
+						<ul class="xgys_ul1">
+							<li><label>州/省</label> <input type="text"
+								id="update_province" name="province" /></li>
+							<li><label>城市</label> <input type="text" id="update_city"
+								name="city" /></li>
+							<li><label>邮编</label> <input type="text" id="update_zipCode"
+								name="zipCode" /></li>
+							<li><label>国家</label> <input type="text" id="update_country"
+								name="country" /></li>
+							<li><label>电话号码</label> <input type="text" required
+								id="update_telphone" name="telphone" onchange="telphoneJudge()" />*</li>
+							<li><label>传真电话</label> <input type="text" id="update_fax"
+								name="fax" /></li>
+							<li><label>服务</label> <textarea id="update_service"
+									name="service"></textarea>*</li>
+						</ul>
+					</div>
+					<div class="but">
+						<button class="xz_save" onclick="form_update_Supplier()">保&nbsp;存</button>
+						<button class="xz_close" onclick="shutDown()">关&nbsp;闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<!--承包商update-->
+	<form action="" method="post" id="formBaseContractorUpdate">
+		<div class="xcbs_yy">
+			<div class="xcbs_div_z">
+				<div class="xz_title">
+					<img class="xz_close_img" src="/asset/img/u122_6.png" />
+				</div>
+				<div class="xcbs_div">
+					<div class="xcbs_ul_k">
+						<ul class="xcbs_ul">
+							<li><label>承包商编号</label> <input type="text" class="zd"
+								name="no" id="BContractorNo_update" readonly /></li>
+							<li><label>州/省</label> <input type="text"
+								id="province_update" name="province" /></li>
+							<li><label>承包商名称</label> <input type="text" id="name_update"
+								name="name" />*</li>
+							<li><label>城市</label> <input type="text" id="city_update"
+								name="city" /></li>
+							<li><label>联系人姓名</label> <input type="text"
+								id="contactName_update" name="contactName" />*</li>
+							<li><label>电话号码</label> <input type="text"
+								id="telphone_update" name="telphone" />*</li>
+							<li><label>E-Mail</label> <input type="text"
+								id="email_update" name="email" /></li>
+							<li><label>传真电话</label> <input type="text" id="fax_update"
+								name="fax" /></li>
+							<li><label class="xcbs_lab1">地址</label> <textarea
+									name="address" id="address_update"></textarea></li>
+							<li><label class="xcbs_lab1">服务</label> <textarea
+									name="service" id="service_update"></textarea>*</li>
+						</ul>
+					</div>
+					<div class="but">
+						<button class="xz_save" onclick="form_update_BaseContractor()">保&nbsp;存</button>
+						<button class="xz_close" onclick="shutDown_BaseContractor()">关&nbsp;闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	
+	<!--  onSubmit=" return closebut()"  -->
+				
+<div class="bm_yy" hidden="hidden">
+		<div class="bm_tc">
+			<div class="bm_top">
+				<input type="checkbox" id="bm_qd">
+				<label for="bm_qd" onclick="changedp()">确定</label>
+				<img src="/asset/img/u122_6.png" onclick="closedp()" />
+			</div>
+			<div class="bm_con">
+				<div class="bm_con_div1">
+					<span>园区</span>
+					<ul id="park">
+						<li>
+							<a>杭州园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+						<li>
+							<a>宁波园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+						<li>
+							<a>金华园区</a>
+							<ul class="bm_ul">
+								<li>财务部</li>
+								<li>行政部</li>
+								<li>运营中心</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="bm_con_div2">
+					<!-- <span>总部（杭州）</span>
+					<ul>
+						<li>总经办</li>
+						<li>财务部</li>
+						<li>法务部</li>
+						<li>市场部</li>
+						<li>技术部</li>
+					</ul> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!--新安全指导-->
+<div class="aqzd_yy">
+	<div class="aqzd_k">
+		<div class="aqzd_div1">
+			<div class="div1_sc">
+				<label>上传</label>
+				<input type="text"/>
+			</div>
+			<div class="div1_sc_button">本地上传</div>
+			<input class="in_file" type="file" name="multipartFile" id="multipartFile"/>
+<!-- 					<input type="file" name="multipartFile" id="multipartFile" /> -->
+<!-- 					<input type="button" onclick="upload1()" value="提交" /> -->
+		</div>
+		<div class="aqzd_div2">
+			<button id="aqzd_qr">确认</button>
+			<button id="aqzd_qx">取消</button>
+		</div>
+	</div>
+</div>
+	
+</body>
+<script type="text/javascript" src="/asset/js/XZ_jichushujuzhongxin.js"></script>
+<script type="text/javascript" src="/asset/js/XZ_bumentanchuang.js"></script>
+</html>

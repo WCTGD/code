@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* CSS Document */
+/*重置*/
+*{ font-family:"微软雅黑";}
+body{ margin: 0; padding: 0;}
+a{ text-decoration:none;}
+ul,li{ list-style: none; margin: 0; padding: 0;}
+img{ margin: 0; padding: 0;}
+input{ margin: 0; padding: 0;}
+/*title*/
+.title{ overflow:hidden; height:36px; line-height:36px; background:#dadada; margin-top:100px; padding-left:100px;}
+.title li{ float:left; font-size:14px; color:#555; margin-left:5px;}
+
+/*标签栏*/
+.right_tb{ height:26px; position:absolute; left:100px; bottom:0; overflow:hidden; white-space:nowrap;}
+
+.right_zm{ display:block; height:26px; width:110px;line-height:26px;font-size:12px;  float:left; margin-right:10px; border-radius:4px 4px 0 0; overflow:hidden;position:relative; cursor:default;background:#dadada; color:#333;}
+.right_zm a{ display:block; float:left; width:88px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;margin-left:4px;}
+
+.tb_gb{ display:block; float:right; margin-top:6px; margin-right: 4px;}
+
+/*left
+.left{ width:100px; background-color:#dadada; height:100%; position:fixed; left:0; top:136px;}
+.left a{ display:block; width:100px; height:74px; margin:auto; margin-bottom:10px;}
+.left a img{ display:block; margin-left:28px; float:left; margin-top:10px;}
+.left a:hover{ background:#edf1f2;}*/
+/*left*/
+.left{ width:100px; background-color:#dadada; height:100%; position:fixed; left:0; top:136px; overflow: auto;}
+.left_l{width:100px; height: auto;}
+.left a{ display:block; width:94px; height:74px; margin:auto; margin-bottom:10px;}
+.left a img{ display:block; margin-left:28px; float:left; margin-top:10px;}
+.left a:hover{ background:#edf1f2;}
+.left::-webkit-scrollbar{width:6px;}
+.left::-webkit-scrollbar-thumb{ background: #ccc;border-radius: 10px;}
+.left::-webkit-scrollbar-track{background:#fff;}
+
+/*right*/
+.right{ height:100%; position:fixed; top:136px; left:100px; bottom:120px;}

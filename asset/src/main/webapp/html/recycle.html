@@ -1,0 +1,843 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="renderer" content="webkit" />
+<link type="text/css" href="/asset/css/XZ_huishouzhan.css" rel="stylesheet" />
+<link type="text/css" href="/asset/css/Xweizhi.css" rel="stylesheet" />
+<!-- 位置 -->
+<link href="/asset/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/asset/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/asset/css/jquery-ui-1.10.3.full.min.css" />
+<link rel="stylesheet" href="/asset/css/jquery.gritter.css" />
+<link rel="stylesheet" href="/asset/css/datepicker.css" />
+<link rel="stylesheet" href="/asset/css/bootstrap-datetimepicker.css" />
+<script type="text/javascript" src="/asset/js/jquery-1.12.3.min.js"></script>
+<script src="/asset/js/date-time/bootstrap-datepicker.js"></script>
+<script src="/asset/js/date-time/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="/asset/js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="/asset/js/date-time/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<link rel="SHORTCUT ICON" href="img/logo.ico">
+<title>神洲酷奇资产管理</title>
+</head>
+
+<script type="text/javascript">
+	pathName = getContextPath();
+	function getContextPath() {
+		fullPath = document.location.pathname;
+		var index = fullPath.substr(1).indexOf("/");
+		var result = fullPath.substr(0, index + 1);
+		return result;
+	}
+	//前一页
+	function before() {
+		var a = $("#pageCode").html();
+		if (a > 1) {
+			$("#pageCode").html(a - 1);
+			select();
+		} else {
+			alert("已经是第一页了")
+		}
+
+	}
+	//后一页
+	function after() {
+		var b = $("#totalPage").html();
+		var a = $("#pageCode").html();
+		if (a < b) {
+			$("#pageCode").html(Number(a) + 1);
+			select();
+		} else {
+			alert("已经是最后一页了");
+		}
+
+	}
+
+	//跳转
+	function skip() {
+		var skipId = $(".skipId").val();
+		var b = $("#totalPage").html();
+		if (skipId<=b && skipId>= 1) {
+			$("#pageCode").html(skipId);
+			select();
+		} else {
+			alert("不存在！");
+		}
+	}
+
+	//每页显示的下拉框
+	function strike() {
+		var size = $("#pageSize").val();
+		$("#pageSize").val(size);
+		select();
+	}
+
+	//列表
+	function select() {
+		var type = $("#type").val();
+		var startType = $("#bxrq1").val();
+		var endType = $("#bxrq2").val();
+		var pageCode = $("#pageCode").text();
+		var pagesize = $("#pageSize").val();
+		$('.cbck_yy').hide();
+		$
+				.ajax({
+					url : pathName + "/recycle/select",
+					type : "post",
+					dataType : "json",
+					contentType : "application/json;charset=UTF-8",
+					data : JSON.stringify({
+						"type" : type,
+						"startType" : startType,
+						"endType" : endType,
+						"pageCode" : pageCode,
+						"pageSize" : pagesize
+					}),
+					success : function(data) {
+						var type = data.recyclesType;
+						var list = data.list; //数据
+						var p = data.page; // 分页
+						$("#pageCode").html(p.pageCode);
+						$("#totalRecord").html(p.totalRecord);
+						$("#start").html(p.start + 1);
+						$("#end").html(p.end);
+						$("#totalPage").html(p.totalPage);
+
+						$("#td").empty();
+						for (var i = 0; i < list.length; i++) {
+							var str = "";
+							str += "<tr class='data' onclick=click1(this) id='"
+									+ list[i].id + "'>";
+							str += "<td><div>" + list[i].type + "</div></td>";
+							str += "<td><div>" + list[i].time + "</div></td>";
+							str += "<td><div>" + list[i].operation
+									+ "</div></td>";
+							str += "<td><div class='tb_cz'>";
+							str += "<a class='ck' onclick='check("
+									+ list[i].id
+									+ ")'>查看</a><a class='fh' onclick='recover("
+									+ list[i].id + ")'>恢复</a></div></td></tr>";
+							$("#td").append(str);
+						}
+						if (list.length < Number(pagesize)) {
+							for (var j = 0; j < (pagesize - list.length); j++) {
+								var str = "<tr><td><div></div></td><td><div></div></td><td><div></div></td><td><div class='tb_cz'></div></td></tr>";
+								$("#td").append(str);
+							}
+						}
+						var name = "请选择";
+						$('#type').empty();
+						var str = "<option value=''>" + name + "</option>";
+						for (var i = 0; i < type.length; i++) {
+							str += "<option value='"+type[i].type+"'>"
+									+ type[i].type + "</option> ";
+						}
+						$('#type').append(str);
+					}
+				})
+	}
+	// 点击触发
+	function click1(t) {
+		$(".data").removeAttr("style");
+		$(t).attr("style", "background-color: #ffff99");
+		// 	$('#tbId').val("");
+		// 	$('#tbId').val(t.id);
+	}
+
+	// 恢复
+	function recover(id) {
+		$.ajax({
+			url : pathName + "/recycle/update?id=" + id,
+			type : "get",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				if (data == 1) {
+					$("tr[id='" + id + "']").remove();
+					select();
+				}
+			}
+		})
+	}
+	//位置查看
+	function positionsee(id) {
+		$(".ck_span2").empty();
+		$.ajax({
+			url : pathName + "/recycle/positionSelect?id=" + id,
+			type : "get",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				$("#spanId").text(data.aNo);
+				$("#spanIdOne").text(data.position);
+				$("#spanIdTwo").text(data.department);
+				$("#spanIdThree").text(data.note);
+				$('#position_see').show();
+			}
+		})
+	}
+	//供应商查看
+	function suppliersee(id) {
+		$(".ck_span2").empty();
+		$.ajax({
+			url : pathName + "/recycle/supplierSelect?id=" + id,
+			type : "get",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				if (data.no != null) {
+					$("#gysId").text(data.no);
+				}
+				if (data.supplierName != null) {
+					$("#gysIdOne").text(data.supplierName);
+				}
+				if (data.contactJob != null) {
+					$("#gysIdTwo").text(data.contactJob);
+				}
+				if (data.contactName != null) {
+					$("#gysIdThree").text(data.contactName);
+				}
+				if (data.email != null) {
+					$("#gysIdFour").text(data.email);
+				}
+				if (data.telphone != null) {
+					$("#gysIdFive").text(data.telphone);
+				}
+				if (data.province != null) {
+					$("#gysIdSix").text(data.province);
+				}
+				if (data.city != null) {
+					$("#gysIdJuly").text(data.city);
+				}
+				if (data.zipCode != null) {
+					$("#gysIdEigt").text(data.zipCode);
+				}
+				if (data.country != null) {
+					$("#gysIdNine").text(data.country);
+				}
+				if (data.fax != null) {
+					$("#gysIdTen").text(data.fax);
+				}
+				if (data.contactAddress != null) {
+					$("#gysIdEleven").text(data.contactAddress);
+				}
+				if (data.service != null) {
+					$("#gysIdTwelve").text(data.service);
+				}
+				$('#supplier_see').show();
+			}
+		})
+	}
+	//承包商查看
+	function contractorsee(id) {
+		$(".ck_span2").empty();
+		$.ajax({
+			url : pathName + "/recycle/baseContractorSelect?id=" + id,
+			type : "get",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				if (data.no != null) {
+					$("#cbsNo").text(data.no);
+				}
+				if (data.name != null) {
+					$("#cbsName").text(data.name);
+				}
+				if (data.contactName != null) {
+					$("#cbsContact").text(data.contactName);
+				}
+				if (data.email != null) {
+					$("#cbsEmail").text(data.email);
+				}
+				if (data.telphone != null) {
+					$("#cbsTelephone").text(data.telphone);
+				}
+				if (data.province != null) {
+					$("#cbsProvince").text(data.province);
+				}
+				if (data.city != null) {
+					$("#cbsCity").text(data.city);
+				}
+				if (data.fax != null) {
+					$("#cbsFax").text(data.fax);
+				}
+				if (data.address != null) {
+					$("#cbsAddress").text(data.address);
+				}
+				if (data.service != null) {
+					$("#cbsService").text(data.service);
+				}
+				$('#contractor_see').show();
+			}
+		})
+	}
+	//维护
+	function matainsee(id){
+		$(".ck_span2").html("");
+		$.ajax({
+ 			url : pathName + "/maintain/selectone",
+ 			type : "get",
+ 			data : {
+ 				id:id
+ 			},
+ 			dataType : "json",
+ 			async : false,
+ 			contentType : "application/json;charset=UTF-8",
+ 			success : function(data) {
+ 				$("#s_no").html(data.no);
+ 				$("#s_job_class").html(data.sundryJobClass.information);
+ 				$("#s_name").html(data.name);
+ 				if(data.unit!=null){
+ 					$("#s_unit").html(data.unit);
+ 				}
+ 				$("#s_workerorder_class").html("预防性维护");
+ 				if(data.frequency!=null){
+ 					$("#s_frequency").html(data.frequency);
+ 				}
+ 				$("#s_assets_class").html(data.assets.baseAssetClass.assetCategory);
+ 				if(data.daynum!=null){
+ 					$("#s_daynum").html(data.daynum);
+ 				}
+ 				if(data.assets!=null){
+ 					$("#s_thing").html("资产");
+ 					$("#s_assets").html(data.assets.assetDesc);
+ 				}else{
+ 					$("#s_thing").html("位置");
+ 				}
+ 				if(data.workday!=null){
+ 					$("#s_workday").html(data.workday);
+ 				}
+ 				if(data.startdate!=null){
+ 					$("#s_start").html(new Date(data.startdate).Format("yyyy-MM-dd"));
+ 				}
+ 				$("#s_position").html(data.position.position);
+ 				if(data.enddate!=null){
+ 					$("#s_end").html(new Date(data.enddate).Format("yyyy-MM-dd"));
+ 				}
+ 				if(data.plan!=null){
+ 					$("#s_plan").html(data.plan);
+ 				}
+ 				$("#matain_see").show();
+ 			}
+ 		})
+	}
+	function see(id) {
+		$(".ck_span2").each(function(){
+		　　　　$(this).html("");
+		　　})
+		  $.ajax({
+			url : pathName + "/repairlist/selectone",
+			type : "get",
+			data : {
+				id : id
+			},
+			dataType : "json",
+			async : false,
+			contentType : "application/json;charset=UTF-8",
+			success : function(data1) {
+				if(data1.note!=null){
+ 				$("#s_note").html(data1.note);}
+ 				$("#s_no").html(data1.no);
+ 				$("#s_state").html(data1.wokerorderState.information);
+ 				$("#s_class").html(data1.wokerorderClass.information);
+ 				$("#s_launch_time").html(data1.launchTime);
+ 				$("#s_worker").html(data1.worker.name);
+ 				$("#s_launchworker").html(data1.launchworker.name);
+ 				$("#s_launchworker_telephone").html(data1.launchworker.mobilePhone);
+ 				$("#s_finish_time").html(data1.finishTime);
+ 				$("#s_level").html(data1.level.information);
+ 				$("#s_a_no").html(data1.assets.no);
+ 				$("#s_a_class").html(data1.assets.baseAssetClass.assetCategory);
+ 				$("#s_a_state").html(data1.assets.sundryAssetsState.information);
+ 				if(data1.assets.publicProperty==1){
+ 					$("#s_a_public").html("公共资产");
+ 				}else{
+ 					$("#s_a_public").html("私有资产");
+ 				}
+ 				if(data1.assets.worker!=null){
+ 				$("#s_a_worker").html(data1.assets.worker.name);
+ 				}
+ 				if(data1.assets.position!=null){
+ 					if(data1.assets.position.note!=null){
+ 		 				$("#s_a_p_note").html(data1.assets.position.note);
+ 		 				}
+ 					$("#s_a_p_no").html(data1.assets.position.no);
+ 				}
+ 				if(data1.assets.baseDepartment!=null){
+ 					$("#s_a_p").html(data1.assets.baseDepartment.department);
+ 				}
+ 				$("#s_a_waynote").html(data1.assets.wayNote);
+ 				$("#s_a_way").html(data1.assets.sundryAssetsWay.information);
+ 				$("#s_a_deadline").html(data1.assets.warrantyDeadline);
+ 				if(data1.assets.note!=null){
+ 					$("#s_a_note").html(data1.assets.note);
+ 				}
+			}
+		})
+		  
+		  $('.ck_yy').show();	
+	}
+	// 查看
+	function check(id) {
+		$.ajax({
+			url : pathName + "/recycle/selectById?id=" + id,
+			type : "get",
+			dataType : "json",
+			contentType : "application/json;charset=UTF-8",
+			success : function(data) {
+				// 				$("tr[id='"+id+"']").remove();
+				$('#tbName').val(data.tbName);
+				$('#fkId').val(data.fkId);
+				//位置p
+				if (data.tbName == "position") {
+					positionsee(data.fkId);
+				}
+				// 供应商
+				if (data.tbName == "supplier") {
+					suppliersee(data.fkId);
+				}
+				// 承包商
+				if (data.tbName == "base_contractor") {//cbck_yy
+					contractorsee(data.fkId);
+				}
+
+				if (data.tbName == "maintain") {
+					matainsee(data.fkId);
+				}
+				if (data.tbName == "repair_list") {
+					$.ajax({
+						url : pathName + "/repairlist/selectone?id="
+								+ data.fkId,
+						type : "get",
+						dataType : "json",
+						contentType : "application/json;charset=UTF-8",
+						success : function(data) {
+							//数据以获取到（样式自己写）
+						}
+					})
+				}
+				if (data.tbName == "assets") {
+					$.ajax({
+						url : pathName + "/assets/selectbypk?id=" + data.fkId,
+						type : "get",
+						dataType : "json",
+						contentType : "application/json;charset=UTF-8",
+						success : function(data) {
+							//数据以获取到（样式自己写）
+						}
+					})
+				}
+			}
+		})
+	}
+</script>
+
+<body onload='select()'>
+	<input type="hidden" id="tbName" />
+	<input type="hidden" id="fkId" />
+	<!--top-->
+	<div class="recover_top">回收站</div>
+	<!--left-->
+	<div class="recover_left">
+		<a>全部删除内容</a>
+	</div>
+	<!--content-->
+	<div class="recover_con">
+		<div class="main">
+			<ul>
+				<li class="li1">
+					<label>类型</label>
+					<select id="type">
+						<option value="">请选择</option>
+						<option>资产</option>
+						<option>位置</option>
+						<option>基础数据</option>
+						<option>员工</option>
+						<option>工单</option>
+						<option>全部</option>
+					</select>
+				</li>
+				<li class="li1">
+					<label>时间</label>
+					<input type="text" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" id="bxrq1" readonly>
+					<span class="span1">--</span>
+					<input type="text" data-date-format="yyyy-mm-dd" class="form-control input-date-time-h inp1" id="bxrq2" readonly>
+
+				</li>
+				<li class="li3">
+					<button onclick="select()">搜&nbsp;索</button>
+				</li>
+			</ul>
+		</div>
+		<!--table-->
+		<div class="div_tb">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="tr_tb">
+					<td>
+						<div>类型</div>
+					</td>
+					<td>
+						<div>删除时间</div>
+					</td>
+					<td>
+						<div>操作人</div>
+					</td>
+					<td>
+						<div class="tb_cz">操作</div>
+					</td>
+				</tr>
+				<tbody id="td">
+					<tr>
+						<td>
+							<div>资产</div>
+						</td>
+						<td>
+							<div>2016.5.5</div>
+						</td>
+						<td>
+							<div>管理员</div>
+						</td>
+						<td>
+							<div class="tb_cz">
+								<a class="ck">查看</a>
+								<a class="fh">恢复</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+				<tr class="tr_tb1">
+					<td colspan="17" class="td_zg">
+						<div>
+							<ul>
+								<li class="t_div1">
+									<select id="pageSize" onchange="strike()">
+										<option value="10" selected="selected">10</option>
+										<option value="20">20</option>
+										<option value="30">30</option>
+									</select>
+								</li>
+								<li class="t_div2">
+									<img src="/asset/img/zuo1.png" onclick="before()" />
+									<span id="pageCode">1</span>
+									<span>/</span>
+									<span id="totalPage">1</span>
+									<img src="/asset/img/you1.png" onclick="after()" />
+								</li>
+								<li class="t_div3">
+									<span>跳转至</span>
+									<input type="text" id="skipId" class="skipId" onchange="skip()" />
+									<span>页</span>
+								</li>
+								<li class="t_div4">
+									共
+									<span id="totalRecord"></span>
+									条数据，当前显示
+									<span id="start">1</span>
+									-
+									<span id="end">10</span>
+								</li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			$(".input-daterange").datepicker({
+				format : "yyyy-mm-dd",
+				language : "zh-CN",
+				keyboardNavigation : false,
+				forceParse : false,
+				autoclose : true,
+			});
+			$(".input-date-time").datetimepicker({
+				format : "yyyy-mm-dd hh:ii",
+				language : "zh-CN",
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				forceParse : 0,
+				showMeridian : 1,
+				minuteStep : 10
+			});
+			$(".input-date-time-h").datetimepicker({
+				format : "yyyy-mm-dd hh:ii:ss",
+				language : "zh-CN",
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				forceParse : 0,
+				showMeridian : 1,
+				minuteStep : 1
+			});
+
+		});
+	</script>
+
+	<!-- 位置查看页面-->
+	<div class="ck_yy" style="height: 455px;" id="position_see">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li">
+					<span class="ck_span1">位置编号</span>
+					<span class="ck_span2" id="spanId"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">位置描述</span>
+					<span class="ck_span2" id="spanIdOne"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">部门</span>
+					<span class="ck_span2" id="spanIdTwo"></span>
+					</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">注释</span>
+					<span class="ck_span2" id="spanIdThree"></span>
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<!--供应商查看页面-->
+	<div class="gyck_yy" id="supplier_see">
+		<div class="gyck_div">
+			<div class="xz_title">
+				<img class="ck_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<ul class="gys_ul">
+				<li class="gys_li">
+					<span class="gys_span1">供应商编号</span>
+					<span class="gys_span2" id="gysId"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">供应商名称</span>
+					<span class="gys_span2" id="gysIdOne"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">联系人职位</span>
+					<span class="gys_span2" id="gysIdTwo"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">联系人姓名</span>
+					<span class="gys_span2" id="gysIdThree"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">E-Mail</span>
+					<span class="gys_span2" id="gysIdFout"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">电话号码</span>
+					<span class="gys_span2" id="gysIdFive"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">州/省</span>
+					<span class="gys_span2" id="gysIdSix"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">城市</span>
+					<span class="gys_span2" id="gysIdJuly"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">邮编</span>
+					<span class="gys_span2" id="gysIdEigt"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">国家</span>
+					<span class="gys_span2" id="gysIdNine"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">传真电话</span>
+					<span class="gys_span2" id="gysIdTen"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1"></span>
+					<span class="gys_span2" id="gysId"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">地址</span>
+					<span class="gys_span2" id="gysIDeleven"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">服务</span>
+					<span class="gys_span2" id="gysTwelve"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<!--承包商查看页面-->
+	<div class="cbck_yy" id="contractor_see">
+		<div class="gyck_div">
+			<div class="xz_title">
+				<img class="ck_close_img" src="/asset/img/u122_6.png" />
+			</div>
+			<ul class="gys_ul">
+				<li class="gys_li">
+					<span class="gys_span1">承包商编号</span>
+					<span class="gys_span2" id="cbsNo"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">承包商名称</span>
+					<span class="gys_span2" id="cbsName"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">联系人姓名</span>
+					<span class="gys_span2" id="cbsContact"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">E-Mail</span>
+					<span class="gys_span2" id="cbsEmail"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">电话号码</span>
+					<span class="gys_span2" id="cbsTelephone"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">州/省</span>
+					<span class="gys_span2" id="cbsProvince"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">城市</span>
+					<span class="gys_span2" id="cbsCity"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">传真电话</span>
+					<span class="gys_span2" id="cbsFax"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">地址</span>
+					<span class="gys_span2" id="cbsAddress"></span>
+				</li>
+				<li class="gys_li">
+					<span class="gys_span1">服务</span>
+					<span class="gys_span2" id="cbsService"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+<!--维护查看页面-->
+	<div class="ck_yy" id="matain_see">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="img/u122_6.png" />
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li">
+					<span class="ck_span1">维护编号</span>
+					<span class="ck_span2" id="s_no">1000023</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">工作类型</span>
+					<span class="ck_span2" id="s_job_class">10225465</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">维护名称</span>
+					<span class="ck_span2" id="s_name">打印机检修</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">频率单位</span>
+					<span class="ck_span2" id="s_unit">10235</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">工单类型</span>
+					<span class="ck_span2" id="s_workerorder_class">预防性维护</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">频率</span>
+					<span class="ck_span2" id="s_frequency">使用中</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产类型</span>
+					<span class="ck_span2" id="s_assets_class">机械</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">天</span>
+					<span class="ck_span2" id="s_daynum">电器</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">基准维护类型</span>
+					<span class="ck_span2" id="s_thing">资产</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">工作周期</span>
+					<span class="ck_span2" id="s_workday">2014/5/22</span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">资产名称</span>
+					<span class="ck_span2" id="s_assets"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">预定开始日期</span>
+					<span class="ck_span2" id="s_start"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">位置</span>
+					<span class="ck_span2" id="s_position"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">预定完成日期</span>
+					<span class="ck_span2" id="s_end"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1">下次维护生成类型</span>
+					<span class="ck_span2" id="s_plan"></span>
+				</li>
+				<li class="ck_li">
+					<span class="ck_span1"></span>
+					<span class="ck_span2"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!--维修查看页面-->
+	<div class="ck_yy" style="height: 747px;" id="repair_see">
+		<div class="ck_div">
+			<div class="xz_title">
+				<img id="ck_close_img" src="img/u122_6.png">
+			</div>
+			<ul class="ck_ul">
+				<li class="ck_li"><span class="ck_span1">工单编号</span> <span class="ck_span2" id="rs_no">1000023</span></li>
+				<li class="ck_li"><span class="ck_span1">工单状态</span> <span class="ck_span2" id="rs_state">10225465</span></li>
+				<li class="ck_li"><span class="ck_span1">工单类型</span> <span class="ck_span2" id="rs_class">打开</span></li>
+				<li class="ck_li"><span class="ck_span1">发起时间</span> <span class="ck_span2" id="rs_launch_time">使用中</span></li>
+				<li class="ck_li"><span class="ck_span1">问题描述</span> <span class="ck_span2" id="rs_note">维修</span></li>
+				<li class="ck_li"><span class="ck_span1">请求者</span> <span class="ck_span2" id="rs_worker">电器</span></li>
+				<li class="ck_li"><span class="ck_span1">创建人</span> <span class="ck_span2" id="rs_launchworker">2016/5/22</span></li>
+				<li class="ck_li"><span class="ck_span1">电话</span> <span class="ck_span2" id="rs_launchworker_telephone">技术部</span></li>
+				<li class="ck_li"><span class="ck_span1">期望完成日期</span> <span class="ck_span2" id="rs_finish_time">故障，使用不了</span></li>
+				<li class="ck_li"><span class="ck_span1">工作优先级</span> <span class="ck_span2" id="rs_level">106-415</span></li>
+				<li class="ck_li"><span class="ck_span1">资产编号</span> <span class="ck_span2" id="rs_a_no">2014/5/22</span></li>
+				<li class="ck_li"><span class="ck_span1">资产类型</span> <span class="ck_span2" id="rs_a_class">保修</span></li>
+				<li class="ck_li"><span class="ck_span1">资产属性</span> <span class="ck_span2" id="rs_a_public">保修</span></li>
+				<li class="ck_li"><span class="ck_span1">授权员工</span> <span class="ck_span2" id="rs_a_worker">保修</span></li>
+				<li class="ck_li"><span class="ck_span1">资产状态</span> <span class="ck_span2" id="rs_a_state">2014/5/22</span></li>
+				<li class="ck_li"><span class="ck_span1">位置编号</span> <span class="ck_span2" id="rs_a_p_no">管理员</span></li>
+				<li class="ck_li"><span class="ck_span1">部门</span> <span class="ck_span2" id="rs_a_p"></span></li>
+				<li class="ck_li"><span class="ck_span1">保修/外包备注</span> <span class="ck_span2" id="rs_a_waynote">管理员</span></li>
+				<li class="ck_li"><span class="ck_span1">保修/外包</span> <span class="ck_span2" id="rs_a_way"></span></li>
+				<li class="ck_li"><span class="ck_span1">保修截止日期</span> <span class="ck_span2" id="rs_a_deadline"></span></li>
+				<li class="ck_li"><span class="ck_span1">注释(资产)</span> <span class="ck_span3" id="rs_a_note"></span></li>
+				<li class="ck_li"><span class="ck_span1">注释(位置)</span> <span class="ck_span3" id="rs_a_p_note"></span></li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript" src="/asset/js/XZ_huishouzhan.js"></script>
+	<script type="text/javascript" src="/asset/js/XZ_weizhi.js"></script>
+	<script src="js/XZ_delect.js"></script>
+</body>
+</html>
+
